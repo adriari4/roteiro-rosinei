@@ -1,0 +1,2423 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roteiro da Rosinei e Ana Cristina</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1D4E9E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Roteiro">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Shrikhand&display=swap">
+<style>
+/* Layout: uma coluna estreita (máx. 36rem). Faixa de azulejo + bandeirinhas de arraial no topo, carrossel de cidades,
+   ficha da cidade com a Dica de Ouro, abas 2×2 e fichas de lugares; assistente de viagem com IA (roteiro dia a dia + conversa);
+   barra inferior fixa com Cidades / Viagem / Favoritos / Dicas. Tela de entrada com usuário e senha. */
+:root {
+  --bg: #FFF8EC;          /* creme */
+  --card: #FFFFFF;
+  --ink: #1A2233;         /* texto principal, quase preto azulado */
+  --ink-soft: #4A5468;
+  --line: #E6DAC4;
+  --azul: #1D4E9E;        /* azul azulejo: textos e ícones */
+  --azul-tint: #E4ECFA;
+  --btn: #1D4E9E;         /* botões principais */
+  --on-btn: #FFFFFF;
+  --terra: #B5441E;       /* terracota */
+  --terra-tint: #FBE5D8;
+  --on-terra: #FFFFFF;
+  --gold: #E3A82B;        /* Dica de Ouro */
+  --gold-tint: #FFF1CC;
+  --gold-ink: #5C3F00;
+  --on-gold: #3A2800;
+  --ok: #1B6B43;
+  --ok-tint: #DCF2E5;
+  --bad: #A3271B;
+  --bad-tint: #FBE3E0;
+  --shadow: 0 1px 2px rgba(26, 34, 51, .06), 0 6px 18px rgba(26, 34, 51, .07);
+  --font-display: "Shrikhand", "Georgia", "Times New Roman", serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+}
+/* Tema: claro por padrão (pedido da família); o botão sol/lua no cabeçalho troca para o escuro e fica lembrado neste aparelho */
+:root { color-scheme: light; }
+:root[data-app-theme="dark"] {
+  --bg: #11161F; --card: #1A2130; --ink: #F4EFE6; --ink-soft: #BCC3D0; --line: #303A52;
+  --azul: #93B6F3; --azul-tint: #1E2C47; --btn: #3566C2; --on-btn: #FFFFFF;
+  --terra: #F2936C; --terra-tint: #3B2319; --on-terra: #1C0F08;
+  --gold: #E9B544; --gold-tint: #2F2612; --gold-ink: #F6D58A; --on-gold: #3A2800;
+  --ok: #82D9A8; --ok-tint: #163223; --bad: #FF9C90; --bad-tint: #3A1A16;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 6px 18px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+
+html { font-size: 112.5%; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3 { text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 1rem; }
+
+/* faixa de azulejos (objeto decorativo: azul cobalto sobre branco nos dois temas) */
+.azulejo {
+  background-color: #FBF7EE;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23FBF7EE'/%3E%3Cg fill='%231D4E9E'%3E%3Ccircle cx='0' cy='0' r='11'/%3E%3Ccircle cx='40' cy='0' r='11'/%3E%3Ccircle cx='0' cy='40' r='11'/%3E%3Ccircle cx='40' cy='40' r='11'/%3E%3Cpath d='M20 5c3.2 5 3.2 9.5 0 15c-3.2-5.5-3.2-10 0-15z'/%3E%3Cpath d='M20 35c3.2-5 3.2-9.5 0-15c-3.2 5.5-3.2 10 0 15z'/%3E%3Cpath d='M5 20c5-3.2 9.5-3.2 15 0c-5.5 3.2-10 3.2-15 0z'/%3E%3Cpath d='M35 20c-5-3.2-9.5-3.2-15 0c5.5 3.2 10 3.2 15 0z'/%3E%3C/g%3E%3Cg fill='%23FBF7EE'%3E%3Ccircle cx='0' cy='0' r='6'/%3E%3Ccircle cx='40' cy='0' r='6'/%3E%3Ccircle cx='0' cy='40' r='6'/%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3C/g%3E%3Cg fill='%23E3A82B'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Ccircle cx='0' cy='0' r='2.4'/%3E%3Ccircle cx='40' cy='0' r='2.4'/%3E%3Ccircle cx='0' cy='40' r='2.4'/%3E%3Ccircle cx='40' cy='40' r='2.4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 34px 34px;
+  background-position: center top;
+}
+/* bandeirinhas de festa (arraial) */
+.bunting {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 20'%3E%3Cpath d='M0 1.5Q33 5 66 1.5' stroke='%23A3906F' stroke-width='1.2' fill='none'/%3E%3Cpath d='M4 2.2h14l-7 14z' fill='%23B5441E'/%3E%3Cpath d='M26 3.4h14l-7 14z' fill='%231D4E9E'/%3E%3Cpath d='M48 2.2h14l-7 14z' fill='%23E3A82B'/%3E%3C/svg%3E");
+  background-size: 66px 20px;
+  background-repeat: repeat-x;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 8.4vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: .005em;
+}
+.city-name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 10vw, 2.75rem);
+  line-height: 1.05;
+}
+.eyebrow {
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.carousel { scrollbar-width: none; scroll-padding-inline: 1rem; }
+.carousel::-webkit-scrollbar { display: none; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  min-height: 2.1rem; padding: .2rem .75rem;
+  border-radius: 999px; font-weight: 700; font-size: .95rem;
+}
+.map-btn {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  min-height: 3.5rem; padding: .75rem 1rem;
+  border-radius: 1rem;
+  background: var(--btn); color: var(--on-btn);
+  font-weight: 700; font-size: 1.1rem; text-decoration: none;
+  transition: transform .1s ease, filter .15s ease;
+}
+.map-btn:hover { filter: brightness(1.08); }
+.map-btn:active { transform: translateY(1px); }
+.map-btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-outline {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 3rem; padding: .5rem 1rem;
+  border: 2px solid var(--azul); border-radius: 999px;
+  color: var(--azul); background: var(--card);
+  font-weight: 700; text-decoration: none;
+}
+.btn-quiet {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  min-height: 2.9rem; padding: .45rem .95rem;
+  border: 2px solid var(--line); border-radius: 999px;
+  color: var(--ink); background: var(--card); font-weight: 700;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: .4rem;
+  min-height: 2.75rem; padding: .4rem .9rem;
+  border-radius: 999px; border: 2px solid var(--line);
+  background: var(--card); color: var(--ink);
+  font-weight: 700; font-size: .98rem; text-decoration: none; text-align: left;
+}
+.chip[aria-pressed="true"] { background: var(--btn); border-color: var(--btn); color: var(--on-btn); }
+.field {
+  width: 100%; min-height: 3.4rem; padding: .7rem 1rem;
+  border: 2px solid var(--line); border-radius: 1rem;
+  background: var(--card); color: var(--ink); font-size: 1.1rem;
+}
+.field:focus { outline: none; border-color: var(--azul); }
+.stepper-btn {
+  width: 3.6rem; height: 3.6rem; border-radius: 999px;
+  border: 2px solid var(--azul); color: var(--azul); background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+}
+.stepper-btn:disabled { opacity: .35; }
+.bubble { border-radius: 1.25rem; padding: .8rem 1rem; font-size: 1.05rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bubble-user { background: var(--btn); color: var(--on-btn); border-bottom-right-radius: .4rem; margin-left: 2.5rem; align-self: flex-end; }
+.bubble-ai { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: .4rem; margin-right: 1.5rem; align-self: flex-start; box-shadow: var(--shadow); }
+.dots span { display: inline-block; width: .5rem; height: .5rem; margin-right: .3rem; border-radius: 999px; background: var(--azul); animation: dot 1.2s infinite ease-in-out; }
+.dots span:nth-child(2) { animation-delay: .15s; }
+.dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+.pb-nav { padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)); }
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 20px rgba(26, 34, 51, .08);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.count {
+  position: absolute; top: -.45rem; right: -.85rem;
+  min-width: 1.45rem; height: 1.45rem; padding: 0 .3rem;
+  border-radius: 999px; background: var(--terra); color: var(--on-terra);
+  font-size: .8rem; font-weight: 700; line-height: 1.45rem; text-align: center;
+}
+.toast-wrap {
+  position: fixed; left: 0; right: 0; z-index: 40; pointer-events: none;
+  bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; padding-inline: 1rem;
+}
+.toast {
+  background: var(--ink); color: var(--bg);
+  padding: .75rem 1.25rem; border-radius: 999px;
+  font-weight: 700; font-size: 1rem; box-shadow: var(--shadow); text-align: center;
+  animation: toast-in .2s ease-out;
+}
+@keyframes toast-in { from { transform: translateY(8px); opacity: .4; } to { transform: none; opacity: 1; } }
+.fade-in { animation: fade-in .25s ease-out; }
+@keyframes fade-in { from { opacity: .35; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+.loading { padding: 3rem 1rem; text-align: center; font-size: 1.2rem; color: var(--ink-soft); }
+</style>
+
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: "var(--bg)", card: "var(--card)", ink: "var(--ink)", soft: "var(--ink-soft)", line: "var(--line)",
+          azul: "var(--azul)", "azul-tint": "var(--azul-tint)", btn: "var(--btn)", onbtn: "var(--on-btn)",
+          terra: "var(--terra)", "terra-tint": "var(--terra-tint)", onterra: "var(--on-terra)",
+          gold: "var(--gold)", "gold-tint": "var(--gold-tint)", "gold-ink": "var(--gold-ink)", ongold: "var(--on-gold)",
+          ok: "var(--ok)", "ok-tint": "var(--ok-tint)", bad: "var(--bad)", "bad-tint": "var(--bad-tint)"
+        },
+        boxShadow: { card: "var(--shadow)" },
+        fontFamily: { display: ["Shrikhand", "Georgia", "serif"], body: ["Atkinson Hyperlegible", "system-ui", "sans-serif"] }
+      }
+    }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>window.react = window.React; /* o UMD do lucide-react procura o global "react" */</script>
+<script src="https://cdn.jsdelivr.net/npm/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+
+<script>try { if (JSON.parse(localStorage.getItem("rosinei.theme")) === "dark") document.documentElement.setAttribute("data-app-theme", "dark"); } catch (e) { /* tema claro */ }</script>
+<div id="root"><p class="loading">Carregando o roteiro…</p></div>
+
+<script>
+(function () {
+  "use strict";
+  const { useState, useEffect, useRef } = React;
+  const html = htm.bind(React.createElement);
+
+  /* ---------- acesso (cadeado familiar: a senha não fica escrita na página, só o seu hash) ---------- */
+  /* versão pública (GitHub Pages, abre direto no navegador) e versão no Claude (com o assistente de IA) */
+  const PUBLIC_URL = "https://adriari4.github.io/roteiro-rosinei/";
+  const CLAUDE_URL = "https://claude.ai/artifact/U4T9W9H3TiETUMSuwdjNnU";
+  const PASS_SALT = "roteiro-rosinei|";
+  const PASS_HASH = "4eaef4c1ebf33254ab32985efdf911e078c3d3052703681a233c91e989935118";
+
+  /* SHA-256 em JavaScript puro (texto ASCII) — não depende de crypto.subtle */
+  function sha256(ascii) {
+    const rr = (v, n) => (v >>> n) | (v << (32 - n));
+    const maxWord = Math.pow(2, 32);
+    const words = [];
+    const bitLen = ascii.length * 8;
+    let hash = [];
+    const k = [];
+    let primes = 0;
+    const composite = {};
+    for (let cand = 2; primes < 64; cand++) {
+      if (!composite[cand]) {
+        for (let i = 0; i < 313; i += cand) composite[i] = cand;
+        hash[primes] = (Math.pow(cand, 0.5) * maxWord) | 0;
+        k[primes++] = (Math.pow(cand, 1 / 3) * maxWord) | 0;
+      }
+    }
+    hash = hash.slice(0, 8);
+    ascii += "\x80";
+    while (ascii.length % 64 - 56) ascii += "\x00";
+    for (let i = 0; i < ascii.length; i++) {
+      const c = ascii.charCodeAt(i);
+      if (c >> 8) return "";
+      words[i >> 2] |= c << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = (bitLen / maxWord) | 0;
+    words[words.length] = bitLen;
+    for (let j = 0; j < words.length;) {
+      const w = words.slice(j, (j += 16));
+      const old = hash;
+      hash = hash.slice(0, 8);
+      for (let i = 0; i < 64; i++) {
+        const w15 = w[i - 15], w2 = w[i - 2];
+        const a = hash[0], e = hash[4];
+        const t1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] +
+          (w[i] = i < 16 ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
+        const t2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(t1 + t2) | 0].concat(hash);
+        hash[4] = (hash[4] + t1) | 0;
+      }
+      for (let i = 0; i < 8; i++) hash[i] = (hash[i] + old[i]) | 0;
+    }
+    let out = "";
+    for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; out += (b < 16 ? "0" : "") + b.toString(16); }
+    return out;
+  }
+
+  /* ---------- utilidades ---------- */
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sem armazenamento: segue sem guardar */ } }
+  };
+  const reduceMotion = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
+  const mapsUrl = (q) => "https://maps.google.com/?q=" + encodeURIComponent(q);
+  const tx = (v, lang) => (v == null ? "" : typeof v === "string" ? v : v[lang]);
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const useCap = (name) => (window.claude && typeof window.claude.use === "function" ? window.claude.use(name) : Promise.resolve(null));
+
+  function Icon({ name, size = 24, strokeWidth = 2.25, fill = "none", className = "" }) {
+    const lib = window.LucideReact || {};
+    const C = (Array.isArray(name) ? name : [name]).map((n) => lib[n]).find(Boolean);
+    if (!C) return null;
+    return html`<${C} size=${size} strokeWidth=${strokeWidth} fill=${fill} className=${className} aria-hidden="true" focusable="false" />`;
+  }
+
+  /* ---------- textos da interface ---------- */
+  /* "o Porto" leva artigo em português: ao Porto, do Porto, para o Porto */
+  const ptA = (c) => (c === "Porto" ? "ao Porto" : "a " + c);
+  const ptDe = (c) => (c === "Porto" ? "do Porto" : "de " + c);
+  const ptPara = (c) => (c === "Porto" ? "para o Porto" : "para " + c);
+  const T = {
+    pt: {
+      subtitle: "Portugal & Espanha",
+      langLabel: "Idioma",
+      chooseCity: "Escolha a cidade",
+      cats: { ver: "O que ver", comer: "Onde comer", bares: "Bares & Cafés", ficar: "Onde ficar" },
+      catIn: { ver: "O que ver em", comer: "Onde comer em", bares: "Bares & Cafés em", ficar: "Onde ficar em" },
+      comerNote: "Comida típica, entre os restaurantes mais bem avaliados no Google Maps (notas aproximadas, consultadas em outubro de 2026). Os horários mudam: confirme antes de ir.",
+      catsLabel: "Categorias",
+      tip: "Dica de Ouro",
+      openMap: "Abrir no mapa",
+      cityMap: "Ver no mapa",
+      addFav: "Guardar nos favoritos",
+      removeFav: "Tirar dos favoritos",
+      added: "Guardado nos favoritos",
+      removed: "Tirado dos favoritos",
+      price: ["Grátis", "Econômico", "Moderado", "Mais caro"],
+      priceLabel: "Preço",
+      easy: "Acesso fácil",
+      reviews: (n) => (n >= 1000 ? (Math.round(n / 100) / 10).toString().replace(".", ",") + " mil avaliações" : n + " avaliações"),
+      ratingLabel: "Nota no Google",
+      places: (n) => (n === 1 ? "1 lugar" : n + " lugares"),
+      nav: { explorar: "Cidades", viagem: "Viagem", favoritos: "Favoritos", dicas: "Dicas" },
+      navLabel: "Navegação principal",
+      favTitle: "Meus favoritos",
+      favIntro: "Os lugares que você guardou, sempre à mão.",
+      favEmptyTitle: "Ainda não há favoritos",
+      favEmptyText: "Toque no coração de qualquer lugar para guardá-lo aqui.",
+      favEmptyBtn: "Escolher lugares",
+      tipsTitle: "Dicas de Ouro",
+      tipsIntro: "Um conselho importante para cada cidade da viagem.",
+      seeCity: (c) => "Ver " + c,
+      note: "Preços aproximados por pessoa. Horários e preços podem mudar: confirme antes de ir.",
+      logout: "Sair da conta",
+      themeDark: "Ativar modo escuro",
+      themeLight: "Ativar modo claro",
+      /* entrada */
+      loginTitle: "Bem-vindos!",
+      loginText: "Entre para ver o roteiro da viagem.",
+      user: "Usuário",
+      pass: "Senha",
+      showPass: "Mostrar senha",
+      hidePass: "Esconder senha",
+      enter: "Entrar",
+      wrong: "Usuário ou senha incorretos. Confira e tente de novo.",
+      /* assistente */
+      planTitle: "Assistente de viagem",
+      planIntro: "Diga quantos dias vocês têm e eu organizo a viagem dia a dia. Depois, pergunte o que quiser.",
+      newPlan: "Novo roteiro",
+      daysQ: "Quantos dias de viagem?",
+      daysUnit: (n) => (n === 1 ? "dia" : "dias"),
+      fewer: "Menos dias",
+      more: "Mais dias",
+      startQ: "Data de início (opcional)",
+      stopsQ: "Cidades da viagem",
+      paceQ: "Ritmo",
+      paces: { calmo: "Bem tranquilo", normal: "Normal" },
+      notesQ: "Algo mais? (opcional)",
+      notesPh: "Ex.: chegamos ao Porto de avião e voltamos de Sevilha",
+      create: "Criar roteiro",
+      compose: (s, stops, date) => "Crie um roteiro de " + s.days + " dias" + (date ? ", começando em " + date : "") +
+        ", em ritmo " + (s.pace === "normal" ? "normal" : "bem tranquilo") + ". Cidades: " + stops + "." + (s.notes ? " Observações: " + s.notes : ""),
+      thinking: ["Pensando…", "Olhando o mapa…", "Calculando as viagens de trem e ônibus…", "Escolhendo os melhores lugares…", "Organizando os dias…", "Quase pronto…"],
+      stop: "Parar",
+      askPh: "Pergunte ao assistente…",
+      askLabel: "Sua pergunta",
+      send: "Enviar",
+      chips: ["Deixe o roteiro mais tranquilo", "Onde comer comida típica no dia 2?", "Como vamos de Lisboa a Lagos?", "Que roupa levar?"],
+      hello: "Olá, Rosinei e Ana Cristina! Eu organizo a viagem dia a dia e respondo dúvidas sobre transporte, comida e passeios.",
+      aiOff: "O assistente precisa de uma conta Claude com acesso permitido. O roteiro salvo, as cidades e as dicas continuam disponíveis.",
+      aiConnecting: "Conectando o assistente…",
+      err: {
+        rate_limited: "Muitas perguntas seguidas. Espere um pouco e tente de novo.",
+        session_expired: "A sessão expirou. Entre de novo na sua conta Claude.",
+        refused: "Não consegui responder isso. Tente perguntar de outro jeito.",
+        empty_completion: "Não consegui responder isso. Tente perguntar de outro jeito.",
+        invalid_json: "A resposta veio incompleta. Tente de novo; se o roteiro for muito longo, peça menos dias de cada vez.",
+        prompt_too_large: "A conversa ficou longa demais. Comece uma nova conversa.",
+        generic: "Algo falhou na conexão. Tente de novo."
+      },
+      stopped: "(interrompido)",
+      truncated: "A resposta ficou longa demais e foi cortada. Peça por partes.",
+      retry: "Tentar de novo",
+      planUpdated: "Roteiro atualizado",
+      seePlan: "Ver roteiro",
+      planHeading: "Roteiro da viagem",
+      savedFamily: "Salvo para a família",
+      savedLocal: "Salvo só neste aparelho",
+      backToFamily: "Ver o roteiro da família",
+      copy: "Copiar roteiro",
+      copied: "Roteiro copiado. Cole no WhatsApp!",
+      copyFail: "Não deu para copiar neste aparelho.",
+      del: "Apagar roteiro",
+      delConfirm: "Apagar este roteiro?",
+      yesDel: "Sim, apagar",
+      cancel: "Cancelar",
+      deleted: "Roteiro apagado",
+      dayLabel: (n) => "Dia " + n,
+      morning: "Manhã", afternoon: "Tarde", evening: "Noite",
+      sleep: "Dormir", tipShort: "Dica", travelDay: "Dia de viagem",
+      newChat: "Nova conversa",
+      promoTitle: "Monte a viagem dia a dia",
+      promoText: "Escolha os dias e as cidades e veja o roteiro recomendado, dia a dia, com restaurantes e trajetos.",
+      promoBtn: "Montar o roteiro",
+      promoPlan: (n) => "Ver o roteiro da viagem (" + n + " dias)",
+      conversation: "Assistente com IA (opcional)",
+      tripTitle: "Roteiro da viagem",
+      tripIntro: "Escolha quantos dias e quais cidades: o app monta um roteiro recomendado, dia a dia, com passeios, restaurantes, trajetos e onde dormir.",
+      build: "Ver roteiro recomendado",
+      change: "Mudar dias e cidades",
+      dirQ: "Por onde começar?",
+      dirs: { ns: "Pelo Porto (norte → sul)", sn: "Pela Espanha (sul → norte)" },
+      tooFew: (d, n) => "Com " + d + " dias não dá para visitar " + n + " cidades. Aumente os dias ou tire alguma cidade.",
+      noStops: "Escolha pelo menos uma cidade.",
+      autoTitle: (n) => "Roteiro recomendado de " + n + " dias",
+      summaryDays: (n) => (n === 1 ? "1 dia" : n + " dias"),
+      arrivalTitle: (c) => "Chegada " + ptA(c),
+      arriveFirst: (c) => "Chegada " + ptA(c) + ", check-in e descanso no hotel.",
+      travelTo: (c) => "Viagem " + ptPara(c),
+      travelMorning: (a, b) => "Viagem " + ptDe(a) + " " + ptPara(b) + " e check-in no hotel.",
+      restAfter: "Almoço sem pressa e descanso no hotel.",
+      restTravel: "Descanso depois da viagem.",
+      afterRest: "Depois do almoço e de um descanso: ",
+      freeMorning: "Manhã livre para passear sem pressa ou descansar.",
+      fullBack: "Volta ao hotel no fim da tarde e descanso.",
+      dinnerEasy: "Jantar tranquilo e cedo.",
+      lastDay: "Último dia",
+      goHome: (how) => "Malas prontas e volta para casa: " + how + ".",
+      lunch: "Almoço",
+      dinner: "Jantar",
+      meals: "Onde comer",
+      tz: " Na Espanha o relógio está 1 hora adiantado",
+      share: "Compartilhar link",
+      shared: "Link copiado. Envie pelo WhatsApp!",
+      aiIntro: "Peça mudanças no roteiro ou tire dúvidas sobre transporte, comida e passeios.",
+      aiStandalone: "O assistente com IA funciona só dentro do Claude e usa a conta Claude de quem está usando. O roteiro recomendado acima funciona sem conta nenhuma.",
+      openClaude: "Abrir no Claude",
+      imported: "Roteiro recebido e guardado neste aparelho."
+    },
+    es: {
+      subtitle: "Portugal y España",
+      langLabel: "Idioma",
+      chooseCity: "Elige la ciudad",
+      cats: { ver: "Qué ver", comer: "Dónde comer", bares: "Bares y Cafés", ficar: "Dónde alojarse" },
+      catIn: { ver: "Qué ver en", comer: "Dónde comer en", bares: "Bares y cafés en", ficar: "Dónde alojarse en" },
+      comerNote: "Comida típica, entre los restaurantes mejor valorados en Google Maps (notas aproximadas, consultadas en octubre de 2026). Los horarios cambian: conviene confirmarlos antes de ir.",
+      catsLabel: "Categorías",
+      tip: "Consejo de Oro",
+      openMap: "Abrir en el mapa",
+      cityMap: "Ver en el mapa",
+      addFav: "Guardar en favoritos",
+      removeFav: "Quitar de favoritos",
+      added: "Guardado en favoritos",
+      removed: "Quitado de favoritos",
+      price: ["Gratis", "Económico", "Moderado", "Más caro"],
+      priceLabel: "Precio",
+      easy: "Acceso fácil",
+      reviews: (n) => (n >= 1000 ? (Math.round(n / 100) / 10).toString().replace(".", ",") + " mil reseñas" : n + " reseñas"),
+      ratingLabel: "Nota en Google",
+      places: (n) => (n === 1 ? "1 lugar" : n + " lugares"),
+      nav: { explorar: "Ciudades", viagem: "Viaje", favoritos: "Favoritos", dicas: "Consejos" },
+      navLabel: "Navegación principal",
+      favTitle: "Mis favoritos",
+      favIntro: "Los sitios que has guardado, siempre a mano.",
+      favEmptyTitle: "Aún no hay favoritos",
+      favEmptyText: "Toca el corazón de cualquier sitio para guardarlo aquí.",
+      favEmptyBtn: "Elegir sitios",
+      tipsTitle: "Consejos de Oro",
+      tipsIntro: "Un consejo importante para cada ciudad del viaje.",
+      seeCity: (c) => "Ver " + c,
+      note: "Precios aproximados por persona. Horarios y precios pueden cambiar: conviene confirmarlos antes de ir.",
+      logout: "Cerrar sesión",
+      themeDark: "Activar modo oscuro",
+      themeLight: "Activar modo claro",
+      loginTitle: "¡Bienvenidos!",
+      loginText: "Entra para ver la ruta del viaje.",
+      user: "Usuario",
+      pass: "Contraseña",
+      showPass: "Mostrar contraseña",
+      hidePass: "Ocultar contraseña",
+      enter: "Entrar",
+      wrong: "Usuario o contraseña incorrectos. Revísalos e inténtalo de nuevo.",
+      planTitle: "Asistente de viaje",
+      planIntro: "Dime cuántos días tenéis y organizo el viaje día a día. Después, pregunta lo que quieras.",
+      newPlan: "Nuevo itinerario",
+      daysQ: "¿Cuántos días de viaje?",
+      daysUnit: (n) => (n === 1 ? "día" : "días"),
+      fewer: "Menos días",
+      more: "Más días",
+      startQ: "Fecha de inicio (opcional)",
+      stopsQ: "Ciudades del viaje",
+      paceQ: "Ritmo",
+      paces: { calmo: "Muy tranquilo", normal: "Normal" },
+      notesQ: "¿Algo más? (opcional)",
+      notesPh: "Ej.: llegamos a Oporto en avión y volvemos desde Sevilla",
+      create: "Crear itinerario",
+      compose: (s, stops, date) => "Crea un itinerario de " + s.days + " días" + (date ? ", empezando el " + date : "") +
+        ", a ritmo " + (s.pace === "normal" ? "normal" : "muy tranquilo") + ". Ciudades: " + stops + "." + (s.notes ? " Observaciones: " + s.notes : ""),
+      thinking: ["Pensando…", "Mirando el mapa…", "Calculando los trayectos en tren y autobús…", "Eligiendo los mejores sitios…", "Organizando los días…", "Casi listo…"],
+      stop: "Parar",
+      askPh: "Pregunta al asistente…",
+      askLabel: "Tu pregunta",
+      send: "Enviar",
+      chips: ["Haz el itinerario más tranquilo", "¿Dónde comer comida típica el día 2?", "¿Cómo vamos de Lisboa a Lagos?", "¿Qué ropa llevar?"],
+      hello: "¡Hola, Rosinei y Ana Cristina! Organizo el viaje día a día y respondo dudas sobre transporte, comida y visitas.",
+      aiOff: "El asistente necesita una cuenta de Claude con acceso permitido. El itinerario guardado, las ciudades y los consejos siguen disponibles.",
+      aiConnecting: "Conectando el asistente…",
+      err: {
+        rate_limited: "Demasiadas preguntas seguidas. Espera un poco e inténtalo de nuevo.",
+        session_expired: "La sesión ha caducado. Vuelve a entrar en tu cuenta de Claude.",
+        refused: "No he podido responder a eso. Prueba a preguntarlo de otra forma.",
+        empty_completion: "No he podido responder a eso. Prueba a preguntarlo de otra forma.",
+        invalid_json: "La respuesta llegó incompleta. Inténtalo de nuevo; si el itinerario es muy largo, pide menos días cada vez.",
+        prompt_too_large: "La conversación es demasiado larga. Empieza una nueva.",
+        generic: "Algo falló en la conexión. Inténtalo de nuevo."
+      },
+      stopped: "(interrumpido)",
+      truncated: "La respuesta era demasiado larga y se cortó. Pídela por partes.",
+      retry: "Reintentar",
+      planUpdated: "Itinerario actualizado",
+      seePlan: "Ver itinerario",
+      planHeading: "Itinerario del viaje",
+      savedFamily: "Guardado para la familia",
+      savedLocal: "Guardado solo en este dispositivo",
+      backToFamily: "Ver el itinerario de la familia",
+      copy: "Copiar itinerario",
+      copied: "Itinerario copiado. ¡Pégalo en WhatsApp!",
+      copyFail: "No se ha podido copiar en este dispositivo.",
+      del: "Borrar itinerario",
+      delConfirm: "¿Borrar este itinerario?",
+      yesDel: "Sí, borrar",
+      cancel: "Cancelar",
+      deleted: "Itinerario borrado",
+      dayLabel: (n) => "Día " + n,
+      morning: "Mañana", afternoon: "Tarde", evening: "Noche",
+      sleep: "Dormir", tipShort: "Consejo", travelDay: "Día de viaje",
+      newChat: "Nueva conversación",
+      promoTitle: "Organiza el viaje día a día",
+      promoText: "Elige los días y las ciudades y mira el itinerario recomendado, día a día, con restaurantes y trayectos.",
+      promoBtn: "Montar el itinerario",
+      promoPlan: (n) => "Ver el itinerario del viaje (" + n + " días)",
+      conversation: "Asistente con IA (opcional)",
+      tripTitle: "Itinerario del viaje",
+      tripIntro: "Elige cuántos días y qué ciudades: la app monta un itinerario recomendado, día a día, con visitas, restaurantes, trayectos y dónde dormir.",
+      build: "Ver itinerario recomendado",
+      change: "Cambiar días y ciudades",
+      dirQ: "¿Por dónde empezar?",
+      dirs: { ns: "Por Oporto (norte → sur)", sn: "Por España (sur → norte)" },
+      tooFew: (d, n) => "Con " + d + " días no da para visitar " + n + " ciudades. Añade días o quita alguna ciudad.",
+      noStops: "Elige al menos una ciudad.",
+      autoTitle: (n) => "Itinerario recomendado de " + n + " días",
+      summaryDays: (n) => (n === 1 ? "1 día" : n + " días"),
+      arrivalTitle: (c) => "Llegada a " + c,
+      arriveFirst: (c) => "Llegada a " + c + ", check-in y descanso en el hotel.",
+      travelTo: (c) => "Viaje a " + c,
+      travelMorning: (a, b) => "Viaje de " + a + " a " + b + " y check-in en el hotel.",
+      restAfter: "Comida sin prisa y descanso en el hotel.",
+      restTravel: "Descanso después del viaje.",
+      afterRest: "Después de comer y descansar: ",
+      freeMorning: "Mañana libre para pasear sin prisa o descansar.",
+      fullBack: "Vuelta al hotel al final de la tarde y descanso.",
+      dinnerEasy: "Cena tranquila y temprano.",
+      lastDay: "Último día",
+      goHome: (how) => "Maletas listas y vuelta a casa: " + how + ".",
+      lunch: "Comida",
+      dinner: "Cena",
+      meals: "Dónde comer",
+      tz: " En España el reloj va 1 hora adelantado",
+      share: "Compartir enlace",
+      shared: "Enlace copiado. ¡Envíalo por WhatsApp!",
+      aiIntro: "Pide cambios en el itinerario o pregunta dudas sobre transporte, comida y visitas.",
+      aiStandalone: "El asistente con IA solo funciona dentro de Claude y usa la cuenta de Claude de quien lo usa. El itinerario recomendado de arriba funciona sin ninguna cuenta.",
+      openClaude: "Abrir en Claude",
+      imported: "Itinerario recibido y guardado en este dispositivo."
+    }
+  };
+
+  const CATS = [
+    { id: "ver", emoji: "👁️" },
+    { id: "comer", emoji: "🍽️" },
+    { id: "bares", emoji: "🍷" },
+    { id: "ficar", emoji: "🏨" }
+  ];
+
+  /* ---------- conteúdo: 6 destinos ----------
+     n = nome · d = descrição · p = preço (0 grátis, 1 €, 2 €€, 3 €€€) · q = busca no Google Maps · e = acesso fácil
+     t = vila (no Algarve) · r / rc = nota e nº de avaliações no Google Maps (aprox., out. 2026) */
+  const CITIES = [
+    {
+      id: "porto", emoji: "🍷", flag: "🇵🇹",
+      name: { pt: "Porto", es: "Oporto" },
+      country: { pt: "Portugal", es: "Portugal" },
+      q: "Porto, Portugal",
+      intro: {
+        pt: "Terra do vinho do Porto, das pontes sobre o rio Douro e das fachadas de azulejo azul.",
+        es: "Tierra del vino de Oporto, de los puentes sobre el Duero y de las fachadas de azulejo azul."
+      },
+      tip: {
+        pt: "O Porto é cheio de ladeiras e de pedras de granito que escorregam com a chuva. Use sapato fechado com sola antiderrapante. Para subir da Ribeira até o centro, pegue o Funicular dos Guindais ou um táxi e poupe as pernas.",
+        es: "Oporto está lleno de cuestas y de adoquines de granito que resbalan con la lluvia. Mejor calzado cerrado con suela antideslizante. Para subir de la Ribeira al centro, el Funicular dos Guindais o un taxi ahorran mucho esfuerzo."
+      },
+      places: {
+        ver: [
+          { id: "ribeira", n: "Ribeira", p: 0, e: true, q: "Cais da Ribeira, Porto",
+            d: { pt: "O cartão-postal do Porto: casinhas coloridas, barcos rabelos e restaurantes à beira do rio Douro. O calçadão junto ao rio é plano, ótimo para caminhar sem pressa.",
+                 es: "La postal de Oporto: casitas de colores, barcos rabelos y restaurantes a orillas del Duero. El paseo junto al río es llano, perfecto para caminar sin prisa." } },
+          { id: "ponte", n: "Ponte Dom Luís I", p: 0, q: "Ponte Luís I, Porto",
+            d: { pt: "A famosa ponte de ferro de dois andares. Em cima passa o metrô: atravesse de metrô (linha D) e desça na estação Jardim do Morro para ver a melhor vista.",
+                 es: "El famoso puente de hierro de dos pisos. Por arriba pasa el metro: se puede cruzar en metro (línea D) y bajar en la estación Jardim do Morro, donde está la mejor vista." } },
+          { id: "morro", n: "Jardim do Morro", p: 0, q: "Jardim do Morro, Vila Nova de Gaia",
+            d: { pt: "Jardim-mirante do outro lado do rio, em Vila Nova de Gaia, com vista de cartão-postal da Ribeira. Fica ao lado da estação de metrô e tem bancos para descansar. Lindo ao pôr do sol.",
+                 es: "Jardín mirador al otro lado del río, en Vila Nova de Gaia, con vistas de postal de la Ribeira. Está junto a la estación de metro y tiene bancos para descansar. Precioso al atardecer." } },
+          { id: "saobento", n: "Estação de São Bento", p: 0, e: true, q: "Estação de São Bento, Porto",
+            d: { pt: "Estação de trem com o saguão coberto por cerca de 20 mil azulejos azuis que contam a história de Portugal. Entrada livre, bem no centro.",
+                 es: "Estación de tren con el vestíbulo cubierto por unos 20.000 azulejos azules que cuentan la historia de Portugal. Entrada libre, en pleno centro." } },
+          { id: "lello", n: "Livraria Lello", p: 1, q: "Livraria Lello, Porto",
+            d: { pt: "Uma das livrarias mais bonitas do mundo, com a famosa escada vermelha. Precisa de ingresso, e o valor pode ser descontado na compra de um livro. Compre online e vá cedo para fugir da fila.",
+                 es: "Una de las librerías más bonitas del mundo, con su famosa escalera roja. Hace falta entrada, y su importe se puede descontar al comprar un libro. Mejor comprarla por internet e ir temprano para evitar la cola." } },
+          { id: "cruzeiro", n: { pt: "Cruzeiro das Seis Pontes", es: "Crucero de los Seis Puentes" }, p: 1, q: "Cruzeiro das 6 Pontes, Cais da Ribeira, Porto",
+            d: { pt: "Passeio de barco de uns 50 minutos pelo Douro, passando sob as seis pontes da cidade. Sentadinho e sem esforço. Saídas da Ribeira e do cais de Gaia.",
+                 es: "Paseo en barco de unos 50 minutos por el Duero, pasando bajo los seis puentes de la ciudad. Sentados y sin esfuerzo. Salidas desde la Ribeira y desde el muelle de Gaia." } },
+          { id: "douro", n: { pt: "Vale do Douro", es: "Valle del Duero" }, p: 3, q: "Pinhão, Portugal",
+            d: { pt: "Excursão de um dia aos vinhedos em socalcos do Douro, Patrimônio Mundial: de van, barco ou trem, com almoço e prova de vinhos. Quase todo o tempo sentados.",
+                 es: "Excursión de un día a los viñedos en terrazas del Duero, Patrimonio Mundial: en furgoneta, barco o tren, con comida y cata de vinos. Casi todo el tiempo sentados." } }
+        ],
+        comer: [
+          { id: "brasao", n: "Brasão Aliados", r: 4.6, rc: 16665, p: 2, q: "Brasão Aliados, Rua de Ramalho Ortigão 28, Porto",
+            d: { pt: "Cervejaria tradicional muito querida, no centro. Famosa pela francesinha (o sanduíche típico do Porto, com molho especial) e pelos bolinhos de bacalhau. Reserve por telefone e peça mesa no piso de baixo.",
+                 es: "Cervecería tradicional muy querida, en el centro. Famosa por su francesinha (el sándwich típico de Oporto, con salsa especial) y sus buñuelos de bacalao. Conviene reservar por teléfono y pedir mesa en la planta baja." } },
+          { id: "abadia", n: "Abadia do Porto", r: 4.5, rc: 5615, p: 2, q: "Restaurante Abadia do Porto, Rua do Ateneu Comercial do Porto 22, Porto",
+            d: { pt: "Clássico desde 1939, com salão amplo. Prove as tripas à moda do Porto, o prato símbolo da cidade, ou o bacalhau e o polvo. Fecha aos domingos.",
+                 es: "Un clásico desde 1939, con un comedor amplio. Hay que probar las tripas a la moda de Oporto, el plato símbolo de la ciudad, o el bacalao y el pulpo. Cierra los domingos." } },
+          { id: "antunes", n: "Restaurante Antunes", r: 4.5, rc: 4393, p: 1, q: "Restaurante Antunes, Rua do Bonjardim, Porto",
+            d: { pt: "Casa de família famosa pelo pernil de porco assado no forno a lenha. Porções fartas e preço justo. Chegue ao meio-dia ou reserve; fecha aos domingos.",
+                 es: "Casa familiar famosa por su pernil de cerdo asado al horno de leña. Raciones generosas y buen precio. Mejor llegar a mediodía o reservar; cierra los domingos." } },
+          { id: "rapido", n: "O Rápido", r: 4.6, rc: 1316, p: 1, q: "Restaurante O Rápido, Rua da Madeira 194, Porto",
+            d: { pt: "Restaurante pequeno e à moda antiga, atrás da estação de São Bento. Bacalhau do dia e tripas: comida caseira de verdade.",
+                 es: "Restaurante pequeño y de los de antes, detrás de la estación de São Bento. Bacalao del día y tripas: auténtica comida casera." } },
+          { id: "guedes", n: "Casa Guedes Tradicional", r: 4.5, rc: 19785, p: 1, q: "Casa Guedes Tradicional, Praça dos Poveiros 130, Porto",
+            d: { pt: "O famoso sanduíche de pernil com queijo da Serra da Estrela. É mais um lanche do que um almoço; não aceita reservas e costuma ter fila: vá no meio da tarde.",
+                 es: "El famoso bocadillo de pernil con queso de la Serra da Estrela. Es más merienda que comida; no admite reservas y suele haber cola: mejor a media tarde." } }
+        ],
+        bares: [
+          { id: "majestic", n: "Majestic Café", p: 2, q: "Majestic Café, Rua de Santa Catarina 112, Porto",
+            d: { pt: "Café de 1921 em estilo Art Nouveau, com espelhos, lustres e garçons de gravata-borboleta. Peça a rabanada da casa com um café.",
+                 es: "Café de 1921 de estilo modernista, con espejos, lámparas y camareros con pajarita. Merece la pena pedir la torrija de la casa con un café." } },
+          { id: "ferreira", n: "Caves Ferreira", p: 2, q: "Caves Ferreira, Vila Nova de Gaia",
+            d: { pt: "Adega de vinho do Porto à beira do rio, em Gaia, fundada em 1751 por uma família portuguesa. Visita guiada com prova no final. Reserve antes.",
+                 es: "Bodega de vino de Oporto junto al río, en Gaia, fundada en 1751 por una familia portuguesa. Visita guiada con cata al final. Conviene reservar." } },
+          { id: "sandeman", n: "Caves Sandeman", p: 2, q: "Sandeman, Largo Miguel Bombarda 47, Vila Nova de Gaia",
+            d: { pt: "Outra adega clássica, bem no cais de Gaia, com guias vestidos com a capa preta do famoso logotipo. Visita curta e com prova de vinhos.",
+                 es: "Otra bodega clásica, en pleno muelle de Gaia, con guías vestidos con la capa negra de su famoso logotipo. Visita corta y con cata." } },
+          { id: "confeitaria", n: "Confeitaria do Bolhão", p: 1, q: "Confeitaria do Bolhão, Rua Formosa 339, Porto",
+            d: { pt: "Confeitaria de 1896, pertinho do mercado. Ótima para um café com pastel de nata ou bolo de arroz, sentado com calma.",
+                 es: "Pastelería de 1896, muy cerca del mercado. Ideal para un café con pastel de nata o bolo de arroz, sentados con calma." } }
+        ],
+        ficar: [
+          { id: "f-baixa", n: { pt: "Baixa e Aliados", es: "Baixa y Aliados" }, p: 2, q: "Avenida dos Aliados, Porto",
+            d: { pt: "O centro da cidade, em volta da Avenida dos Aliados. Ruas mais planas que na Ribeira, metrô, táxis e quase tudo a pé. A opção mais cômoda.",
+                 es: "El centro de la ciudad, alrededor de la Avenida dos Aliados. Calles más llanas que en la Ribeira, metro, taxis y casi todo a pie. La opción más cómoda." } },
+          { id: "f-ribeira", n: "Ribeira", p: 3, q: "Ribeira, Porto",
+            d: { pt: "Dormir à beira do rio é um sonho, mas as ruas são íngremes e de pedra, e muitos prédios antigos não têm elevador. Confirme isso antes de reservar.",
+                 es: "Dormir junto al río es un sueño, pero las calles son empinadas y empedradas, y muchos edificios antiguos no tienen ascensor. Hay que confirmarlo antes de reservar." } },
+          { id: "f-boavista", n: "Boavista", p: 2, q: "Avenida da Boavista, Porto",
+            d: { pt: "Zona moderna e tranquila, com hotéis grandes, avenidas largas e metrô. Fica a uns 10 minutos de táxi do centro histórico.",
+                 es: "Zona moderna y tranquila, con hoteles grandes, avenidas anchas y metro. A unos 10 minutos en taxi del centro histórico." } }
+        ]
+      }
+    },
+    {
+      id: "coimbra", emoji: "🎓", flag: "🇵🇹",
+      name: { pt: "Coimbra", es: "Coímbra" },
+      country: { pt: "Portugal", es: "Portugal" },
+      q: "Coimbra, Portugal",
+      intro: {
+        pt: "A cidade dos estudantes, com uma das universidades mais antigas da Europa, no alto de um morro sobre o rio Mondego.",
+        es: "La ciudad de los estudiantes, con una de las universidades más antiguas de Europa, en lo alto de una colina sobre el río Mondego."
+      },
+      tip: {
+        pt: "Coimbra fica num morro: a Universidade está no alto. Suba de táxi (ou pelo Elevador do Mercado e o funicular) e desça a pé, devagar, pela parte alta até a Baixa. Compre antes o ingresso da Biblioteca Joanina: a visita tem hora marcada.",
+        es: "Coímbra está en una colina: la Universidad está arriba. Mejor subir en taxi (o con el Elevador do Mercado y su funicular) y bajar a pie, despacio, por la parte alta hasta la Baixa. La entrada de la Biblioteca Joanina conviene comprarla antes: la visita va con hora fija."
+      },
+      places: {
+        ver: [
+          { id: "universidade", n: { pt: "Universidade de Coimbra", es: "Universidad de Coímbra" }, p: 2, q: "Universidade de Coimbra, Paço das Escolas",
+            d: { pt: "Uma das universidades mais antigas da Europa, fundada em 1290 e Patrimônio Mundial. No Paço das Escolas ficam a torre, a Sala dos Capelos e um terraço com vista para o rio Mondego.",
+                 es: "Una de las universidades más antiguas de Europa, fundada en 1290 y Patrimonio Mundial. En el Paço das Escolas están la torre, la Sala dos Capelos y una terraza con vistas al Mondego." } },
+          { id: "joanina", n: "Biblioteca Joanina", p: 2, q: "Biblioteca Joanina, Coimbra",
+            d: { pt: "Biblioteca barroca do século XVIII, toda em madeira pintada e dourada, dentro da Universidade. A visita é curta e com hora marcada; lá dentro não se pode fotografar.",
+                 es: "Biblioteca barroca del siglo XVIII, toda de madera pintada y dorada, dentro de la Universidad. La visita es corta y con hora fija; dentro no se pueden hacer fotos." } },
+          { id: "santacruz", n: "Mosteiro de Santa Cruz", p: 1, e: true, q: "Mosteiro de Santa Cruz, Coimbra",
+            d: { pt: "Igreja na Baixa, de acesso plano, com azulejos e os túmulos dos dois primeiros reis de Portugal, D. Afonso Henriques e D. Sancho I.",
+                 es: "Iglesia en la Baixa, de acceso llano, con azulejos y las tumbas de los dos primeros reyes de Portugal, Alfonso Enríquez y Sancho I." } },
+          { id: "sevelha", n: "Sé Velha", p: 1, q: "Sé Velha de Coimbra",
+            d: { pt: "Catedral românica do século XII, com jeito de fortaleza, no meio da parte alta. Fica no caminho de quem desce a pé da Universidade.",
+                 es: "Catedral románica del siglo XII, con aspecto de fortaleza, en plena parte alta. Queda de camino si se baja a pie desde la Universidad." } },
+          { id: "pequenitos", n: "Portugal dos Pequenitos", p: 2, e: true, q: "Portugal dos Pequenitos, Coimbra",
+            d: { pt: "Parque com casas e monumentos de Portugal em miniatura e pavilhões dos países de língua portuguesa, incluindo o Brasil. Plano e divertido, do outro lado do rio.",
+                 es: "Parque con casas y monumentos de Portugal en miniatura y pabellones de los países de lengua portuguesa, incluido Brasil. Llano y divertido, al otro lado del río." } },
+          { id: "lagrimas", n: "Quinta das Lágrimas", p: 1, q: "Quinta das Lágrimas, Coimbra",
+            d: { pt: "Jardins românticos ligados à história de amor de D. Pedro e Inês de Castro, com a Fonte das Lágrimas. Passeio tranquilo e à sombra.",
+                 es: "Jardines románticos ligados a la historia de amor de Pedro e Inés de Castro, con la Fuente de las Lágrimas. Paseo tranquilo y a la sombra." } }
+        ],
+        comer: [
+          { id: "solar", n: "Solar do Bacalhau", r: 4.4, rc: 6091, p: 2, q: "Restaurante Solar do Bacalhau, Rua da Sota 10, Coimbra",
+            d: { pt: "Salão grande na Baixa, recomendado pelo Guia Michelin (Bib Gourmand). Peça o bacalhau à Coimbra, no tacho de barro. Aceita reservas: o mais cômodo para vocês.",
+                 es: "Comedor grande en la Baixa, recomendado por la Guía Michelin (Bib Gourmand). Hay que pedir el bacalao a la Coímbra, en cazuela de barro. Admite reservas: el más cómodo." } },
+          { id: "leitoes", n: "Pedro dos Leitões", t: "Mealhada", r: 4.4, rc: 11213, p: 2, e: true, q: "Pedro dos Leitões, Mealhada",
+            d: { pt: "A uns 20 km de Coimbra, o templo do leitão à Bairrada: crocante, com espumante da região. Salão grande e térreo; reserve no fim de semana.",
+                 es: "A unos 20 km de Coímbra, el templo del cochinillo a la Bairrada: crujiente, con espumoso de la zona. Comedor grande y a pie de calle; conviene reservar el fin de semana." } },
+          { id: "maria", n: "A Cozinha da Maria", r: 4.4, rc: 1755, p: 2, e: true, q: "A Cozinha da Maria, Praça do Comércio 110, Coimbra",
+            d: { pt: "Na Praça do Comércio, na Baixa. Prove a chanfana (cabra assada no vinho tinto em panela de barro), o prato típico de Coimbra. Reserve por telefone; fecha aos domingos.",
+                 es: "En la Praça do Comércio, en la Baixa. Hay que probar la chanfana (cabra guisada en vino tinto en olla de barro), el plato típico de Coímbra. Reservar por teléfono; cierra los domingos." } },
+          { id: "zemanel", n: "Zé Manel dos Ossos", r: 4.6, rc: 3185, p: 1, q: "Zé Manel dos Ossos, Beco do Forno, Coimbra",
+            d: { pt: "Tasca minúscula, com as paredes forradas de bilhetes, famosa pelos “ossos” (espinhaço de porco) e pela feijoada de javali. Só umas seis mesas e sem reservas; no mesmo beco fica o Rui Manel dos Ossos, maior e com reservas.",
+                 es: "Tasca diminuta, con las paredes forradas de notas, famosa por sus «huesos» (espinazo de cerdo) y su fabada de jabalí. Solo unas seis mesas y sin reservas; en el mismo callejón está Rui Manel dos Ossos, más grande y con reservas." } },
+          { id: "sete", n: "Restaurante Sete", r: 4.7, rc: 2423, p: 2, q: "Restaurante Sete, Rua Martins de Carvalho 10, Coimbra",
+            d: { pt: "Cozinha tradicional com um toque moderno: ossos do espinhaço e borrego assado no vinho. Está sempre cheio: reserve.",
+                 es: "Cocina tradicional con un toque moderno: espinazo de cerdo y cordero al vino. Siempre está lleno: hay que reservar." } }
+        ],
+        bares: [
+          { id: "cafesantacruz", n: "Café Santa Cruz", p: 1, e: true, q: "Café Santa Cruz, Coimbra",
+            d: { pt: "Café instalado numa antiga capela ao lado do mosteiro, com abóbadas de pedra e vitrais. Bom para um café com pastel de Santa Clara.",
+                 es: "Café instalado en una antigua capilla junto al monasterio, con bóvedas de piedra y vidrieras. Ideal para un café con un pastel de Santa Clara." } },
+          { id: "fadoaocentro", n: "Fado ao Centro", p: 1, q: "Fado ao Centro, Coimbra",
+            d: { pt: "Pequena sala com espetáculo diário de fado de Coimbra, cantado por homens de capa preta, com explicações entre as músicas. Sessão curta, no fim da tarde.",
+                 es: "Pequeña sala con espectáculo diario de fado de Coímbra, cantado por hombres con capa negra, con explicaciones entre canciones. Sesión corta, al final de la tarde." } },
+          { id: "briosa", n: "Pastelaria Briosa", p: 1, q: "Pastelaria Briosa, Coimbra",
+            d: { pt: "Confeitaria tradicional no Largo da Portagem, junto ao rio. Peça os pastéis de Tentúgal ou de Santa Clara, doces típicos da região.",
+                 es: "Pastelería tradicional en el Largo da Portagem, junto al río. Hay que probar los pasteles de Tentúgal o de Santa Clara, dulces típicos de la zona." } }
+        ],
+        ficar: [
+          { id: "f-baixa", n: "Baixa (Largo da Portagem)", p: 2, q: "Largo da Portagem, Coimbra",
+            d: { pt: "A parte plana da cidade, junto ao rio, com comércio, restaurantes e a estação Coimbra-A perto. A melhor escolha para não subir ladeiras.",
+                 es: "La parte llana de la ciudad, junto al río, con comercios, restaurantes y la estación Coimbra-A cerca. La mejor opción para no subir cuestas." } },
+          { id: "f-santaclara", n: "Santa Clara", p: 2, q: "Santa Clara, Coimbra",
+            d: { pt: "Do outro lado do rio, mais tranquilo, com vista para a parte alta iluminada à noite. Perto do Portugal dos Pequenitos; para o centro, uma ponte plana ou um táxi curto.",
+                 es: "Al otro lado del río, más tranquilo, con vistas a la parte alta iluminada de noche. Cerca del Portugal dos Pequenitos; al centro, un puente llano o un taxi corto." } },
+          { id: "f-lagrimas", n: "Quinta das Lágrimas (hotel)", p: 3, q: "Quinta das Lágrimas Hotel, Coimbra",
+            d: { pt: "Hotel num palácio com jardins históricos e restaurante elegante. Uma noite especial, a poucos minutos de táxi do centro.",
+                 es: "Hotel en un palacio con jardines históricos y restaurante elegante. Una noche especial, a pocos minutos en taxi del centro." } }
+        ]
+      }
+    },
+    {
+      id: "lisboa", emoji: "🚋", flag: "🇵🇹",
+      name: { pt: "Lisboa", es: "Lisboa" },
+      country: { pt: "Portugal", es: "Portugal" },
+      q: "Lisboa, Portugal",
+      intro: {
+        pt: "A capital das sete colinas, dos bondinhos amarelos, do fado e dos pastéis de nata.",
+        es: "La capital de las siete colinas, de los tranvías amarillos, del fado y de los pasteles de nata."
+      },
+      tip: {
+        pt: "A calçada portuguesa (as pedrinhas brancas e pretas das calçadas) é linda, mas lisa como sabão, ainda mais quando molhada. Use sapato com sola de borracha antiderrapante e pegue táxi ou Uber para subir as colinas. Quem tem mais de 65 anos tem desconto em muitos monumentos: leve o passaporte.",
+        es: "La calzada portuguesa (los adoquines blancos y negros de las aceras) es preciosa, pero resbala como el jabón, sobre todo mojada. Mejor calzado con suela de goma antideslizante y taxi o Uber para subir las colinas. Los mayores de 65 años tienen descuento en muchos monumentos: conviene llevar el pasaporte."
+      },
+      places: {
+        ver: [
+          { id: "jeronimos", n: "Mosteiro dos Jerónimos", p: 1, e: true, q: "Mosteiro dos Jerónimos, Lisboa",
+            d: { pt: "Obra-prima do estilo manuelino, em Belém, com o túmulo de Vasco da Gama na igreja. O claustro é deslumbrante e o andar térreo é plano.",
+                 es: "Obra maestra del estilo manuelino, en Belém, con la tumba de Vasco da Gama en la iglesia. El claustro es deslumbrante y la planta baja es llana." } },
+          { id: "torre", n: "Torre de Belém", p: 1, q: "Torre de Belém, Lisboa",
+            d: { pt: "O símbolo de Lisboa, na beira do rio Tejo. Por dentro tem escadas estreitas em caracol: muita gente prefere admirá-la de fora, no jardim, sem pagar.",
+                 es: "El símbolo de Lisboa, a orillas del Tajo. Por dentro tiene escaleras estrechas de caracol: mucha gente prefiere verla desde fuera, en el jardín, sin pagar." } },
+          { id: "comercio", n: "Praça do Comércio", p: 0, e: true, q: "Praça do Comércio, Lisboa",
+            d: { pt: "Praça enorme e plana à beira do rio, com o Arco da Rua Augusta. Dali sai a Rua Augusta, só para pedestres, cheia de lojas e cafés.",
+                 es: "Una plaza enorme y llana junto al río, con el Arco de la Rua Augusta. De allí sale la Rua Augusta, peatonal y llena de tiendas y cafés." } },
+          { id: "santaluzia", n: "Miradouro de Santa Luzia", p: 0, q: "Miradouro de Santa Luzia, Lisboa",
+            d: { pt: "Mirante florido em Alfama, com painéis de azulejo e vista para os telhados e o rio. Suba de táxi ou de bondinho 28 e desça a pé, devagar.",
+                 es: "Mirador con flores en la Alfama, con paneles de azulejos y vistas a los tejados y al río. Mejor subir en taxi o en el tranvía 28 y bajar a pie, despacio." } },
+          { id: "tram28", n: { pt: "Bondinho 28", es: "Tranvía 28" }, p: 1, q: "Martim Moniz, Lisboa",
+            d: { pt: "O bondinho amarelo (o “elétrico”) que sobe e desce as colinas do centro. Embarque no ponto inicial, no Martim Moniz, para ir sentado. Cuidado com a carteira.",
+                 es: "El tranvía amarillo (el «elétrico») que sube y baja por las colinas del centro. Conviene subir en la parada inicial, en Martim Moniz, para ir sentados. Ojo con la cartera." } },
+          { id: "oceanario", n: "Oceanário de Lisboa", p: 2, e: true, q: "Oceanário de Lisboa",
+            d: { pt: "Um dos maiores aquários da Europa, no Parque das Nações. Percurso plano, com rampas e bancos. Ótimo programa para um dia de chuva.",
+                 es: "Uno de los mayores acuarios de Europa, en el Parque das Nações. Recorrido llano, con rampas y bancos. Un planazo para un día de lluvia." } },
+          { id: "sintra", n: "Sintra", p: 2, q: "Palácio Nacional da Pena, Sintra",
+            d: { pt: "Vila de contos de fadas a 40 minutos de trem do Rossio. Suba ao Palácio da Pena de ônibus ou tuk-tuk, nunca a pé: a subida é muito íngreme. Prefira um dia de semana.",
+                 es: "Pueblo de cuento a 40 minutos en tren desde Rossio. Al Palacio da Pena hay que subir en autobús o tuk-tuk, nunca a pie: la cuesta es muy empinada. Mejor un día laborable." } },
+          { id: "cascais", n: "Cascais", p: 0, e: true, q: "Cascais, Portugal",
+            d: { pt: "Vila de praia elegante a cerca de 40 minutos de trem pela linha da costa, saindo do Cais do Sodré. Calçadão plano à beira-mar e peixe fresco.",
+                 es: "Elegante pueblo costero a unos 40 minutos en tren por la línea de la costa, desde Cais do Sodré. Paseo llano junto al mar y pescado fresco." } }
+        ],
+        comer: [
+          { id: "uma", n: "Uma Marisqueira", r: 4.6, rc: 27516, p: 2, q: "Uma Marisqueira, Rua dos Sapateiros 177, Lisboa",
+            d: { pt: "Salinha pequena na Baixa, famosa pelo arroz de marisco: uma panela dá para dois ou três. Ligue para reservar e já encomende o arroz. Leve dinheiro: pode não aceitar cartão.",
+                 es: "Local pequeño en la Baixa, famoso por su arroz con marisco: una cazuela da para dos o tres. Conviene llamar para reservar y encargar ya el arroz. Mejor llevar efectivo: puede no aceptar tarjeta." } },
+          { id: "solar", n: "Solar dos Presuntos", r: 4.5, rc: 6528, p: 3, q: "Solar dos Presuntos, Rua das Portas de Santo Antão 150, Lisboa",
+            d: { pt: "Casa clássica de cozinha do Minho, perto dos Restauradores, numa rua plana. Arroz de marisco, polvo e presunto. Aceita reservas; fecha aos domingos.",
+                 es: "Casa clásica de cocina del Miño, cerca de Restauradores, en una calle llana. Arroz con marisco, pulpo y jamón. Admite reservas; cierra los domingos." } },
+          { id: "laurentina", n: "Laurentina, o Rei do Bacalhau", r: 4.5, rc: 5669, p: 2, q: "Laurentina O Rei do Bacalhau, Avenida Conde de Valbom 71A, Lisboa",
+            d: { pt: "Casa clássica dedicada ao bacalhau, nas Avenidas Novas, zona plana. Peça o bacalhau à Brás ou as pataniscas. Reserve; fecha aos domingos.",
+                 es: "Casa clásica dedicada al bacalao, en las Avenidas Novas, zona llana. Lo suyo es el bacalao a Brás o las pataniscas (buñuelos de bacalao). Conviene reservar; cierra los domingos." } },
+          { id: "domfeijao", n: "Dom Feijão", r: 4.5, rc: 2882, p: 2, q: "Dom Feijão, Largo Machado de Assis 7D, Lisboa",
+            d: { pt: "Restaurante de bairro frequentado por lisboetas, numa pracinha tranquila e plana (Areeiro). Polvo ou bacalhau à lagareiro e peixe grelhado. Aceita reservas; fecha aos domingos.",
+                 es: "Restaurante de barrio frecuentado por lisboetas, en una plazuela tranquila y llana (Areeiro). Pulpo o bacalao a la lagareiro y pescado a la brasa. Admite reservas; cierra los domingos." } },
+          { id: "ramiro", n: "Cervejaria Ramiro", r: 4.4, rc: 20659, p: 3, q: "Cervejaria Ramiro, Avenida Almirante Reis 1, Lisboa",
+            d: { pt: "A marisqueira mais famosa de Lisboa: amêijoas à Bulhão Pato, camarão e, no fim, o prego (bife no pão). À noite a fila passa de uma hora: vá num dia de semana ao meio-dia. Fecha às segundas.",
+                 es: "La marisquería más famosa de Lisboa: almejas a la Bulhão Pato, gambas y, al final, el prego (filete en pan). Por la noche la cola supera la hora: mejor un día laborable a mediodía. Cierra los lunes." } }
+        ],
+        bares: [
+          { id: "belem", n: "Pastéis de Belém", p: 1, q: "Pastéis de Belém, Rua de Belém 84, Lisboa",
+            d: { pt: "A casa que faz os pastéis de nata originais desde 1837, com receita secreta. A fila para levar anda rápido; lá dentro há salões enormes para sentar.",
+                 es: "La casa que hace los pasteles de nata originales desde 1837, con receta secreta. La cola para llevar avanza rápido; dentro hay salones enormes para sentarse." } },
+          { id: "brasileira", n: "A Brasileira", p: 1, q: "A Brasileira, Rua Garrett 120, Lisboa",
+            d: { pt: "Café histórico do Chiado, de 1905, com a estátua de Fernando Pessoa na calçada. O nome vem do café do Brasil que a casa vendia!",
+                 es: "Café histórico del Chiado, de 1905, con la estatua de Fernando Pessoa en la terraza. ¡Su nombre viene del café de Brasil que vendía!" } },
+          { id: "nacional", n: "Confeitaria Nacional", p: 1, q: "Confeitaria Nacional, Praça da Figueira, Lisboa",
+            d: { pt: "Uma das confeitarias mais antigas de Lisboa, de 1829, na Praça da Figueira. Famosa pelo bolo-rei e pelos doces conventuais.",
+                 es: "Una de las pastelerías más antiguas de Lisboa, de 1829, en la Praça da Figueira. Famosa por su bolo-rei (roscón) y sus dulces conventuales." } },
+          { id: "ginjinha", n: "A Ginjinha", p: 1, q: "A Ginjinha Espinheira, Largo de São Domingos 8, Lisboa",
+            d: { pt: "Balcãozinho de 1840 no Largo de São Domingos, onde se toma ginjinha, licor de ginja (uma cereja azedinha), em pé na rua. Um golinho é tradição!",
+                 es: "Pequeño mostrador de 1840 en el Largo de São Domingos donde se toma ginjinha, licor de guinda, de pie en la calle. ¡Un sorbito es tradición!" } },
+          { id: "fado", n: "Clube de Fado", p: 3, q: "Clube de Fado, Lisboa",
+            d: { pt: "Casa de fado em Alfama, perto da Sé, com jantar e fadistas ao vivo num ambiente intimista. Reserve com antecedência.",
+                 es: "Casa de fado en la Alfama, cerca de la catedral, con cena y fadistas en directo en un ambiente íntimo. Conviene reservar con antelación." } }
+        ],
+        ficar: [
+          { id: "f-baixa", n: { pt: "Baixa e Chiado", es: "Baixa y Chiado" }, p: 2, q: "Baixa, Lisboa",
+            d: { pt: "O coração da cidade: a Baixa é plana, cheia de lojas, cafés e metrô. O Chiado, logo acima, é elegante e animado.",
+                 es: "El corazón de la ciudad: la Baixa es llana y está llena de tiendas, cafés y metro. El Chiado, justo encima, es elegante y animado." } },
+          { id: "f-liberdade", n: "Avenida da Liberdade", p: 3, q: "Avenida da Liberdade, Lisboa",
+            d: { pt: "Avenida larga e arborizada, com hotéis de qualidade, subida suave, metrô e a Baixa logo ali embaixo.",
+                 es: "Avenida ancha y arbolada, con hoteles de calidad, pendiente suave, metro y la Baixa justo abajo." } },
+          { id: "f-nacoes", n: "Parque das Nações", p: 2, q: "Parque das Nações, Lisboa",
+            d: { pt: "Bairro moderno à beira do Tejo, plano e tranquilo, perto do aeroporto e do Oceanário. Fica a uns 20 minutos de metrô do centro.",
+                 es: "Barrio moderno junto al Tajo, llano y tranquilo, cerca del aeropuerto y del Oceanário. A unos 20 minutos en metro del centro." } }
+        ]
+      }
+    },
+    {
+      id: "algarve", emoji: "🏖️", flag: "🇵🇹",
+      name: { pt: "Algarve", es: "Algarve" },
+      country: { pt: "Portugal", es: "Portugal" },
+      q: "Algarve, Portugal",
+      intro: {
+        pt: "O sul de Portugal, com Lagos e Albufeira como paradas principais: falésias douradas, praias de água clara e peixe grelhado.",
+        es: "El sur de Portugal, con Lagos y Albufeira como paradas principales: acantilados dorados, playas de agua clara y pescado a la brasa."
+      },
+      tip: {
+        pt: "As cidades do Algarve ficam longe umas das outras e o ônibus passa pouco: alugue um carro ou contrate passeios com transporte. Muitas praias têm escadas íngremes; prefira as que têm o selo “Praia Acessível”, com rampas e passarelas. E não esqueça protetor solar, chapéu e água.",
+        es: "Los pueblos del Algarve están lejos entre sí y el autobús pasa poco: mejor alquilar coche o contratar excursiones con transporte. Muchas playas tienen escaleras empinadas; conviene elegir las que tienen el distintivo «Praia Acessível», con rampas y pasarelas. Y no olvidar crema solar, sombrero y agua."
+      },
+      places: {
+        ver: [
+          { id: "piedade", n: "Ponta da Piedade", t: "Lagos", p: 0, q: "Ponta da Piedade, Lagos",
+            d: { pt: "Falésias e arcos de pedra dourada sobre um mar verde-esmeralda. O mirante de cima tem estacionamento perto. Os passeios de barco às grutas saem da marina de Lagos.",
+                 es: "Acantilados y arcos de piedra dorada sobre un mar verde esmeralda. El mirador de arriba tiene aparcamiento cerca. Los paseos en barca a las grutas salen del puerto deportivo de Lagos." } },
+          { id: "lagos-centro", n: { pt: "Centro histórico de Lagos", es: "Casco antiguo de Lagos" }, t: "Lagos", p: 0, q: "Praça Gil Eanes, Lagos",
+            d: { pt: "Ruas de pedra com casinhas brancas, muralhas antigas e a Igreja de Santo António, toda em talha dourada. A parte junto à avenida do rio é plana.",
+                 es: "Calles empedradas con casitas blancas, murallas antiguas y la Iglesia de San Antonio, toda de madera dorada. La zona junto a la avenida del río es llana." } },
+          { id: "donaana", n: "Praia Dona Ana", t: "Lagos", p: 0, q: "Praia Dona Ana, Lagos",
+            d: { pt: "Uma das praias mais fotografadas de Portugal, com rochas douradas e água cristalina. Para descer até a areia há uma escadaria longa; do mirante de cima a vista já é linda.",
+                 es: "Una de las playas más fotografiadas de Portugal, con rocas doradas y agua cristalina. Para bajar a la arena hay una escalera larga; desde el mirador de arriba la vista ya es preciosa." } },
+          { id: "albufeira-velha", n: { pt: "Cidade Velha de Albufeira", es: "Casco antiguo de Albufeira" }, t: "Albufeira", p: 0, q: "Praia dos Pescadores, Albufeira",
+            d: { pt: "Ruelas brancas sobre a falésia, igrejinhas e a Praia dos Pescadores, com barcos coloridos. Há um elevador público para descer até a praia do Peneco.",
+                 es: "Callejuelas blancas sobre el acantilado, pequeñas iglesias y la Praia dos Pescadores, con barcas de colores. Hay un ascensor público para bajar a la playa del Peneco." } },
+          { id: "albufeira-marina", n: "Marina de Albufeira", t: "Albufeira", p: 0, e: true, q: "Marina de Albufeira",
+            d: { pt: "Marina com prédios coloridos e passeio plano. Daqui saem os passeios de barco para ver golfinhos e a Gruta de Benagil.",
+                 es: "Puerto deportivo con edificios de colores y paseo llano. De aquí salen las excursiones en barco para ver delfines y la Cueva de Benagil." } },
+          { id: "falesia", n: "Praia da Falésia", t: "Albufeira", p: 0, q: "Praia da Falésia, Albufeira",
+            d: { pt: "Praia enorme, com quilômetros de areia aos pés de falésias vermelhas e brancas. Para chegar à areia há rampas ou escadas, conforme a entrada; depois, caminhadas planas na beira da água.",
+                 es: "Playa enorme, con kilómetros de arena a los pies de acantilados rojos y blancos. Para llegar a la arena hay rampas o escaleras, según el acceso; después, paseos llanos por la orilla." } },
+          { id: "marinha", n: "Praia da Marinha", t: "Lagoa", p: 0, q: "Praia da Marinha, Lagoa",
+            d: { pt: "Considerada uma das praias mais bonitas da Europa. Do alto da falésia a vista já vale a viagem; para descer até a areia há um caminho com escadas.",
+                 es: "Considerada una de las playas más bonitas de Europa. Desde lo alto del acantilado la vista ya merece la pena; para bajar a la arena hay un camino con escaleras." } },
+          { id: "benagil", n: { pt: "Gruta de Benagil", es: "Cueva de Benagil" }, t: "Lagoa", p: 2, q: "Gruta de Benagil",
+            d: { pt: "A famosa gruta com um “olho” aberto no teto. O jeito mais cômodo de ver é um passeio de barco de cerca de 1 hora saindo de Albufeira, Portimão, Carvoeiro ou Benagil, com o mar calmo.",
+                 es: "La famosa cueva con un «ojo» abierto en el techo. Lo más cómodo es un paseo en barco de alrededor de 1 hora desde Albufeira, Portimão, Carvoeiro o Benagil, con el mar en calma." } },
+          { id: "tavira", n: "Tavira", t: "Tavira", p: 0, q: "Ponte Romana, Tavira",
+            d: { pt: "Cidade tranquila e charmosa, com uma ponte antiga sobre o rio Gilão, muitas igrejas e casas de telhado em forma de pirâmide. Ótima para passear sem pressa.",
+                 es: "Ciudad tranquila y con encanto, con un puente antiguo sobre el río Gilão, muchas iglesias y casas con tejados en forma de pirámide. Ideal para pasear sin prisa." } }
+        ],
+        comer: [
+          { id: "casinha", n: "Casinha do Petisco", t: "Lagos", r: 4.7, rc: 2622, p: 2, q: "Casinha do Petisco, Rua da Oliveira 51, Lagos",
+            d: { pt: "Pequena e acolhedora, só abre para o jantar. Cataplana de marisco e peixe grelhado excelentes. Poucas mesas: ligue por volta das 17h30 para reservar e leve dinheiro.",
+                 es: "Pequeña y acogedora, solo abre para cenar. Cataplana de marisco y pescado a la brasa excelentes. Pocas mesas: conviene llamar hacia las 17:30 para reservar y llevar efectivo." } },
+          { id: "forja", n: "Restaurante A Forja", t: "Lagos", r: 4.6, rc: 1651, p: 2, q: "Restaurante A Forja, Rua dos Ferreiros 17, Lagos",
+            d: { pt: "Tasca típica muito procurada pelos próprios moradores. Sardinhas e robalo grelhados. Chegue ao meio-dia ou às 18h30 para não esperar; fecha aos sábados.",
+                 es: "Tasca típica muy buscada por los propios vecinos. Sardinas y lubina a la brasa. Mejor llegar a mediodía o a las 18:30 para no esperar; cierra los sábados." } },
+          { id: "reis", n: "Restaurante Reis", t: "Lagos", r: 4.5, rc: 2018, p: 2, e: true, q: "Restaurante Reis, Rua António Barbosa Viana 21, Lagos",
+            d: { pt: "O mais confortável de Lagos: aceita reservas e tem acesso fácil. Peça a cataplana de tamboril e gambas, a panela de cobre típica do Algarve. Fecha aos domingos.",
+                 es: "El más cómodo de Lagos: admite reservas y tiene acceso fácil. Lo suyo es la cataplana de rape y gambas, la olla de cobre típica del Algarve. Cierra los domingos." } },
+          { id: "teodosio", n: "Restaurante O Teodósio", t: "Guia", r: 4.4, rc: 10763, p: 1, q: "Restaurante O Teodósio, Rua do Emigrante 50, Guia, Albufeira",
+            d: { pt: "Na Guia, ao lado de Albufeira: o famoso frango piri-piri da Guia, num salão enorme. De junho a setembro não aceita reservas e a fila chega a uma hora: chegue ao meio-dia.",
+                 es: "En Guia, junto a Albufeira: el famoso pollo piri-piri de Guia, en un comedor enorme. De junio a septiembre no admite reservas y la cola llega a una hora: mejor llegar a mediodía." } },
+          { id: "ticosta", n: "Adega TiCosta", t: "Albufeira", r: 4.5, rc: 2093, p: 2, q: "Adega TiCosta Restaurante Tradicional Português, Albufeira",
+            d: { pt: "Cozinha portuguesa tradicional desde 1988, fora do centro (vá de táxi). Cataplana de tamboril e feijoada de búzios. Aceita reservas; fecha aos domingos.",
+                 es: "Cocina portuguesa tradicional desde 1988, fuera del centro (mejor en taxi). Cataplana de rape y guiso de caracolas de mar. Admite reservas; cierra los domingos." } },
+          { id: "rustico", n: "Jardim Rústico", t: "Albufeira", r: 4.6, rc: 1327, p: 2, q: "Jardim Rústico, Avenida Sá Carneiro 185, Albufeira",
+            d: { pt: "Restaurante com jardim: cataplana e arroz de marisco. Aceita reservas e aos sábados tem fado. Fecha às segundas; leve dinheiro.",
+                 es: "Restaurante con jardín: cataplana y arroz con marisco. Admite reservas y los sábados hay fado. Cierra los lunes; mejor llevar efectivo." } }
+        ],
+        bares: [
+          { id: "alianca", n: "Café Aliança", t: "Faro", p: 1, q: "Café Aliança, Faro",
+            d: { pt: "Um dos cafés mais antigos de Portugal, aberto em 1908 no centro de Faro, perto da marina. Bom para um café com um doce de amêndoa ou de figo.",
+                 es: "Uno de los cafés más antiguos de Portugal, abierto en 1908 en el centro de Faro, cerca del puerto deportivo. Ideal para un café con un dulce de almendra o de higo." } },
+          { id: "quintao", n: "Morgado do Quintão", t: "Lagoa", p: 2, q: "Morgado do Quintão, Lagoa",
+            d: { pt: "Vinícola de família no interior, com uma oliveira de mais de 2.000 anos. Provas de vinho tranquilas, à sombra. Reserve antes.",
+                 es: "Bodega familiar en el interior, con un olivo de más de 2.000 años. Catas tranquilas a la sombra. Conviene reservar." } },
+          { id: "vilamoura", n: "Marina de Vilamoura", t: "Vilamoura", p: 2, e: true, q: "Marina de Vilamoura",
+            d: { pt: "Passeio plano em volta da marina, cheio de bares e cafés com mesas ao ar livre. Perfeito para o fim de tarde vendo os barcos.",
+                 es: "Paseo llano alrededor del puerto deportivo, lleno de bares y cafés con terraza. Perfecto para la tarde viendo los barcos." } }
+        ],
+        ficar: [
+          { id: "f-lagos", n: "Lagos", t: "Lagos", p: 2, q: "Lagos, Portugal",
+            d: { pt: "No oeste, com centro histórico animado, marina e praias lindas por perto. Boa base para conhecer a Ponta da Piedade.",
+                 es: "En el oeste, con un casco antiguo animado, puerto deportivo y playas preciosas cerca. Buena base para la Ponta da Piedade." } },
+          { id: "f-albufeira", n: "Albufeira", t: "Albufeira", p: 2, q: "Albufeira, Portugal",
+            d: { pt: "Muitos hotéis com piscina e tudo perto. O centro antigo é animado; para dormir sossegado, evite a zona da “Strip” (Oura), cheia de bares à noite, e prefira a Galé, os Salgados ou a Falésia.",
+                 es: "Muchos hoteles con piscina y todo cerca. El casco antiguo es animado; para dormir tranquilos, mejor evitar la zona de la «Strip» (Oura), llena de bares de noche, y elegir Galé, Salgados o Falésia." } },
+          { id: "f-tavira", n: "Tavira", t: "Tavira", p: 2, q: "Tavira, Portugal",
+            d: { pt: "No leste, calma e bonita, com hotéis pequenos e um ritmo bom para descansar. As praias ficam numa ilha, a um curto passeio de barco.",
+                 es: "En el este, tranquila y bonita, con hoteles pequeños y buen ritmo para descansar. Las playas están en una isla, a un corto trayecto en barca." } },
+          { id: "f-vilamoura", n: "Vilamoura", t: "Vilamoura", p: 3, q: "Vilamoura",
+            d: { pt: "Hotéis tipo resort com piscina, tudo plano e organizado em volta da marina. Bem no meio do Algarve, bom para conhecer a região de carro.",
+                 es: "Hoteles tipo resort con piscina, todo llano y organizado alrededor del puerto deportivo. En pleno centro del Algarve, bien situado para recorrerlo en coche." } }
+        ]
+      }
+    },
+    {
+      id: "sevilla", emoji: "💃", flag: "🇪🇸",
+      name: { pt: "Sevilha", es: "Sevilla" },
+      country: { pt: "Espanha", es: "España" },
+      q: "Sevilla, España",
+      intro: {
+        pt: "A alma da Andaluzia: flamenco, laranjeiras nas ruas, pátios floridos e tapas a qualquer hora.",
+        es: "El alma de Andalucía: flamenco, naranjos en las calles, patios con flores y tapas a cualquier hora."
+      },
+      tip: {
+        pt: "Compre os ingressos do Real Alcázar e da Catedral online, com alguns dias de antecedência: esgotam e as filas são longas. No verão, passeie de manhã cedo e no fim da tarde; ao meio-dia pode passar de 40 °C.",
+        es: "Hay que comprar las entradas del Real Alcázar y de la Catedral por internet con unos días de antelación: se agotan y las colas son largas. En verano, mejor pasear temprano y al caer la tarde; a mediodía se pueden superar los 40 °C."
+      },
+      places: {
+        ver: [
+          { id: "alcazar", n: "Real Alcázar", p: 2, q: "Real Alcázar de Sevilla",
+            d: { pt: "Palácio real ainda em uso, com salões mouriscos cobertos de azulejos e jardins enormes com fontes. Reserve dia e hora online.",
+                 es: "Palacio real aún en uso, con salones mudéjares cubiertos de azulejos y enormes jardines con fuentes. Hay que reservar día y hora por internet." } },
+          { id: "catedral", n: { pt: "Catedral e Giralda", es: "Catedral y Giralda" }, p: 2, q: "Catedral de Sevilla",
+            d: { pt: "A maior catedral gótica do mundo, com o túmulo de Cristóvão Colombo. Para subir a Giralda há 35 rampas em vez de escadas (só alguns degraus no fim): dá para ir no seu ritmo.",
+                 es: "La mayor catedral gótica del mundo, con la tumba de Cristóbal Colón. Para subir a la Giralda hay 35 rampas en lugar de escaleras (solo unos peldaños al final): se sube al propio ritmo." } },
+          { id: "espana", n: "Plaza de España", p: 0, e: true, q: "Plaza de España, Sevilla",
+            d: { pt: "Praça semicircular gigantesca, com bancos de azulejo dedicados a cada província espanhola, canal e pontes. Fica no Parque de María Luisa, ótimo para descansar na sombra.",
+                 es: "Una plaza semicircular gigantesca, con bancos de azulejos dedicados a cada provincia española, canal y puentes. Está en el Parque de María Luisa, ideal para descansar a la sombra." } },
+          { id: "santacruz", n: { pt: "Bairro de Santa Cruz", es: "Barrio de Santa Cruz" }, p: 0, q: "Barrio de Santa Cruz, Sevilla",
+            d: { pt: "O antigo bairro judeu: ruelas estreitas, pracinhas com laranjeiras e casas brancas cheias de flores. Fica ao lado do Alcázar.",
+                 es: "La antigua judería: callejuelas estrechas, plazuelas con naranjos y casas blancas llenas de flores. Está junto al Alcázar." } },
+          { id: "setas", n: "Las Setas (Metropol Parasol)", p: 1, q: "Setas de Sevilla, Metropol Parasol",
+            d: { pt: "A enorme estrutura de madeira em forma de cogumelos. Um elevador leva ao passeio do alto, com vista da cidade inteira. Lindo ao entardecer.",
+                 es: "La enorme estructura de madera en forma de setas. Un ascensor sube a la pasarela superior, con vistas a toda la ciudad. Precioso al atardecer." } },
+          { id: "barco", n: { pt: "Passeio de barco pelo Guadalquivir", es: "Paseo en barco por el Guadalquivir" }, p: 1, q: "Cruceros Torre del Oro, Sevilla",
+            d: { pt: "Cruzeiro de cerca de 1 hora pelo rio, saindo do lado da Torre del Oro. Sentado, com vista para a Giralda, a Torre del Oro e o bairro de Triana.",
+                 es: "Crucero de alrededor de 1 hora por el río, saliendo junto a la Torre del Oro. Sentados, con vistas a la Giralda, la Torre del Oro y el barrio de Triana." } }
+        ],
+        comer: [
+          { id: "dosdemayo", n: "Bodega Dos de Mayo", r: 4.5, rc: 9410, p: 2, q: "Bodega Dos de Mayo, Plaza de la Gavidia 6, Sevilla",
+            d: { pt: "Bodega antiga com salão grande e um terraço amplo: é fácil achar lugar sentado. Bacalhau de várias formas e rabo de touro. Nos fins de semana, chegue por volta das 13h.",
+                 es: "Bodega antigua con un comedor grande y una terraza amplia: es fácil sentarse. Bacalao de varias formas y rabo de toro. Los fines de semana, mejor llegar hacia las 13:00." } },
+          { id: "ricardo", n: "Casa Ricardo", r: 4.5, rc: 6180, p: 2, q: "Casa Ricardo, Calle Hernán Cortés 2, Sevilla",
+            d: { pt: "Taberna tradicional (a antiga Casa Ovidio), famosa pelas croquetes de presunto e pelo montadito de pringá (pãozinho com carnes do cozido). Enche: reserve por telefone.",
+                 es: "Taberna tradicional (la antigua Casa Ovidio), famosa por sus croquetas de jamón y su montadito de pringá. Se llena: conviene reservar por teléfono." } },
+          { id: "viuda", n: "Casa La Viuda", r: 4.4, rc: 4506, p: 2, q: "Casa La Viuda, Calle Albareda 2, Sevilla",
+            d: { pt: "Restaurante com mesas, perto da Plaza Nueva: o mais confortável para vocês. Peça o lombo ibérico ao uísque (solomillo al whisky), clássico de Sevilha, ou o rabo de touro. Reserve.",
+                 es: "Restaurante con mesas, cerca de la Plaza Nueva: el más cómodo. Lo suyo es el solomillo ibérico al whisky, clásico sevillano, o el rabo de toro. Conviene reservar." } },
+          { id: "blancapaloma", n: "Blanca Paloma", r: 4.5, rc: 5922, p: 2, q: "Blanca Paloma, Calle San Jacinto 49, Sevilla",
+            d: { pt: "Bar de tapas clássico de Triana. Berinjelas recheadas de camarão, boquerones ao limão e bochecha de porco (carrillada). Costuma fechar domingo e segunda.",
+                 es: "Bar de tapas clásico de Triana. Berenjenas rellenas de gambas, boquerones al limón y carrillada. Suele cerrar domingo y lunes." } }
+        ],
+        bares: [
+          { id: "rinconcillo", n: "El Rinconcillo", r: 4.3, rc: 14000, p: 1, q: "El Rinconcillo, Calle Gerona 40, Sevilla",
+            d: { pt: "O bar mais antigo de Sevilha, de 1670: vale uma parada rápida no balcão. Peça espinafre com grão-de-bico e bacalhau frito. A conta é anotada a giz no balcão!",
+                 es: "El bar más antiguo de Sevilla, de 1670: merece una parada rápida en la barra. Hay que pedir espinacas con garbanzos y bacalao frito. ¡La cuenta se apunta con tiza en la barra!" } },
+          { id: "campana", n: "Confitería La Campana", p: 1, q: "Confitería La Campana, Sevilla",
+            d: { pt: "Confeitaria de 1885 no começo da Rua Sierpes. Ótima para um café com doces andaluzes.",
+                 es: "Confitería de 1885 al principio de la calle Sierpes. Perfecta para un café con dulces andaluces." } },
+          { id: "memoria", n: "Casa de la Memoria", p: 2, q: "Casa de la Memoria, Calle Cuna 6, Sevilla",
+            d: { pt: "Espetáculo de flamenco intimista, com poucos lugares e artistas de primeira, todos sentados bem perto do palco. Compre a entrada antes.",
+                 es: "Espectáculo de flamenco íntimo, con pocas plazas y artistas de primera, todos sentados muy cerca del escenario. Conviene comprar la entrada con antelación." } },
+          { id: "triana", n: "Mercado de Triana", p: 1, e: true, q: "Mercado de Triana, Sevilla",
+            d: { pt: "Mercado coberto junto à ponte de Triana, com bancas de frutas, bares de tapas e ruínas de um antigo castelo no subsolo.",
+                 es: "Mercado cubierto junto al puente de Triana, con puestos de fruta, bares de tapas y restos de un antiguo castillo bajo el suelo." } },
+          { id: "eme", n: { pt: "Terraço do Hotel EME", es: "Terraza del Hotel EME" }, p: 3, q: "Hotel EME Catedral, Sevilla",
+            d: { pt: "Terraço no alto do hotel, com a Giralda praticamente ao alcance da mão. Caro, mas inesquecível ao pôr do sol.",
+                 es: "Terraza en lo alto del hotel, con la Giralda casi al alcance de la mano. Cara, pero inolvidable al atardecer." } }
+        ],
+        ficar: [
+          { id: "f-centro", n: { pt: "Centro e Santa Cruz", es: "Centro y Santa Cruz" }, p: 3, q: "Santa Cruz, Sevilla",
+            d: { pt: "Ao lado da Catedral e do Alcázar, com tudo a pé. As ruas são estreitas e o táxi nem sempre chega à porta: confirme com o hotel.",
+                 es: "Junto a la Catedral y el Alcázar, todo a pie. Las calles son estrechas y el taxi no siempre llega a la puerta: conviene confirmarlo con el hotel." } },
+          { id: "f-arenal", n: "El Arenal", p: 2, q: "El Arenal, Sevilla",
+            d: { pt: "Entre a Catedral e o rio, perto da Praça de Touros. Bairro plano, com táxis e restaurantes por perto.",
+                 es: "Entre la Catedral y el río, cerca de la Plaza de Toros. Barrio llano, con taxis y restaurantes a mano." } },
+          { id: "f-triana", n: "Triana", p: 2, q: "Triana, Sevilla",
+            d: { pt: "Do outro lado do rio, o bairro dos ceramistas e do flamenco. Mais autêntico e um pouco mais barato, a uns 10–15 minutos a pé do centro.",
+                 es: "Al otro lado del río, el barrio de los ceramistas y del flamenco. Más auténtico y algo más barato, a unos 10–15 minutos a pie del centro." } }
+        ]
+      }
+    },
+    {
+      id: "cordoba", emoji: "🕌", flag: "🇪🇸",
+      name: { pt: "Córdoba", es: "Córdoba" },
+      country: { pt: "Espanha", es: "España" },
+      q: "Córdoba, España",
+      intro: {
+        pt: "Cidade de três culturas: a Mesquita-Catedral, as ruelas brancas da Judiaria e os pátios cheios de flores.",
+        es: "La ciudad de las tres culturas: la Mezquita-Catedral, las callejas blancas de la Judería y los patios llenos de flores."
+      },
+      tip: {
+        pt: "Compre o ingresso da Mesquita-Catedral online e vá logo na abertura: menos gente e mais fresquinho. Se a viagem for em maio, não perca a Festa dos Pátios, quando as casas abrem ao público seus pátios cobertos de flores.",
+        es: "Mejor comprar la entrada de la Mezquita-Catedral por internet e ir a primera hora: menos gente y más fresco. Si el viaje es en mayo, no hay que perderse la Fiesta de los Patios, cuando las casas abren al público sus patios llenos de flores."
+      },
+      places: {
+        ver: [
+          { id: "mezquita", n: { pt: "Mesquita-Catedral", es: "Mezquita-Catedral" }, p: 2, e: true, q: "Mezquita-Catedral de Córdoba",
+            d: { pt: "Um bosque de mais de 800 colunas com arcos vermelhos e brancos, e uma catedral construída lá dentro. Uma das maravilhas da Espanha, com percurso plano.",
+                 es: "Un bosque de más de 800 columnas con arcos rojos y blancos, y una catedral construida en su interior. Una de las maravillas de España, con recorrido llano." } },
+          { id: "alcazar", n: "Alcázar de los Reyes Cristianos", p: 1, q: "Alcázar de los Reyes Cristianos, Córdoba",
+            d: { pt: "Fortaleza com jardins de fontes, laranjeiras e espelhos d'água. Foi aqui que os Reis Católicos receberam Cristóvão Colombo.",
+                 es: "Fortaleza con jardines de fuentes, naranjos y estanques. Aquí recibieron los Reyes Católicos a Cristóbal Colón." } },
+          { id: "puente", n: { pt: "Ponte Romana", es: "Puente Romano" }, p: 0, e: true, q: "Puente Romano, Córdoba",
+            d: { pt: "Ponte de pedra sobre o Guadalquivir, plana e só para pedestres. Do outro lado fica a Torre da Calahorra; a vista da Mesquita ao entardecer é linda.",
+                 es: "Puente de piedra sobre el Guadalquivir, llano y peatonal. Al otro lado está la Torre de la Calahorra; la vista de la Mezquita al atardecer es preciosa." } },
+          { id: "juderia", n: { pt: "Judiaria e Calleja de las Flores", es: "Judería y Calleja de las Flores" }, p: 0, q: "Calleja de las Flores, Córdoba",
+            d: { pt: "Labirinto de ruelas brancas ao lado da Mesquita. Não deixe de ver a Calleja de las Flores, com a torre ao fundo entre vasos de gerânios.",
+                 es: "Laberinto de callejas blancas junto a la Mezquita. No hay que perderse la Calleja de las Flores, con la torre al fondo entre macetas de geranios." } },
+          { id: "viana", n: "Palacio de Viana", p: 1, q: "Palacio de Viana, Córdoba",
+            d: { pt: "Palácio com 12 pátios e um jardim, cada um com flores e fontes diferentes. Perfeito para conhecer os pátios de Córdoba em qualquer época do ano.",
+                 es: "Palacio con 12 patios y un jardín, cada uno con flores y fuentes distintas. Perfecto para conocer los patios cordobeses en cualquier época del año." } },
+          { id: "medina", n: "Medina Azahara", p: 1, q: "Conjunto Arqueológico Madinat al-Zahra, Córdoba",
+            d: { pt: "Ruínas da cidade-palácio do califado, a uns 8 km, Patrimônio Mundial. Vá de ônibus turístico ou táxi; do centro de visitantes um micro-ônibus leva às ruínas, onde há trechos de terra.",
+                 es: "Ruinas de la ciudad palacio del califato, a unos 8 km, Patrimonio Mundial. Se va en autobús turístico o taxi; desde el centro de visitantes un microbús lleva a las ruinas, con tramos de tierra." } }
+        ],
+        comer: [
+          { id: "montillana", n: "Taberna La Montillana", r: 4.8, rc: 19460, p: 2, q: "Taberna La Montillana, Calle San Álvaro 5, Córdoba",
+            d: { pt: "A mais bem avaliada de Córdoba. Salmorejo, flamenquín, berinjelas com mel e rabo de touro ao vinho oloroso. Está sempre cheia: reserve com antecedência.",
+                 es: "La mejor valorada de Córdoba. Salmorejo, flamenquín, berenjenas con miel y rabo de toro al oloroso. Siempre está llena: conviene reservar con antelación." } },
+          { id: "pepe", n: "Casa Pepe de la Judería", r: 4.5, rc: 10888, p: 2, q: "Casa Pepe de la Judería, Calle Romero 1, Córdoba",
+            d: { pt: "Ao lado da Mesquita, com terraço no alto e recomendado pelo Guia Michelin. Rabo de touro, salmorejo (creme frio de tomate) e flamenquín. Aceita reservas.",
+                 es: "Junto a la Mezquita, con azotea y recomendado por la Guía Michelin. Rabo de toro, salmorejo y flamenquín. Admite reservas." } },
+          { id: "churrasco", n: "El Churrasco", r: 4.5, rc: 6203, p: 2, q: "Restaurante El Churrasco, Calle Romero 16, Córdoba",
+            d: { pt: "Casa de família desde 1970, na Judiaria. Peça o churrasco cordovês (lombo de porco na brasa) e o salmorejo. Reserve.",
+                 es: "Casa familiar desde 1970, en la Judería. Lo suyo es el churrasco cordobés y el salmorejo. Conviene reservar." } },
+          { id: "campos", n: "Bodegas Campos", r: 4.5, rc: 6305, p: 3, q: "Bodegas Campos, Calle Lineros 32, Córdoba",
+            d: { pt: "Casa de 1908 com vários pátios e barris assinados por famosos. Rabo de touro e salmorejo num ambiente elegante. Reserve.",
+                 es: "Casa de 1908 con varios patios y barricas firmadas por famosos. Rabo de toro y salmorejo en un ambiente elegante. Conviene reservar." } },
+          { id: "salinas", n: "Taberna Salinas", r: 4.6, rc: 5494, p: 1, q: "Taberna Salinas, Calle Tundidores 3, Córdoba",
+            d: { pt: "Taberna de 1879 com pátio, perto da Praça da Corredera. Comida caseira e barata: salmorejo, berinjelas fritas com mel e laranjas com bacalhau. Fecha aos domingos.",
+                 es: "Taberna de 1879 con patio, cerca de la Plaza de la Corredera. Comida casera y barata: salmorejo, berenjenas fritas con miel y naranjas con bacalao. Cierra los domingos." } }
+        ],
+        bares: [
+          { id: "pisto", n: "Taberna San Miguel (Casa El Pisto)", p: 1, q: "Taberna San Miguel Casa El Pisto, Córdoba",
+            d: { pt: "Taberna de 1880 com as paredes cobertas de cartazes antigos de tourada. Peça um vinho de Montilla-Moriles e uma tapa.",
+                 es: "Taberna de 1880 con las paredes cubiertas de carteles taurinos antiguos. Lo suyo es un vino de Montilla-Moriles y una tapa." } },
+          { id: "guzman", n: "Bodega Guzmán", p: 1, q: "Bodega Guzmán, Calle Judíos, Córdoba",
+            d: { pt: "Pequena taberna da Judiaria, com barris e decoração tourina. Vinho de Montilla servido direto do barril.",
+                 es: "Pequeña taberna de la Judería, con barricas y decoración taurina. Vino de Montilla servido directamente de la barrica." } },
+          { id: "corredera", n: "Plaza de la Corredera", p: 1, e: true, q: "Plaza de la Corredera, Córdoba",
+            d: { pt: "A grande praça com arcadas de Córdoba, rodeada de bares com mesas ao ar livre. Bom lugar para um café da manhã com churros ou um refresco à tarde.",
+                 es: "La gran plaza porticada de Córdoba, rodeada de bares con terraza. Buen sitio para desayunar churros o tomar algo por la tarde." } },
+          { id: "hammam", n: "Hammam Al Ándalus", p: 2, q: "Hammam Al Ándalus, Córdoba",
+            d: { pt: "Banhos árabes ao lado da Mesquita: piscinas de água morna, quente e fria, e massagem. Descanso merecido para as pernas (se tiver pressão alta, consulte o médico antes).",
+                 es: "Baños árabes junto a la Mezquita: piscinas templadas, calientes y frías, y masaje. Un descanso merecido para las piernas (con tensión alta, mejor consultar antes al médico)." } }
+        ],
+        ficar: [
+          { id: "f-juderia", n: { pt: "Judiaria", es: "Judería" }, p: 2, q: "Judería, Córdoba",
+            d: { pt: "Dormir ao lado da Mesquita, entre ruelas e pátios. Muito charmoso, mas quase não entram carros: confirme o acesso de táxi com o hotel.",
+                 es: "Dormir junto a la Mezquita, entre callejas y patios. Con mucho encanto, pero casi no entran coches: conviene confirmar el acceso en taxi con el hotel." } },
+          { id: "f-tendillas", n: "Centro (Tendillas)", p: 2, q: "Plaza de las Tendillas, Córdoba",
+            d: { pt: "A zona comercial, plana e movimentada, em volta da Praça das Tendillas. A uns 10–15 minutos a pé da Mesquita, com táxi fácil.",
+                 es: "La zona comercial, llana y animada, alrededor de la Plaza de las Tendillas. A unos 10–15 minutos a pie de la Mezquita, con taxi fácil." } },
+          { id: "f-parador", n: "Parador de Córdoba", p: 2, q: "Parador de Córdoba",
+            d: { pt: "Hotel da rede estatal Paradores, numa zona alta e tranquila, com piscina e jardins. É preciso táxi para ir ao centro.",
+                 es: "Hotel de la red de Paradores, en una zona alta y tranquila, con piscina y jardines. Hace falta taxi para ir al centro." } }
+        ]
+      }
+    }
+  ];
+
+  const CITY_BY_ID = Object.fromEntries(CITIES.map((c) => [c.id, c]));
+  const favKey = (cityId, placeId) => cityId + "/" + placeId;
+
+  /* paradas do roteiro (Lagos e Albufeira ficam dentro do Algarve) */
+  const STOPS = [
+    { id: "porto", city: "porto", emoji: "🍷", name: { pt: "Porto", es: "Oporto" } },
+    { id: "coimbra", city: "coimbra", emoji: "🎓", name: { pt: "Coimbra", es: "Coímbra" } },
+    { id: "lisboa", city: "lisboa", emoji: "🚋", name: { pt: "Lisboa", es: "Lisboa" } },
+    { id: "lagos", city: "algarve", emoji: "🏖️", name: { pt: "Lagos", es: "Lagos" } },
+    { id: "albufeira", city: "algarve", emoji: "⛱️", name: { pt: "Albufeira", es: "Albufeira" } },
+    { id: "sevilla", city: "sevilla", emoji: "💃", name: { pt: "Sevilha", es: "Sevilla" } },
+    { id: "cordoba", city: "cordoba", emoji: "🕌", name: { pt: "Córdoba", es: "Córdoba" } }
+  ];
+  const STOP_BY_ID = Object.fromEntries(STOPS.map((s) => [s.id, s]));
+  const stopOf = (city, place) => {
+    if (city.id !== "algarve") return city.id;
+    if (place.t === "Lagos") return "lagos";
+    if (place.t === "Albufeira" || place.t === "Guia") return "albufeira";
+    return "algarve";
+  };
+
+  const PLACE_BY_KEY = {};
+  CITIES.forEach((c) => CATS.forEach((cat) => c.places[cat.id].forEach((p) => { PLACE_BY_KEY[favKey(c.id, p.id)] = { place: p, city: c, cat: cat.id }; })));
+
+  const CATALOG = Object.keys(PLACE_BY_KEY).map((k) => {
+    const { place, city, cat } = PLACE_BY_KEY[k];
+    const stop = stopOf(city, place);
+    return k + " | " + stop + (stop === "algarve" && place.t ? " (" + place.t + ")" : "") + " | " + cat + " | " + tx(place.n, "pt") +
+      (place.r ? " | Google " + place.r : "");
+  }).join("\n");
+
+  function readHash() {
+    const h = (location.hash || "").slice(1).toLowerCase();
+    if (CITY_BY_ID[h]) return { city: h, view: "explorar" };
+    if (h === "favoritos" || h === "dicas" || h === "viagem") return { view: h };
+    return {};
+  }
+
+  /* ---------- roteiro recomendado (sem IA, funciona sem conta) ----------
+     Ordem da rota, dias mínimos/máximos por parada, peso para os dias extra, trajetos e passeios dia a dia. */
+  const ORDER = ["porto", "coimbra", "lisboa", "lagos", "albufeira", "sevilla", "cordoba"];
+  const SPAIN = { sevilla: true, cordoba: true };
+  const MIN_DAYS = { porto: 2, coimbra: 1, lisboa: 3, lagos: 2, albufeira: 2, sevilla: 2, cordoba: 1 };
+  const MAX_DAYS = { porto: 5, coimbra: 2, lisboa: 6, lagos: 3, albufeira: 5, sevilla: 4, cordoba: 3 };
+  const WEIGHT = { porto: 3, coimbra: 1, lisboa: 4, lagos: 1.5, albufeira: 2.5, sevilla: 3, cordoba: 1.5 };
+  const SLEEP = { porto: "porto/f-baixa", coimbra: "coimbra/f-baixa", lisboa: "lisboa/f-baixa", lagos: "algarve/f-lagos",
+    albufeira: "algarve/f-albufeira", sevilla: "sevilla/f-arenal", cordoba: "cordoba/f-tendillas" };
+  const HOME = {
+    porto: { pt: "aeroporto do Porto, a uns 25 minutos de táxi", es: "aeropuerto de Oporto, a unos 25 minutos en taxi" },
+    coimbra: { pt: "trem até o aeroporto do Porto ou de Lisboa", es: "tren hasta el aeropuerto de Oporto o de Lisboa" },
+    lisboa: { pt: "aeroporto de Lisboa, a uns 20 minutos de táxi", es: "aeropuerto de Lisboa, a unos 20 minutos en taxi" },
+    lagos: { pt: "aeroporto de Faro, a cerca de 1 hora de carro", es: "aeropuerto de Faro, a cerca de 1 hora en coche" },
+    albufeira: { pt: "aeroporto de Faro, a uns 40 minutos de carro", es: "aeropuerto de Faro, a unos 40 minutos en coche" },
+    sevilla: { pt: "aeroporto de Sevilha, a uns 20 minutos de táxi", es: "aeropuerto de Sevilla, a unos 20 minutos en taxi" },
+    cordoba: { pt: "trem AVE para Madri (~1h45) ou Sevilha (~45 min) e voo", es: "tren AVE a Madrid (~1 h 45) o Sevilla (~45 min) y vuelo" }
+  };
+  /* trajetos aproximados entre paradas (chave na ordem da rota) */
+  const TRAVEL = {
+    "porto|coimbra": { h: 1.5, pt: "trem Alfa Pendular ou Intercidades, ~1h até Coimbra-B e trem curto ou táxi até o centro", es: "tren Alfa Pendular o Intercidades, ~1 h hasta Coimbra-B y tren corto o taxi al centro" },
+    "porto|lisboa": { h: 3, pt: "trem Alfa Pendular, ~3h", es: "tren Alfa Pendular, ~3 h" },
+    "porto|lagos": { h: 7, pt: "voo Porto–Faro (~1h) e carro ~1h, ou trem e ônibus ~7h", es: "vuelo Oporto–Faro (~1 h) y coche ~1 h, o tren y autobús ~7 h" },
+    "porto|albufeira": { h: 6, pt: "trem Alfa Pendular até Albufeira-Ferreiras, ~6h, ou voo Porto–Faro (~1h)", es: "tren Alfa Pendular hasta Albufeira-Ferreiras, ~6 h, o vuelo Oporto–Faro (~1 h)" },
+    "porto|sevilla": { h: 6, pt: "avião (~1h15 de voo) ou carro, ~6h", es: "avión (~1 h 15 de vuelo) o coche, ~6 h" },
+    "porto|cordoba": { h: 7, pt: "avião até Sevilha ou Madri e trem AVE, ou carro ~6h30", es: "avión hasta Sevilla o Madrid y tren AVE, o coche ~6 h 30" },
+    "coimbra|lisboa": { h: 2, pt: "trem, ~1h45–2h", es: "tren, ~1 h 45–2 h" },
+    "coimbra|lagos": { h: 6, pt: "trem até Lisboa e ônibus para Lagos, ~6h; de carro ~4h30", es: "tren hasta Lisboa y autobús a Lagos, ~6 h; en coche ~4 h 30" },
+    "coimbra|albufeira": { h: 4.5, pt: "trem Alfa Pendular até Albufeira-Ferreiras, ~4h30; de carro ~4h", es: "tren Alfa Pendular hasta Albufeira-Ferreiras, ~4 h 30; en coche ~4 h" },
+    "coimbra|sevilla": { h: 6, pt: "carro ou transfer, ~5h30", es: "coche o traslado, ~5 h 30" },
+    "coimbra|cordoba": { h: 6.5, pt: "carro ou transfer, ~6h", es: "coche o traslado, ~6 h" },
+    "lisboa|lagos": { h: 4, pt: "ônibus Rede Expressos ~3h45, ou trem com troca em Tunes ~4h; de carro ~3h", es: "autobús Rede Expressos ~3 h 45, o tren con cambio en Tunes ~4 h; en coche ~3 h" },
+    "lisboa|albufeira": { h: 3, pt: "trem ~2h45 até Albufeira-Ferreiras e táxi de 10 min; ônibus ~3h", es: "tren ~2 h 45 hasta Albufeira-Ferreiras y taxi de 10 min; autobús ~3 h" },
+    "lisboa|sevilla": { h: 6, pt: "avião (~1h de voo) ou ônibus ~6h30–7h; de carro ~4h30", es: "avión (~1 h de vuelo) o autobús ~6 h 30–7 h; en coche ~4 h 30" },
+    "lisboa|cordoba": { h: 6, pt: "avião até Sevilha ou Madri e trem AVE; de carro ~5h30", es: "avión hasta Sevilla o Madrid y tren AVE; en coche ~5 h 30" },
+    "lagos|albufeira": { h: 1, pt: "carro ~45 min; ônibus ~1h–1h15", es: "coche ~45 min; autobús ~1 h–1 h 15" },
+    "lagos|sevilla": { h: 4, pt: "carro ou transfer ~3h15; ônibus ~4h30 (via Faro)", es: "coche o traslado ~3 h 15; autobús ~4 h 30 (vía Faro)" },
+    "lagos|cordoba": { h: 5, pt: "carro ou transfer, ~4h30", es: "coche o traslado, ~4 h 30" },
+    "albufeira|sevilla": { h: 3, pt: "ônibus ~3h–3h30 (via Faro) ou transfer/carro ~2h45", es: "autobús ~3 h–3 h 30 (vía Faro) o traslado/coche ~2 h 45" },
+    "albufeira|cordoba": { h: 4.5, pt: "carro ~4h, ou ônibus até Sevilha e trem AVE", es: "coche ~4 h, o autobús hasta Sevilla y tren AVE" },
+    "sevilla|cordoba": { h: 1, pt: "trem AVE, ~45 min", es: "tren AVE, ~45 min" }
+  };
+  const legBetween = (a, b) => TRAVEL[ORDER.indexOf(a) < ORDER.indexOf(b) ? a + "|" + b : b + "|" + a] || null;
+
+  /* passeios por parada: half = meio dia (em ordem de prioridade), full = excursão de dia inteiro, eve = fim de tarde */
+  const ITIN = {
+    porto: {
+      half: [
+        { k: ["porto/ribeira"], pt: "Passeio plano pela Ribeira, à beira do Douro.", es: "Paseo llano por la Ribeira, junto al Duero." },
+        { k: ["porto/cruzeiro"], pt: "Cruzeiro das Seis Pontes, sentados (50 min).", es: "Crucero de los Seis Puentes, sentados (50 min)." },
+        { k: ["porto/saobento"], pt: "Azulejos da Estação de São Bento e centro histórico.", es: "Azulejos de la Estación de São Bento y centro histórico." },
+        { k: ["porto/ferreira"], pt: "Cave de vinho do Porto em Gaia, com prova.", es: "Bodega de vino de Oporto en Gaia, con cata." },
+        { k: ["porto/lello"], pt: "Livraria Lello (ingresso com hora marcada).", es: "Librería Lello (entrada con hora)." },
+        { k: ["porto/majestic", "porto/confeitaria"], pt: "Rua de Santa Catarina: café no Majestic ou na Confeitaria do Bolhão.", es: "Rua de Santa Catarina: café en el Majestic o en la Confeitaria do Bolhão." },
+        { k: ["porto/sandeman"], pt: "Caves Sandeman, no cais de Gaia.", es: "Bodegas Sandeman, en el muelle de Gaia." }
+      ],
+      full: [{ k: ["porto/douro"], pt: "Excursão de um dia ao Vale do Douro, com almoço e prova de vinhos.", es: "Excursión de un día al Valle del Duero, con comida y cata de vinos." }],
+      eve: [
+        { k: ["porto/morro"], pt: "Pôr do sol no Jardim do Morro (metrô linha D).", es: "Atardecer en el Jardim do Morro (metro línea D)." },
+        { k: ["porto/ponte"], pt: "Atravessar a Ponte Dom Luís I ao entardecer.", es: "Cruzar el puente Don Luis I al atardecer." }
+      ]
+    },
+    coimbra: {
+      half: [
+        { k: ["coimbra/universidade", "coimbra/joanina"], pt: "Universidade de táxi: Paço das Escolas e Biblioteca Joanina (hora marcada).", es: "Universidad en taxi: Paço das Escolas y Biblioteca Joanina (hora fija)." },
+        { k: ["coimbra/sevelha"], pt: "Descer a pé, devagar, pela Sé Velha até a Baixa.", es: "Bajar a pie, despacio, por la Sé Velha hasta la Baixa." },
+        { k: ["coimbra/santacruz", "coimbra/cafesantacruz"], pt: "Mosteiro de Santa Cruz e café no Café Santa Cruz.", es: "Monasterio de Santa Cruz y café en el Café Santa Cruz." },
+        { k: ["coimbra/pequenitos"], pt: "Portugal dos Pequenitos, plano e divertido.", es: "Portugal dos Pequenitos, llano y divertido." },
+        { k: ["coimbra/lagrimas"], pt: "Jardins da Quinta das Lágrimas.", es: "Jardines de la Quinta das Lágrimas." }
+      ],
+      full: [],
+      eve: [
+        { k: ["coimbra/fadoaocentro"], pt: "Fado de Coimbra no Fado ao Centro.", es: "Fado de Coímbra en Fado ao Centro." },
+        { k: ["coimbra/briosa"], pt: "Doce típico na Pastelaria Briosa, junto ao rio.", es: "Dulce típico en la Pastelaria Briosa, junto al río." }
+      ]
+    },
+    lisboa: {
+      half: [
+        { k: ["lisboa/comercio"], pt: "Baixa e Praça do Comércio, tudo plano.", es: "Baixa y Praça do Comércio, todo llano." },
+        { k: ["lisboa/jeronimos", "lisboa/torre"], pt: "Belém: Mosteiro dos Jerónimos e Torre de Belém.", es: "Belém: Monasterio de los Jerónimos y Torre de Belém." },
+        { k: ["lisboa/belem"], pt: "Pastéis de Belém, sentados no salão.", es: "Pasteles de Belém, sentados en el salón." },
+        { k: ["lisboa/tram28"], pt: "Bondinho 28 desde o Martim Moniz (para ir sentados).", es: "Tranvía 28 desde Martim Moniz (para ir sentados)." },
+        { k: ["lisboa/santaluzia"], pt: "Miradouro de Santa Luzia e Alfama, descendo devagar.", es: "Mirador de Santa Luzia y la Alfama, bajando despacio." },
+        { k: ["lisboa/oceanario"], pt: "Oceanário no Parque das Nações, todo plano.", es: "Oceanário en el Parque das Nações, todo llano." },
+        { k: ["lisboa/brasileira"], pt: "Chiado e café n'A Brasileira.", es: "Chiado y café en A Brasileira." },
+        { k: ["lisboa/nacional"], pt: "Rossio e Confeitaria Nacional.", es: "Rossio y Confeitaria Nacional." }
+      ],
+      full: [
+        { k: ["lisboa/sintra"], pt: "Dia em Sintra: Palácio da Pena (suba de ônibus ou tuk-tuk).", es: "Día en Sintra: Palacio da Pena (subir en autobús o tuk-tuk)." },
+        { k: ["lisboa/cascais"], pt: "Dia em Cascais: trem pela costa e calçadão plano à beira-mar.", es: "Día en Cascais: tren por la costa y paseo llano junto al mar." }
+      ],
+      eve: [
+        { k: ["lisboa/fado"], pt: "Jantar com fado em Alfama (reservar).", es: "Cena con fado en la Alfama (reservar)." },
+        { k: ["lisboa/ginjinha"], pt: "Um golinho de ginjinha no Largo de São Domingos.", es: "Un sorbito de ginjinha en el Largo de São Domingos." }
+      ]
+    },
+    lagos: {
+      half: [
+        { k: ["algarve/lagos-centro"], pt: "Centro histórico de Lagos e Igreja de Santo António.", es: "Casco antiguo de Lagos e Iglesia de San Antonio." },
+        { k: ["algarve/piedade"], pt: "Ponta da Piedade: mirante e, com mar calmo, barco às grutas.", es: "Ponta da Piedade: mirador y, con mar en calma, barco a las grutas." },
+        { k: ["algarve/donaana"], pt: "Mirante da Praia Dona Ana.", es: "Mirador de la Praia Dona Ana." },
+        { k: ["algarve/marinha"], pt: "Praia da Marinha vista do alto da falésia (de carro).", es: "Praia da Marinha desde lo alto del acantilado (en coche)." }
+      ],
+      full: [],
+      eve: [{ k: [], pt: "Passeio ao entardecer pela avenida junto à marina.", es: "Paseo al atardecer por la avenida junto al puerto." }]
+    },
+    albufeira: {
+      half: [
+        { k: ["algarve/albufeira-velha"], pt: "Cidade Velha e Praia dos Pescadores (elevador para a praia).", es: "Casco antiguo y Praia dos Pescadores (ascensor a la playa)." },
+        { k: ["algarve/benagil"], pt: "Barco à Gruta de Benagil saindo da marina, com mar calmo.", es: "Barco a la Cueva de Benagil desde el puerto, con mar en calma." },
+        { k: ["algarve/falesia"], pt: "Praia da Falésia: caminhada plana na beira da água.", es: "Praia da Falésia: paseo llano por la orilla." },
+        { k: ["algarve/albufeira-marina"], pt: "Marina de Albufeira, plana e colorida.", es: "Puerto deportivo de Albufeira, llano y colorido." }
+      ],
+      full: [{ k: ["algarve/tavira"], pt: "Dia em Tavira, a cidade mais tranquila do Algarve (~1h de carro).", es: "Día en Tavira, la ciudad más tranquila del Algarve (~1 h en coche)." }],
+      eve: [
+        { k: ["algarve/vilamoura"], pt: "Fim de tarde na Marina de Vilamoura.", es: "Final de la tarde en el puerto de Vilamoura." },
+        { k: ["algarve/albufeira-marina"], pt: "Pôr do sol na marina de Albufeira.", es: "Atardecer en el puerto de Albufeira." }
+      ]
+    },
+    sevilla: {
+      half: [
+        { k: ["sevilla/espana"], pt: "Plaza de España e Parque de María Luisa, à sombra.", es: "Plaza de España y Parque de María Luisa, a la sombra." },
+        { k: ["sevilla/alcazar"], pt: "Real Alcázar (hora reservada online).", es: "Real Alcázar (hora reservada por internet)." },
+        { k: ["sevilla/santacruz"], pt: "Bairro de Santa Cruz, devagar.", es: "Barrio de Santa Cruz, despacio." },
+        { k: ["sevilla/catedral"], pt: "Catedral e Giralda (sobe-se por rampas).", es: "Catedral y Giralda (se sube por rampas)." },
+        { k: ["sevilla/barco"], pt: "Passeio de barco pelo Guadalquivir, sentados.", es: "Paseo en barco por el Guadalquivir, sentados." },
+        { k: ["sevilla/triana"], pt: "Triana e Mercado de Triana.", es: "Triana y Mercado de Triana." },
+        { k: ["sevilla/campana"], pt: "Rua Sierpes e Confitería La Campana.", es: "Calle Sierpes y Confitería La Campana." }
+      ],
+      full: [],
+      eve: [
+        { k: ["sevilla/memoria"], pt: "Flamenco na Casa de la Memoria.", es: "Flamenco en la Casa de la Memoria." },
+        { k: ["sevilla/setas"], pt: "Las Setas ao pôr do sol (elevador).", es: "Las Setas al atardecer (ascensor)." },
+        { k: ["sevilla/eme"], pt: "Vista da Giralda no terraço do Hotel EME.", es: "Vista de la Giralda desde la terraza del Hotel EME." }
+      ]
+    },
+    cordoba: {
+      half: [
+        { k: ["cordoba/mezquita"], pt: "Mesquita-Catedral, o grande tesouro de Córdoba.", es: "Mezquita-Catedral, el gran tesoro de Córdoba." },
+        { k: ["cordoba/juderia"], pt: "Judiaria e Calleja de las Flores.", es: "Judería y Calleja de las Flores." },
+        { k: ["cordoba/alcazar"], pt: "Alcázar de los Reyes Cristianos e jardins.", es: "Alcázar de los Reyes Cristianos y jardines." },
+        { k: ["cordoba/viana"], pt: "Palacio de Viana e seus 12 pátios.", es: "Palacio de Viana y sus 12 patios." },
+        { k: ["cordoba/hammam"], pt: "Banhos árabes para descansar as pernas.", es: "Baños árabes para descansar las piernas." }
+      ],
+      full: [{ k: ["cordoba/medina"], pt: "Medina Azahara, a cidade-palácio do califado (ônibus turístico).", es: "Medina Azahara, la ciudad palacio del califato (autobús turístico)." }],
+      eve: [
+        { k: ["cordoba/puente"], pt: "Ponte Romana ao entardecer.", es: "Puente Romano al atardecer." },
+        { k: ["cordoba/corredera"], pt: "Um refresco na Plaza de la Corredera.", es: "Algo fresco en la Plaza de la Corredera." }
+      ]
+    }
+  };
+
+  function sanitizeCfg(c) {
+    c = c || {};
+    const s = Array.isArray(c.s) ? ORDER.filter((id) => c.s.indexOf(id) >= 0) : ORDER.slice();
+    const d = Math.max(1, Math.min(30, parseInt(c.d, 10) || 14));
+    return { d, s, st: /^\d{4}-\d{2}-\d{2}$/.test(c.st || "") ? c.st : "", p: c.p === "normal" ? "normal" : "calmo", dir: c.dir === "sn" ? "sn" : "ns" };
+  }
+  const cfgFromSettings = (s) => sanitizeCfg({ d: s.days, s: s.stops, st: s.start, p: s.pace, dir: s.dir });
+
+  /* dias por parada: o mínimo de cada uma e o resto pelos pesos, respeitando o máximo */
+  function allocateDays(stops, n) {
+    const alloc = {};
+    const base = stops.reduce((sum, id) => sum + MIN_DAYS[id], 0);
+    /* a última parada precisa de pelo menos 2 dias: um para chegar e outro para a volta */
+    const lastStop = stops[stops.length - 1];
+    const minOf = (id) => MIN_DAYS[id] + (id === lastStop && MIN_DAYS[id] === 1 ? 1 : 0);
+    const fullBase = stops.reduce((sum, id) => sum + minOf(id), 0);
+    stops.forEach((id) => { alloc[id] = n >= fullBase ? minOf(id) : n >= base ? MIN_DAYS[id] : 1; });
+    let left = n - stops.reduce((sum, id) => sum + alloc[id], 0);
+    const pick = (ignoreCap) => {
+      let best = null, score = -1;
+      stops.forEach((id) => {
+        if (!ignoreCap && alloc[id] >= MAX_DAYS[id]) return;
+        const sc = WEIGHT[id] / alloc[id];
+        if (sc > score) { score = sc; best = id; }
+      });
+      return best;
+    };
+    while (left > 0) { const id = pick(false) || pick(true); alloc[id]++; left--; }
+    return alloc;
+  }
+
+  function restaurantsFor(stop) {
+    const city = CITY_BY_ID[STOP_BY_ID[stop].city];
+    return city.places.comer.filter((p) => stopOf(city, p) === stop).map((p) => favKey(city.id, p.id));
+  }
+
+  function generatePlan(rawCfg, lang, t) {
+    const cfg = sanitizeCfg(rawCfg);
+    const stops = cfg.dir === "sn" ? cfg.s.slice().reverse() : cfg.s.slice();
+    if (!stops.length || cfg.d < stops.length) return null;
+    const alloc = allocateDays(stops, cfg.d);
+    const days = [];
+    let n = 0;
+    stops.forEach((stop, si) => {
+      const it = ITIN[stop];
+      const D = alloc[stop];
+      const name = STOP_BY_ID[stop].name[lang];
+      const city = CITY_BY_ID[STOP_BY_ID[stop].city];
+      const rests = restaurantsFor(stop);
+      const prev = si > 0 ? stops[si - 1] : null;
+      const leg = prev ? legBetween(prev, stop) : null;
+      const fullDays = Math.max(0, Math.min(it.full.length, D - 3));
+      const sleepRef = PLACE_BY_KEY[SLEEP[stop]];
+      const sleepName = sleepRef ? tx(sleepRef.place.n, lang) : name;
+      let hi = 0, fi = 0, ei = 0, ri = 0;
+      for (let j = 0; j < D; j++) {
+        n++;
+        const last = n === cfg.d;
+        const arrival = j === 0;
+        const daysLeft = D - j;
+        const day = { day: n, stop, title: "", travel: null, morning: "", afternoon: "", evening: "", places: [], sleep: "", tip: "", meals: [] };
+        const take = () => { const x = it.half[hi++]; if (!x) return ""; day.places.push.apply(day.places, x.k); return x[lang]; };
+        const home = t.goHome(HOME[stop][lang]);
+
+        if (arrival && !prev) {
+          day.title = t.arrivalTitle(name);
+          day.morning = t.arriveFirst(name);
+          day.afternoon = take() || t.restAfter;
+        } else if (arrival) {
+          const from = STOP_BY_ID[prev].name[lang];
+          day.title = t.travelTo(name);
+          day.travel = { from, to: name, how: (leg ? leg[lang] : "") + (!!SPAIN[prev] !== !!SPAIN[stop] ? "." + t.tz : "") };
+          day.morning = t.travelMorning(from, name);
+          day.afternoon = leg && leg.h >= 4 ? t.restTravel : (take() || t.restTravel);
+        } else if (last) {
+          day.title = t.lastDay;
+          day.morning = take() || t.freeMorning;
+          day.afternoon = home;
+        } else if (j >= 2 && fi < fullDays) {
+          const f = it.full[fi++];
+          day.morning = f[lang];
+          day.places.push.apply(day.places, f.k);
+          day.afternoon = t.fullBack;
+        } else {
+          day.morning = take() || t.freeMorning;
+          const halfLeft = it.half.length - hi;
+          if (cfg.p === "normal") day.afternoon = take() || t.restAfter;
+          else day.afternoon = halfLeft > daysLeft - 1 ? t.afterRest + take() : t.restAfter;
+        }
+
+        if (last && arrival) day.evening = home;
+        else if (!last) {
+          const e = it.eve[ei++];
+          if (e) { day.evening = e[lang]; day.places.push.apply(day.places, e.k); }
+          else day.evening = t.dinnerEasy;
+        }
+        if (!day.title) {
+          const k = day.places[0];
+          day.title = k && PLACE_BY_KEY[k] ? tx(PLACE_BY_KEY[k].place.n, lang) : name;
+        }
+        if (rests.length) {
+          day.meals.push({ label: t.lunch, key: rests[ri++ % rests.length] });
+          if (!last) day.meals.push({ label: t.dinner, key: rests[ri++ % rests.length] });
+        }
+        if (!last) day.sleep = sleepName.indexOf(name) >= 0 ? sleepName : sleepName + " (" + name + ")";
+        const algarvePair = (stop === "albufeira" && prev === "lagos") || (stop === "lagos" && prev === "albufeira");
+        if (arrival && !algarvePair) day.tip = city.tip[lang];
+        day.places = day.places.filter((k, i, a) => PLACE_BY_KEY[k] && a.indexOf(k) === i);
+        days.push(day);
+      }
+    });
+    return {
+      title: t.autoTitle(cfg.d),
+      summary: stops.map((s) => STOP_BY_ID[s].name[lang] + " (" + t.summaryDays(alloc[s]) + ")").join(" → "),
+      days,
+      meta: { start: cfg.st, auto: true }
+    };
+  }
+
+  /* links para compartilhar (abrem a versão pública já com o roteiro) */
+  function shareLink(cur) {
+    if (!cur) return null;
+    if (cur.type === "auto") return PUBLIC_URL + "#a=" + encodeURIComponent(JSON.stringify(cur.cfg));
+    if (cur.type === "ai" && window.LZString) return PUBLIC_URL + "#r=" + window.LZString.compressToEncodedURIComponent(JSON.stringify(cur.plan));
+    return null;
+  }
+  function readSharedFromHash() {
+    const h = location.hash || "";
+    try {
+      if (h.indexOf("#a=") === 0) return { type: "auto", cfg: sanitizeCfg(JSON.parse(decodeURIComponent(h.slice(3)))) };
+      if (h.indexOf("#r=") === 0 && window.LZString) {
+        const raw = JSON.parse(window.LZString.decompressFromEncodedURIComponent(h.slice(3)) || "null");
+        const meta = raw && raw.meta && typeof raw.meta === "object" ? { start: sanitizeCfg({ st: raw.meta.start }).st } : { start: "" };
+        const p = normalizePlan(raw, meta);
+        if (p) return { type: "ai", plan: p };
+      }
+    } catch (e) { /* link inválido: ignora */ }
+    return null;
+  }
+
+  /* ---------- assistente: instruções, leitura parcial e normalização ---------- */
+  function stripPlan(plan) {
+    if (!plan) return null;
+    return { title: plan.title, summary: plan.summary, days: plan.days };
+  }
+
+  function buildInstructions(lang, plan) {
+    const L = lang === "pt" ? "Brazilian Portuguese" : "Spanish (Spain)";
+    return [
+      "You are the travel assistant inside \"Roteiro da Rosinei e Ana Cristina\", a mobile guide app made for Rosinei, Ana Cristina and their family, Brazilians touring Portugal and southern Spain. The travellers include older adults. Write every text field in " + L + ", warm and clear, with short sentences and simple words (they read on a phone with large text).",
+      "",
+      "PACE: plan for older travellers; they walk slowly and tire easily. At most 2–3 main visits per day, a calm lunch and rest in the afternoon, early dinners, taxis/Uber for hills, light travel days (no sightseeing marathon after a long trip). Mention stairs or steep streets when relevant.",
+      "MUST-SEE: they want Coimbra, Lagos and Albufeira in the trip. Keep them unless the user explicitly removes them.",
+      "STOPS north→south, suggested route Porto → Coimbra → Lisboa → Lagos → Albufeira → Sevilla → Córdoba (reverse it if they arrive in Spain). Stop ids: porto, coimbra, lisboa, lagos, albufeira, sevilla, cordoba. Use \"algarve\" for a day elsewhere in the Algarve and \"viagem\" for a pure travel day.",
+      "TRANSPORT (approximate, use these figures):",
+      "- Porto → Coimbra: train (Alfa Pendular / Intercidades) ~1h to Coimbra-B, then a short connecting train or taxi to the centre.",
+      "- Coimbra → Lisboa: train ~1h45–2h.",
+      "- Lisboa → Lagos: bus (Rede Expressos) ~3h45, or train with a change in Tunes ~4h; car ~3h.",
+      "- Lisboa → Albufeira: train ~2h45 to Albufeira-Ferreiras station + 10 min taxi; bus ~3h.",
+      "- Lagos ↔ Albufeira: car ~45 min; bus ~1h–1h15.",
+      "- Albufeira → Sevilla: no direct train; bus ~3h–3h30 (often via Faro) or private transfer/car ~2h45. Spain is 1 hour ahead of Portugal.",
+      "- Sevilla → Córdoba: AVE high-speed train ~45 min.",
+      "DAYS PER STOP (guide, adapt to the total): Lisboa 3–4, Porto 2–3, Sevilla 2–3, Coimbra 1–2, Lagos 2, Albufeira 2, Córdoba 1–2. Day 1 is usually arrival and the last day departure.",
+      "",
+      "PLACES IN THE APP (key | stop | category | name | Google rating). Prefer these and list their keys in \"places\" (only keys from this list). The \"comer\" entries are the best-rated restaurants of typical food: use them for meal suggestions.",
+      CATALOG,
+      "",
+      "CURRENT PLAN: " + (plan ? JSON.stringify(stripPlan(plan)) : "none"),
+      "",
+      "ANSWER FORMAT: reply with ONLY one JSON object, with \"reply\" first:",
+      "{\"reply\": \"1–4 short sentences: the answer, or what you created/changed\", \"plan\": null}",
+      "or, when you create or change the itinerary, the COMPLETE updated plan:",
+      "{\"reply\": \"...\", \"plan\": {\"title\": \"...\", \"summary\": \"1–2 sentences\", \"days\": [{\"day\": 1, \"stop\": \"porto\", \"title\": \"short title\", \"travel\": null, \"morning\": \"...\", \"afternoon\": \"...\", \"evening\": \"...\", \"places\": [\"porto/ribeira\"], \"sleep\": \"area to sleep\", \"tip\": \"short practical tip or empty\"}]}}",
+      "\"travel\" is null or {\"from\": \"Porto\", \"to\": \"Coimbra\", \"how\": \"train, ~1h\"} written in the user's language. Keep morning/afternoon/evening under 30 words each. The number of days must match what the user asked. If the user only asks a question, answer in \"reply\" and set \"plan\" to null. If something is uncertain (exact prices, opening hours), tell them to confirm."
+    ].join("\n");
+  }
+
+  /* lê o campo "reply" enquanto o JSON ainda está chegando */
+  function partialReply(raw) {
+    const m = /"reply"\s*:\s*"/.exec(raw || "");
+    if (!m) return "";
+    let i = m.index + m[0].length, out = "";
+    while (i < raw.length) {
+      const ch = raw[i];
+      if (ch === "\\") {
+        const n = raw[i + 1];
+        if (n === undefined) break;
+        if (n === "u") {
+          const hex = raw.substr(i + 2, 4);
+          if (hex.length < 4) break;
+          out += String.fromCharCode(parseInt(hex, 16));
+          i += 6;
+          continue;
+        }
+        out += n === "n" ? "\n" : n === "t" ? " " : n;
+        i += 2;
+        continue;
+      }
+      if (ch === "\"") break;
+      out += ch;
+      i++;
+    }
+    return out;
+  }
+
+  function normalizePlan(p, meta) {
+    if (!p || !Array.isArray(p.days) || !p.days.length) return null;
+    const s = (v) => (v == null ? "" : String(v)).trim();
+    return {
+      title: s(p.title),
+      summary: s(p.summary),
+      days: p.days.slice(0, 40).map((d, i) => ({
+        day: i + 1,
+        stop: s(d && d.stop).toLowerCase(),
+        title: s(d && d.title),
+        travel: d && d.travel && (d.travel.from || d.travel.to) ? { from: s(d.travel.from), to: s(d.travel.to), how: s(d.travel.how) } : null,
+        morning: s(d && d.morning),
+        afternoon: s(d && d.afternoon),
+        evening: s(d && d.evening),
+        places: Array.isArray(d && d.places) ? d.places.map(String).filter((k) => PLACE_BY_KEY[k]).slice(0, 8) : [],
+        sleep: s(d && d.sleep),
+        tip: s(d && d.tip)
+      })),
+      meta
+    };
+  }
+
+  function dayDate(start, n, lang) {
+    if (!start || !/^\d{4}-\d{2}-\d{2}$/.test(start)) return "";
+    const [y, m, d] = start.split("-").map(Number);
+    const dt = new Date(y, m - 1, d + n - 1);
+    try {
+      return new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "es-ES", { weekday: "short", day: "numeric", month: "short" }).format(dt);
+    } catch (e) { return dt.toDateString(); }
+  }
+
+  function stopLabel(id, lang, t) {
+    const s = STOP_BY_ID[id];
+    if (s) return { emoji: s.emoji, name: s.name[lang] };
+    if (id === "algarve") return { emoji: "🏖️", name: "Algarve" };
+    return { emoji: "🚆", name: t.travelDay };
+  }
+
+  function planToText(plan, lang, t) {
+    const lines = ["Roteiro da Rosinei e Ana Cristina" + (plan.title ? " — " + plan.title : "")];
+    if (plan.summary) lines.push(plan.summary);
+    plan.days.forEach((d) => {
+      const st = stopLabel(d.stop, lang, t);
+      const date = dayDate(plan.meta && plan.meta.start, d.day, lang);
+      lines.push("", t.dayLabel(d.day) + (date ? " (" + date + ")" : "") + " · " + st.name + (d.title ? ": " + d.title : ""));
+      if (d.travel) lines.push("🚆 " + [d.travel.from, d.travel.to].filter(Boolean).join(" → ") + (d.travel.how ? " · " + d.travel.how : ""));
+      if (d.morning) lines.push(t.morning + ": " + d.morning);
+      if (d.afternoon) lines.push(t.afternoon + ": " + d.afternoon);
+      if (d.evening) lines.push(t.evening + ": " + d.evening);
+      (d.meals || []).forEach((m) => { const ref = PLACE_BY_KEY[m.key]; if (ref) lines.push("🍽️ " + m.label + ": " + tx(ref.place.n, lang)); });
+      if (d.sleep) lines.push("🛏️ " + t.sleep + ": " + d.sleep);
+      if (d.tip) lines.push("💡 " + d.tip);
+    });
+    return lines.join("\n");
+  }
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e2) { return false; }
+    }
+  }
+
+  /* ---------- estado do assistente (vive no App para não perder a resposta ao trocar de aba) ---------- */
+  const OFF_CODES = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"];
+
+  function useTrip(lang, t, showToast) {
+    const [sample, setSample] = useState(undefined);          /* undefined: conectando · null: indisponível */
+    const [dbInfo, setDbInfo] = useState({ db: null, canWrite: false, ready: false });
+    /* "current" = o roteiro escolhido: {type:"auto", cfg} (recomendado, gerado no aparelho) ou {type:"ai", plan} */
+    const [family, setFamily] = useState(null);
+    const [localCur, setLocalCur] = useState(() => {
+      const c = store.get("rosinei.current", null);
+      if (c && (c.type === "auto" || c.type === "ai")) return c;
+      const old = store.get("rosinei.plan", null);
+      return old && Array.isArray(old.days) ? { type: "ai", plan: old } : null;
+    });
+    const [chat, setChat] = useState(() => { const c = store.get("rosinei.chat", []); return Array.isArray(c) ? c : []; });
+    const [busy, setBusy] = useState(false);
+    const [settings, setSettings] = useState(() => Object.assign(
+      { days: 14, start: "", pace: "calmo", stops: STOPS.map((s) => s.id), notes: "", dir: "ns" },
+      store.get("rosinei.settings", {})
+    ));
+    const ctlRef = useRef(null);
+
+    useEffect(() => {
+      let alive = true;
+      /* sample é uma função: guardá-la com updater, senão o React a chamaria como atualizador de estado */
+      useCap("sample").then((s) => { if (alive) setSample(() => s || null); }, () => { if (alive) setSample(null); });
+      return () => { alive = false; };
+    }, []);
+
+    useEffect(() => {
+      let alive = true, unsub = null;
+      (async () => {
+        const [db, user] = await Promise.all([useCap("db"), useCap("user")]);
+        if (!alive) return;
+        if (!db) { setDbInfo({ db: null, canWrite: false, ready: true }); return; }
+        let can = null;
+        try { can = user ? await user.can("data.write") : null; } catch (e) { can = null; }
+        if (!alive) return;
+        setDbInfo({ db, canWrite: can !== false, ready: true });
+        try {
+          unsub = db.doc("roteiro/familia").onSnapshot(
+            (snap) => {
+              const d = snap.exists ? snap.data() : null;
+              const c = d && d.current && (d.current.type === "auto" || d.current.type === "ai") ? d.current
+                : d && d.plan ? { type: "ai", plan: d.plan } : null;
+              setFamily(c);
+            },
+            () => {}
+          );
+        } catch (e) { /* sem roteiro compartilhado nesta visita */ }
+      })();
+      return () => { alive = false; if (unsub) unsub(); };
+    }, []);
+
+    useEffect(() => { store.set("rosinei.chat", chat.filter((m) => !m.pending).slice(-30)); }, [chat]);
+    useEffect(() => { store.set("rosinei.settings", settings); }, [settings]);
+
+    const current = localCur || family;
+    const planSource = localCur ? "local" : family ? "family" : null;
+    const plan = !current ? null : current.type === "auto" ? generatePlan(current.cfg, lang, t) : current.plan;
+
+    function setLocal(c) { setLocalCur(c); store.set("rosinei.current", c); store.set("rosinei.plan", null); }
+
+    async function saveCurrent(c) {
+      if (dbInfo.db && dbInfo.canWrite) {
+        try {
+          await dbInfo.db.doc("roteiro/familia").set({ current: c, savedAt: Date.now() });
+          setFamily(c);
+          setLocal(null);
+          return;
+        } catch (e) {
+          if (e && e.code === "invalid_argument") setDbInfo((x) => Object.assign({}, x, { canWrite: false }));
+        }
+      }
+      setLocal(c);
+    }
+    const savePlan = (p) => saveCurrent({ type: "ai", plan: p });
+    function buildAuto() { return saveCurrent({ type: "auto", cfg: cfgFromSettings(settings) }); }
+    function importShared(c) {
+      setLocal(c);
+      if (c.type === "auto") setSettings((s) => Object.assign({}, s, { days: c.cfg.d, stops: c.cfg.s, start: c.cfg.st, pace: c.cfg.p, dir: c.cfg.dir }));
+      showToast(t.imported);
+    }
+
+    async function deletePlan() {
+      if (planSource === "local") { setLocal(null); }
+      else if (planSource === "family" && dbInfo.db && dbInfo.canWrite) {
+        try { await dbInfo.db.doc("roteiro/familia").delete(); setFamily(null); } catch (e) { showToast(t.err.generic); return; }
+      }
+      showToast(t.deleted);
+    }
+
+    function patchMsg(id, patch) {
+      setChat((c) => c.map((m) => (m.id === id ? Object.assign({}, m, patch) : m)));
+    }
+
+    function buildTurns(history) {
+      const turns = [{ role: "user", content: buildInstructions(lang, plan) }];
+      history.filter((m) => !m.pending && !m.error && m.text && m.text.trim()).slice(-12).forEach((m) => {
+        turns.push({ role: m.role === "user" ? "user" : "assistant", content: m.text });
+      });
+      if (turns[turns.length - 1].role !== "user") turns.push({ role: "user", content: "?" });
+      return turns;
+    }
+
+    async function send(text) {
+      text = (text || "").trim();
+      if (!text || !sample || busy) return;
+      const userMsg = { id: uid(), role: "user", text };
+      const aiId = uid();
+      const history = chat.filter((m) => !m.error).concat(userMsg);
+      setChat(history.concat({ id: aiId, role: "assistant", text: "", pending: true }));
+      const ctl = new AbortController();
+      ctlRef.current = ctl;
+      setBusy(true);
+      try {
+        const res = await sample.json(buildTurns(history), {
+          signal: ctl.signal,
+          cache: false,
+          modelTier: "default",
+          onText: ({ text: raw }) => { const r = partialReply(raw); if (r) patchMsg(aiId, { text: r }); }
+        });
+        const reply = res && typeof res.reply === "string" && res.reply.trim() ? res.reply.trim() : "✓";
+        const start = plan && plan.meta && plan.meta.start ? plan.meta.start : settings.start || "";
+        const newPlan = res && res.plan ? normalizePlan(res.plan, { start, lang, createdAt: Date.now() }) : null;
+        patchMsg(aiId, { text: reply, pending: false, plan: !!newPlan });
+        if (newPlan) await savePlan(newPlan);
+      } catch (e) {
+        const code = e && e.code;
+        if (code === "cancelled") {
+          const part = e.text ? partialReply(e.text) : "";
+          patchMsg(aiId, { text: part ? part + " " + t.stopped : t.stopped, pending: false });
+        } else if (OFF_CODES.indexOf(code) >= 0) {
+          setSample(null);
+          patchMsg(aiId, { text: "", pending: false, error: t.aiOff });
+        } else {
+          if (!code) console.warn("assistente:", e);
+          patchMsg(aiId, { text: "", pending: false, error: t.err[code] || t.err.generic, retry: text });
+        }
+      } finally {
+        ctlRef.current = null;
+        setBusy(false);
+      }
+    }
+
+    function retry(msg) {
+      setChat((c) => {
+        const i = c.findIndex((m) => m.id === msg.id);
+        return i > 0 ? c.slice(0, i - 1) : c;
+      });
+      setTimeout(() => send(msg.retry), 0);
+    }
+
+    function stop() { if (ctlRef.current) ctlRef.current.abort(); }
+    function newChat() { if (!busy) setChat([]); }
+    function useFamilyPlan() { setLocal(null); }
+
+    return { sample, dbInfo, plan, current, planSource, family, chat, busy, settings, setSettings, send, retry, stop, newChat,
+      deletePlan, useFamilyPlan, buildAuto, importShared };
+  }
+
+  /* ---------- componentes ---------- */
+  function LangToggle({ lang, setLang, t }) {
+    const opts = [{ id: "pt", flag: "🇧🇷", label: "PT" }, { id: "es", flag: "🇪🇸", label: "ES" }];
+    return html`
+      <div role="group" aria-label=${t.langLabel} className="flex shrink-0 rounded-full border-2 border-azul bg-card p-1">
+        ${opts.map((o) => {
+          const on = lang === o.id;
+          return html`
+            <button key=${o.id} type="button" aria-pressed=${on} onClick=${() => setLang(o.id)}
+              className=${"min-h-[3rem] min-w-[4.6rem] px-3 rounded-full text-lg font-bold flex items-center justify-center gap-1.5 transition-colors " +
+                (on ? "bg-btn text-onbtn" : "text-azul")}>
+              <span aria-hidden="true" className="text-xl leading-none">${o.flag}</span>${o.label}
+            </button>`;
+        })}
+      </div>`;
+  }
+
+  function Header({ lang, setLang, t, theme, toggleTheme }) {
+    const dark = theme === "dark";
+    return html`
+      <header>
+        <div className="azulejo h-5" aria-hidden="true"></div>
+        <div className="bunting h-5" aria-hidden="true"></div>
+        <div className="max-w-xl mx-auto px-4 pt-2 pb-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <div className="min-w-0">
+            <h1 className="title text-terra"><span className="block text-[.62em] leading-tight">Roteiro da</span>Rosinei e Ana Cristina</h1>
+            <p className="text-soft font-bold text-lg mt-1">${t.subtitle}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick=${toggleTheme} aria-pressed=${dark} aria-label=${dark ? t.themeLight : t.themeDark}
+              title=${dark ? t.themeLight : t.themeDark}
+              className="w-14 h-14 shrink-0 rounded-full border-2 border-azul bg-card text-azul flex items-center justify-center">
+              <${Icon} name=${dark ? "Sun" : "Moon"} size=${26} />
+            </button>
+            <${LangToggle} lang=${lang} setLang=${setLang} t=${t} />
+          </div>
+        </div>
+      </header>`;
+  }
+
+  function Login({ lang, setLang, t, onOk, theme, toggleTheme }) {
+    const [user, setUser] = useState("");
+    const [pass, setPass] = useState("");
+    const [show, setShow] = useState(false);
+    const [wrong, setWrong] = useState(false);
+    function submit(e) {
+      e.preventDefault();
+      const h = sha256(PASS_SALT + user.trim().toLowerCase() + "|" + pass.trim());
+      if (h === PASS_HASH) { store.set("rosinei.auth", PASS_HASH); onOk(); }
+      else setWrong(true);
+    }
+    return html`
+      <div>
+        <${Header} lang=${lang} setLang=${setLang} t=${t} theme=${theme} toggleTheme=${toggleTheme} />
+        <main className="max-w-xl mx-auto px-4 pt-6 pb-12">
+          <form onSubmit=${submit} className="rounded-3xl bg-card border border-line shadow-card p-5 flex flex-col gap-4" noValidate>
+            <div className="flex flex-col gap-1">
+              <h2 className="city-name text-azul">${t.loginTitle}</h2>
+              <p className="text-[1.1rem] text-soft">${t.loginText}</p>
+            </div>
+            <label htmlFor="login-user" className="flex flex-col gap-1.5 font-bold text-lg">
+              ${t.user}
+              <input id="login-user" className="field" value=${user} autoComplete="username" autoCapitalize="none" autoCorrect="off"
+                spellCheck=${false} onChange=${(e) => { setUser(e.target.value); setWrong(false); }} />
+            </label>
+            <label htmlFor="login-pass" className="flex flex-col gap-1.5 font-bold text-lg">
+              ${t.pass}
+              <div className="flex gap-2">
+                <input id="login-pass" className="field flex-1 min-w-0" value=${pass} type=${show ? "text" : "password"} inputMode="numeric"
+                  autoComplete="current-password" onChange=${(e) => { setPass(e.target.value); setWrong(false); }} />
+                <button type="button" className="stepper-btn shrink-0" aria-label=${show ? t.hidePass : t.showPass} aria-pressed=${show}
+                  onClick=${() => setShow(!show)}>
+                  <${Icon} name=${show ? "EyeOff" : "Eye"} size=${24} />
+                </button>
+              </div>
+            </label>
+            ${wrong && html`<p role="alert" className="rounded-xl bg-bad-tint text-bad font-bold px-4 py-3">${t.wrong}</p>`}
+            <button type="submit" className="map-btn">
+              <${Icon} name="LogIn" size=${24} /> ${t.enter}
+            </button>
+          </form>
+        </main>
+      </div>`;
+  }
+
+  function CityCarousel({ cityId, onPick, lang, t }) {
+    const box = useRef(null);
+    useEffect(() => {
+      const el = box.current && box.current.querySelector('[aria-pressed="true"]');
+      if (!el) return;
+      box.current.scrollTo({ left: Math.max(0, el.offsetLeft - 16), behavior: reduceMotion() ? "auto" : "smooth" });
+    }, [cityId]);
+    return html`
+      <nav aria-label=${t.chooseCity} className="flex flex-col gap-2">
+        <h2 className="eyebrow">${t.chooseCity}</h2>
+        <div ref=${box} className="carousel relative -mx-4 px-4 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-1">
+          ${CITIES.map((c) => {
+            const on = c.id === cityId;
+            return html`
+              <button key=${c.id} type="button" aria-pressed=${on} onClick=${() => onPick(c.id)}
+                className=${"snap-start shrink-0 w-[8.4rem] min-h-[6.6rem] rounded-2xl border-2 p-3 flex flex-col items-start justify-between gap-2 text-left transition-colors " +
+                  (on ? "bg-btn text-onbtn border-btn shadow-card" : "bg-card text-ink border-line")}>
+                <span className="text-[1.9rem] leading-none" aria-hidden="true">${c.emoji}</span>
+                <span className="block">
+                  <span className="block text-xl font-bold leading-tight">${c.name[lang]}</span>
+                  <span className=${"block text-[.95rem] " + (on ? "opacity-90" : "text-soft")}>${c.country[lang]}</span>
+                </span>
+              </button>`;
+          })}
+        </div>
+      </nav>`;
+  }
+
+  function PromoCard({ t, plan, goTrip }) {
+    if (plan) {
+      return html`
+        <button type="button" onClick=${goTrip}
+          className="rounded-2xl bg-azul-tint border-2 border-azul text-azul p-4 flex items-center gap-3 text-left font-bold text-[1.1rem]">
+          <${Icon} name="ClipboardList" size=${28} />
+          <span className="flex-1 min-w-0">${t.promoPlan(plan.days.length)}</span>
+          <${Icon} name="ChevronRight" size=${24} />
+        </button>`;
+    }
+    return html`
+      <div className="rounded-2xl bg-azul-tint border-2 border-azul p-4 flex flex-col gap-3">
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 w-12 h-12 rounded-full bg-btn text-onbtn flex items-center justify-center" aria-hidden="true">
+            <${Icon} name="Sparkles" size=${26} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[1.2rem] font-bold text-azul leading-tight">${t.promoTitle}</p>
+            <p className="text-[1.02rem] text-ink mt-1">${t.promoText}</p>
+          </div>
+        </div>
+        <button type="button" onClick=${goTrip} className="map-btn">
+          <${Icon} name="Sparkles" size=${22} /> ${t.promoBtn}
+        </button>
+      </div>`;
+  }
+
+  function CityHero({ city, lang, t }) {
+    return html`
+      <section className="fade-in flex flex-col gap-3" key=${city.id}>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="min-w-0">
+            <p className="eyebrow"><span aria-hidden="true">${city.flag} </span>${city.country[lang]}</p>
+            <h2 className="city-name text-azul">${city.name[lang]}</h2>
+          </div>
+          <a className="btn-outline" href=${mapsUrl(city.q)} target="_blank" rel="noopener noreferrer">
+            <${Icon} name="Map" size=${22} /> ${t.cityMap}
+          </a>
+        </div>
+        <p className="text-[1.1rem] leading-relaxed">${city.intro[lang]}</p>
+      </section>`;
+  }
+
+  function TipCard({ city, lang, t, showCity }) {
+    return html`
+      <aside aria-label=${t.tip} className="rounded-2xl bg-gold-tint border-2 border-gold p-4 flex gap-3">
+        <div className="shrink-0 w-12 h-12 rounded-full bg-gold text-ongold flex items-center justify-center" aria-hidden="true">
+          <${Icon} name="Lightbulb" size=${26} />
+        </div>
+        <div className="min-w-0 flex flex-col gap-1">
+          <p className="eyebrow !text-gold-ink">${t.tip}${showCity ? " · " + city.name[lang] : ""}</p>
+          <p className="text-[1.1rem] leading-relaxed text-ink">${city.tip[lang]}</p>
+        </div>
+      </aside>`;
+  }
+
+  function CatTabs({ cat, setCat, t }) {
+    return html`
+      <div role="tablist" aria-label=${t.catsLabel} className="grid grid-cols-2 gap-3">
+        ${CATS.map((c) => {
+          const on = c.id === cat;
+          return html`
+            <button key=${c.id} id=${"tab-" + c.id} role="tab" type="button" aria-selected=${on} aria-controls="painel"
+              onClick=${() => setCat(c.id)}
+              className=${"min-h-[4.5rem] rounded-2xl border-2 px-3 py-2 flex items-center gap-3 text-left text-[1.05rem] font-bold leading-tight transition-colors " +
+                (on ? "bg-terra text-onterra border-terra shadow-card" : "bg-card text-ink border-line")}>
+              <span className="text-[1.6rem] leading-none shrink-0" aria-hidden="true">${c.emoji}</span>
+              <span className="min-w-0">${t.cats[c.id]}</span>
+            </button>`;
+        })}
+      </div>`;
+  }
+
+  function PriceBadge({ p, t }) {
+    if (p === 0) {
+      return html`<span className="badge bg-ok-tint text-ok">${t.price[0]}</span>`;
+    }
+    return html`
+      <span className="badge bg-azul-tint text-ink">
+        <span aria-hidden="true" className="tracking-wider tabular-nums">
+          <span className="text-azul">${"€".repeat(p)}</span><span className="opacity-30">${"€".repeat(3 - p)}</span>
+        </span>
+        <span><span className="sr-only">${t.priceLabel}: </span>${t.price[p]}</span>
+      </span>`;
+  }
+
+  function RatingBadge({ r, rc, t }) {
+    if (!r) return null;
+    const val = Number(r).toFixed(1).replace(".", ",");
+    return html`
+      <span className="badge bg-gold-tint text-gold-ink" title=${t.ratingLabel}>
+        <${Icon} name="Star" size=${17} fill="currentColor" />
+        <span><span className="sr-only">${t.ratingLabel}: </span>${val}${rc ? html`<span className="font-normal"> · ${t.reviews(rc)}</span>` : null}</span>
+      </span>`;
+  }
+
+  function PlaceCard({ place, city, cat, lang, t, isFav, onToggleFav, showContext }) {
+    const name = tx(place.n, lang);
+    const context = [showContext ? t.cats[cat] : "", place.t || ""].filter(Boolean).join(" · ");
+    return html`
+      <article className="rounded-2xl bg-card border border-line shadow-card p-4 flex flex-col gap-3">
+        <div className="flex items-start gap-3">
+          <div className="min-w-0 flex-1">
+            ${context && html`<p className="text-soft font-bold text-[.95rem] flex items-center gap-1">
+              ${place.t && html`<${Icon} name="MapPin" size=${16} />`}${context}</p>`}
+            <h3 className="text-[1.3rem] font-bold leading-snug text-ink">${name}</h3>
+          </div>
+          <button type="button" aria-pressed=${isFav} aria-label=${(isFav ? t.removeFav : t.addFav) + ": " + name}
+            title=${isFav ? t.removeFav : t.addFav} onClick=${onToggleFav}
+            className=${"shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center transition-colors " +
+              (isFav ? "bg-terra-tint border-terra text-terra" : "bg-card border-line text-soft")}>
+            <${Icon} name="Heart" size=${28} fill=${isFav ? "currentColor" : "none"} />
+          </button>
+        </div>
+        <p className="text-[1.05rem] leading-relaxed text-ink">${place.d[lang]}</p>
+        <div className="flex flex-wrap gap-2">
+          <${RatingBadge} r=${place.r} rc=${place.rc} t=${t} />
+          <${PriceBadge} p=${place.p} t=${t} />
+          ${place.e && html`<span className="badge bg-ok-tint text-ok"><${Icon} name=${["Accessibility", "Footprints"]} size=${18} /> ${t.easy}</span>`}
+        </div>
+        <a className="map-btn" href=${mapsUrl(place.q)} target="_blank" rel="noopener noreferrer"
+          aria-label=${t.openMap + ": " + name}>
+          <${Icon} name="Navigation" size=${24} /> ${t.openMap}
+        </a>
+      </article>`;
+  }
+
+  function PlaceList({ city, cat, lang, t, favs, toggleFav }) {
+    const items = city.places[cat];
+    return html`
+      <section id="painel" role="tabpanel" aria-labelledby=${"tab-" + cat} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-[1.45rem] font-bold leading-tight">${t.catIn[cat]} ${city.name[lang]}</h2>
+            <span className="text-soft shrink-0">${t.places(items.length)}</span>
+          </div>
+          ${cat === "comer" && html`<p className="text-soft text-[.98rem] leading-relaxed">${t.comerNote}</p>`}
+        </div>
+        ${items.map((p) => {
+          const k = favKey(city.id, p.id);
+          return html`<${PlaceCard} key=${k} place=${p} city=${city} cat=${cat} lang=${lang} t=${t}
+            isFav=${favs.includes(k)} onToggleFav=${() => toggleFav(k)} />`;
+        })}
+      </section>`;
+  }
+
+  function FavoritesView({ lang, t, favs, toggleFav, goExplore }) {
+    const groups = CITIES.map((c) => ({
+      city: c,
+      items: CATS.flatMap((cat) => c.places[cat.id]
+        .filter((p) => favs.includes(favKey(c.id, p.id)))
+        .map((p) => ({ p, cat: cat.id })))
+    })).filter((g) => g.items.length);
+
+    return html`
+      <section className="fade-in flex flex-col gap-5">
+        <div className="flex flex-col gap-1">
+          <h2 className="city-name text-terra">${t.favTitle}</h2>
+          <p className="text-[1.1rem] text-soft">${t.favIntro}</p>
+        </div>
+        ${groups.length === 0 && html`
+          <div className="rounded-2xl bg-card border-2 border-dashed border-line p-6 flex flex-col items-center text-center gap-3">
+            <div className="w-16 h-16 rounded-full bg-terra-tint text-terra flex items-center justify-center" aria-hidden="true">
+              <${Icon} name="Heart" size=${34} />
+            </div>
+            <p className="text-xl font-bold">${t.favEmptyTitle}</p>
+            <p className="text-[1.05rem] text-soft">${t.favEmptyText}</p>
+            <button type="button" onClick=${goExplore} className="map-btn w-full mt-1">
+              <${Icon} name="MapPin" size=${22} /> ${t.favEmptyBtn}
+            </button>
+          </div>`}
+        ${groups.map((g) => html`
+          <div key=${g.city.id} className="flex flex-col gap-3">
+            <h3 className="flex items-center gap-2 text-[1.45rem] font-bold text-azul">
+              <span aria-hidden="true">${g.city.emoji}</span>${g.city.name[lang]}
+              <span className="text-soft text-base font-normal">· ${t.places(g.items.length)}</span>
+            </h3>
+            ${g.items.map(({ p, cat }) => {
+              const k = favKey(g.city.id, p.id);
+              return html`<${PlaceCard} key=${k} place=${p} city=${g.city} cat=${cat} lang=${lang} t=${t}
+                isFav=${true} onToggleFav=${() => toggleFav(k)} showContext=${true} />`;
+            })}
+          </div>`)}
+      </section>`;
+  }
+
+  function TipsView({ lang, t, pickCity, onLogout }) {
+    return html`
+      <section className="fade-in flex flex-col gap-5">
+        <div className="flex flex-col gap-1">
+          <h2 className="city-name text-terra">${t.tipsTitle}</h2>
+          <p className="text-[1.1rem] text-soft">${t.tipsIntro}</p>
+        </div>
+        ${CITIES.map((c) => html`
+          <div key=${c.id} className="flex flex-col gap-2">
+            <${TipCard} city=${c} lang=${lang} t=${t} showCity=${true} />
+            <button type="button" onClick=${() => pickCity(c.id)} className="btn-outline self-start">
+              <span aria-hidden="true">${c.emoji}</span> ${t.seeCity(c.name[lang])}
+              <${Icon} name="ChevronRight" size=${20} />
+            </button>
+          </div>`)}
+        <button type="button" onClick=${onLogout} className="btn-quiet self-center mt-4">
+          <${Icon} name="LogOut" size=${20} /> ${t.logout}
+        </button>
+      </section>`;
+  }
+
+  /* ---------- assistente de viagem ---------- */
+  function PlanSetup({ t, lang, trip, onBuild }) {
+    const s = trip.settings;
+    const set = (patch) => trip.setSettings(Object.assign({}, s, patch));
+    const toggleStop = (id) => set({ stops: s.stops.includes(id) ? s.stops.filter((x) => x !== id) : STOPS.map((x) => x.id).filter((x) => x === id || s.stops.includes(x)) });
+    const problem = s.stops.length === 0 ? t.noStops : s.days < s.stops.length ? t.tooFew(s.days, s.stops.length) : "";
+    return html`
+      <section className="rounded-3xl bg-card border border-line shadow-card p-4 flex flex-col gap-5" aria-labelledby="setup-title">
+        <h3 id="setup-title" className="text-[1.35rem] font-bold flex items-center gap-2">
+          <${Icon} name="CalendarDays" size=${26} className="text-azul" /> ${t.newPlan}
+        </h3>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-lg">${t.daysQ}</p>
+          <div className="flex items-center gap-4">
+            <button type="button" className="stepper-btn" aria-label=${t.fewer} disabled=${s.days <= 1} onClick=${() => set({ days: Math.max(1, s.days - 1) })}>
+              <${Icon} name="Minus" size=${26} />
+            </button>
+            <p className="min-w-[6rem] text-center" aria-live="polite">
+              <span className="font-display text-[2.4rem] leading-none text-azul tabular-nums">${s.days}</span>
+              <span className="block text-soft font-bold">${t.daysUnit(s.days)}</span>
+            </p>
+            <button type="button" className="stepper-btn" aria-label=${t.more} disabled=${s.days >= 30} onClick=${() => set({ days: Math.min(30, s.days + 1) })}>
+              <${Icon} name="Plus" size=${26} />
+            </button>
+          </div>
+        </div>
+        <label htmlFor="trip-start" className="flex flex-col gap-1.5 font-bold text-lg">
+          ${t.startQ}
+          <input id="trip-start" type="date" className="field" value=${s.start} onChange=${(e) => set({ start: e.target.value })} />
+        </label>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-lg">${t.stopsQ}</p>
+          <div className="flex flex-wrap gap-2">
+            ${STOPS.map((st) => html`
+              <button key=${st.id} type="button" className="chip" aria-pressed=${s.stops.includes(st.id)} onClick=${() => toggleStop(st.id)}>
+                <span aria-hidden="true">${st.emoji}</span>${st.name[lang]}
+              </button>`)}
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-lg">${t.dirQ}</p>
+          <div className="flex flex-wrap gap-2">
+            ${["ns", "sn"].map((d) => html`
+              <button key=${d} type="button" className="chip" aria-pressed=${(s.dir || "ns") === d} onClick=${() => set({ dir: d })}>${t.dirs[d]}</button>`)}
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-lg">${t.paceQ}</p>
+          <div className="flex flex-wrap gap-2">
+            ${["calmo", "normal"].map((p) => html`
+              <button key=${p} type="button" className="chip" aria-pressed=${s.pace === p} onClick=${() => set({ pace: p })}>${t.paces[p]}</button>`)}
+          </div>
+        </div>
+        ${problem && html`<p role="alert" className="rounded-xl bg-bad-tint text-bad font-bold px-4 py-3">${problem}</p>`}
+        <button type="button" className="map-btn" disabled=${!!problem} onClick=${onBuild}>
+          <${Icon} name=${["Route", "Map"]} size=${24} /> ${t.build}
+        </button>
+      </section>`;
+  }
+
+  function DayCard({ d, plan, lang, t }) {
+    const st = stopLabel(d.stop, lang, t);
+    const date = dayDate(plan.meta && plan.meta.start, d.day, lang);
+    const blocks = [["morning", "Sunrise"], ["afternoon", "Sun"], ["evening", "Moon"]].filter(([k]) => d[k]);
+    return html`
+      <article className="rounded-2xl bg-card border border-line shadow-card p-4 flex flex-col gap-3">
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 w-14 h-14 rounded-2xl bg-terra text-onterra flex flex-col items-center justify-center leading-none" aria-hidden="true">
+            <span className="text-[.7rem] font-bold uppercase tracking-wider">${lang === "pt" ? "Dia" : "Día"}</span>
+            <span className="font-display text-[1.6rem]">${d.day}</span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="eyebrow"><span className="sr-only">${t.dayLabel(d.day)} · </span>${date || st.name}</p>
+            <h4 className="text-[1.25rem] font-bold leading-snug"><span aria-hidden="true">${st.emoji} </span>${date ? st.name + (d.title ? " — " : "") : ""}${d.title}</h4>
+          </div>
+        </div>
+        ${d.travel && html`
+          <p className="rounded-xl bg-azul-tint text-ink px-3 py-2 flex items-start gap-2 font-bold">
+            <${Icon} name=${["TrainFront", "Train"]} size=${22} className="text-azul shrink-0 mt-0.5" />
+            <span>${[d.travel.from, d.travel.to].filter(Boolean).join(" → ")}${d.travel.how ? html`<span className="font-normal"> · ${d.travel.how}</span>` : null}</span>
+          </p>`}
+        ${blocks.map(([k, ic]) => html`
+          <div key=${k} className="flex gap-3">
+            <${Icon} name=${ic} size=${22} className="text-gold-ink shrink-0 mt-1" />
+            <p className="text-[1.05rem] leading-relaxed min-w-0"><b>${t[k]}:</b> ${d[k]}</p>
+          </div>`)}
+        ${d.places.length > 0 && html`
+          <div className="flex flex-wrap gap-2">
+            ${d.places.map((k) => {
+              const ref = PLACE_BY_KEY[k];
+              return html`<a key=${k} className="chip" href=${mapsUrl(ref.place.q)} target="_blank" rel="noopener noreferrer">
+                <${Icon} name="MapPin" size=${18} className="text-azul" />${tx(ref.place.n, lang)}</a>`;
+            })}
+          </div>`}
+        ${d.meals && d.meals.length > 0 && html`
+          <div className="flex flex-col gap-2">
+            <p className="font-bold flex items-center gap-2"><${Icon} name=${["UtensilsCrossed", "Utensils"]} size=${20} className="text-terra" /> ${t.meals}</p>
+            <div className="flex flex-col gap-2">
+              ${d.meals.map((m, i) => {
+                const ref = PLACE_BY_KEY[m.key];
+                if (!ref) return null;
+                return html`<a key=${i} className="chip w-full !rounded-2xl justify-between gap-3" href=${mapsUrl(ref.place.q)} target="_blank" rel="noopener noreferrer">
+                  <span className="min-w-0"><span className="block text-soft font-normal text-[.9rem]">${m.label}</span>${tx(ref.place.n, lang)}</span>
+                  ${ref.place.r ? html`<span className="shrink-0 text-gold-ink">★ ${Number(ref.place.r).toFixed(1).replace(".", ",")}</span>` : null}</a>`;
+              })}
+            </div>
+          </div>`}
+        ${d.sleep && html`<p className="text-[1.02rem] text-soft flex gap-2"><${Icon} name="BedDouble" size=${22} className="shrink-0" /><span><b>${t.sleep}:</b> ${d.sleep}</span></p>`}
+        ${d.tip && html`<p className="rounded-xl bg-gold-tint px-3 py-2 text-[1.02rem] flex gap-2"><${Icon} name="Lightbulb" size=${20} className="text-gold-ink shrink-0 mt-0.5" /><span><b>${t.tipShort}:</b> ${d.tip}</span></p>`}
+      </article>`;
+  }
+
+  function PlanView({ plan, lang, t, trip, showToast }) {
+    const [confirm, setConfirm] = useState(false);
+    const canDelete = trip.planSource === "local" || (trip.planSource === "family" && trip.dbInfo.canWrite);
+    const link = shareLink(trip.current);
+    return html`
+      <section id="plano" className="flex flex-col gap-4" aria-labelledby="plan-title">
+        <div className="flex flex-col gap-1">
+          <p className="eyebrow">${t.planHeading} · ${plan.days.length} ${t.daysUnit(plan.days.length)}</p>
+          <h3 id="plan-title" className="text-[1.5rem] font-bold leading-tight text-azul">${plan.title || t.planHeading}</h3>
+          ${plan.summary && html`<p className="text-[1.08rem] leading-relaxed">${plan.summary}</p>`}
+          <p className=${"badge self-start mt-1 " + (trip.planSource === "family" ? "bg-ok-tint text-ok" : "bg-azul-tint text-azul")}>
+            <${Icon} name=${trip.planSource === "family" ? "Users" : "Smartphone"} size=${18} />
+            ${trip.planSource === "family" ? t.savedFamily : t.savedLocal}
+          </p>
+        </div>
+        ${plan.days.map((d) => html`<${DayCard} key=${d.day} d=${d} plan=${plan} lang=${lang} t=${t} />`)}
+        <div className="flex flex-wrap gap-2">
+          ${link && html`
+            <button type="button" className="btn-outline" onClick=${async () => showToast((await copyText(link)) ? t.shared : t.copyFail)}>
+              <${Icon} name="Share2" size=${20} /> ${t.share}
+            </button>`}
+          <button type="button" className="btn-outline" onClick=${async () => showToast((await copyText(planToText(plan, lang, t))) ? t.copied : t.copyFail)}>
+            <${Icon} name="Copy" size=${20} /> ${t.copy}
+          </button>
+          ${trip.planSource === "local" && trip.family && html`
+            <button type="button" className="btn-quiet" onClick=${trip.useFamilyPlan}><${Icon} name="Users" size=${20} /> ${t.backToFamily}</button>`}
+          ${canDelete && !confirm && html`
+            <button type="button" className="btn-quiet" onClick=${() => setConfirm(true)}><${Icon} name="Trash2" size=${20} /> ${t.del}</button>`}
+        </div>
+        ${confirm && html`
+          <div role="alertdialog" aria-label=${t.delConfirm} className="rounded-2xl bg-bad-tint p-4 flex flex-col gap-3">
+            <p className="font-bold text-bad text-lg">${t.delConfirm}</p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="btn-quiet !border-bad !text-bad" onClick=${() => { setConfirm(false); trip.deletePlan(); }}>${t.yesDel}</button>
+              <button type="button" className="btn-quiet" onClick=${() => setConfirm(false)}>${t.cancel}</button>
+            </div>
+          </div>`}
+      </section>`;
+  }
+
+  function Thinking({ t }) {
+    const [i, setI] = useState(0);
+    useEffect(() => {
+      const id = setInterval(() => setI((x) => Math.min(x + 1, t.thinking.length - 1)), 4000);
+      return () => clearInterval(id);
+    }, [t]);
+    return html`<span className="flex items-center gap-2 text-soft"><span className="dots" aria-hidden="true"><span></span><span></span><span></span></span>${t.thinking[i]}</span>`;
+  }
+
+  function ChatPanel({ t, trip, scrollToPlan }) {
+    const [text, setText] = useState("");
+    const endRef = useRef(null);
+    const lastLen = useRef(trip.chat.length);
+    useEffect(() => {
+      if (trip.chat.length > lastLen.current && endRef.current) endRef.current.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "nearest" });
+      lastLen.current = trip.chat.length;
+    }, [trip.chat.length]);
+    const canSend = !!trip.sample && !trip.busy;
+    function submit(e) {
+      e.preventDefault();
+      if (!text.trim() || !canSend) return;
+      trip.send(text);
+      setText("");
+    }
+    return html`
+      <section className="flex flex-col gap-3" aria-labelledby="chat-title">
+        <div className="flex items-center justify-between gap-3">
+          <h3 id="chat-title" className="text-[1.35rem] font-bold flex items-center gap-2">
+            <${Icon} name="MessagesSquare" size=${26} className="text-azul" /> ${t.conversation}
+          </h3>
+          ${trip.chat.length > 0 && !trip.busy && html`<button type="button" className="btn-quiet !min-h-[2.6rem] text-[.95rem]" onClick=${trip.newChat}>${t.newChat}</button>`}
+        </div>
+        <p className="text-[1.05rem] text-soft -mt-1">${t.aiIntro}</p>
+        <div className="flex flex-col gap-3">
+          <p className="bubble bubble-ai">${t.hello}</p>
+          ${trip.chat.map((m) => {
+            if (m.role === "user") return html`<p key=${m.id} className="bubble bubble-user">${m.text}</p>`;
+            return html`
+              <div key=${m.id} className="bubble bubble-ai flex flex-col gap-2">
+                ${m.pending && !m.text && html`<${Thinking} t=${t} />`}
+                ${m.text && html`<span>${m.text}</span>`}
+                ${m.pending && m.text && html`<span className="dots" aria-hidden="true"><span></span><span></span><span></span></span>`}
+                ${m.error && html`<span className="text-bad font-bold" role="alert">${m.error}</span>`}
+                ${m.retry && html`<button type="button" className="btn-outline self-start" onClick=${() => trip.retry(m)}><${Icon} name="RotateCcw" size=${20} /> ${t.retry}</button>`}
+                ${m.plan && html`<button type="button" className="btn-outline self-start" onClick=${scrollToPlan}><${Icon} name="ClipboardList" size=${20} /> ${t.planUpdated} · ${t.seePlan}</button>`}
+              </div>`;
+          })}
+          <div ref=${endRef}></div>
+        </div>
+        ${trip.busy && html`<button type="button" className="btn-quiet self-center" onClick=${trip.stop}><${Icon} name="Square" size=${18} fill="currentColor" /> ${t.stop}</button>`}
+        ${trip.sample && html`
+          <div className="flex flex-wrap gap-2">
+            ${t.chips.map((c) => html`<button key=${c} type="button" className="chip" disabled=${!canSend} onClick=${() => trip.send(c)}>${c}</button>`)}
+          </div>
+          <form onSubmit=${submit} className="flex gap-2 items-end">
+            <label htmlFor="chat-input" className="sr-only">${t.askLabel}</label>
+            <textarea id="chat-input" rows="2" className="field flex-1 min-w-0" placeholder=${t.askPh} value=${text}
+              onChange=${(e) => setText(e.target.value)}
+              onKeyDown=${(e) => { if (e.key === "Enter" && !e.shiftKey) submit(e); }}></textarea>
+            <button type="submit" className="map-btn !min-h-[3.4rem] !px-4 shrink-0" disabled=${!canSend || !text.trim()} aria-label=${t.send}>
+              <${Icon} name=${["SendHorizontal", "SendHorizonal", "Send"]} size=${24} />
+            </button>
+          </form>`}
+      </section>`;
+  }
+
+  function AiUnavailable({ t, trip }) {
+    if (trip.sample === undefined) {
+      return html`<p className="rounded-2xl bg-azul-tint text-azul font-bold px-4 py-3 flex items-center gap-2"><span className="dots" aria-hidden="true"><span></span><span></span><span></span></span>${t.aiConnecting}</p>`;
+    }
+    const outside = !window.claude;
+    return html`
+      <section className="rounded-2xl bg-card border border-line p-4 flex flex-col gap-3" aria-labelledby="ai-off-title">
+        <h3 id="ai-off-title" className="text-[1.2rem] font-bold flex items-center gap-2">
+          <${Icon} name="Sparkles" size=${24} className="text-azul" /> ${t.conversation}
+        </h3>
+        <p className="text-[1.02rem] text-soft">${outside ? t.aiStandalone : t.aiOff}</p>
+        ${outside && html`<a className="btn-outline self-start" href=${CLAUDE_URL} target="_blank" rel="noopener noreferrer"><${Icon} name="ExternalLink" size=${20} /> ${t.openClaude}</a>`}
+      </section>`;
+  }
+
+  function TripView({ lang, t, trip, showToast }) {
+    const [showSetup, setShowSetup] = useState(!trip.plan);
+    const scrollToPlan = () => { const el = document.getElementById("plano"); if (el) el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); };
+    const hadPlan = useRef(!!trip.plan);
+    useEffect(() => { if (trip.plan && !hadPlan.current) setShowSetup(false); hadPlan.current = !!trip.plan; }, [trip.plan]);
+
+    async function onBuild() {
+      await trip.buildAuto();
+      setShowSetup(false);
+      setTimeout(scrollToPlan, 80);
+    }
+
+    return html`
+      <section className="fade-in flex flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <h2 className="city-name text-terra">${t.tripTitle}</h2>
+          <p className="text-[1.1rem] text-soft">${t.tripIntro}</p>
+        </div>
+        ${(showSetup || !trip.plan) && html`<${PlanSetup} t=${t} lang=${lang} trip=${trip} onBuild=${onBuild} />`}
+        ${trip.plan && !showSetup && html`
+          <button type="button" className="btn-outline self-start" onClick=${() => setShowSetup(true)}>
+            <${Icon} name="CalendarPlus" size=${20} /> ${t.change}
+          </button>`}
+        ${trip.plan && html`<${PlanView} plan=${trip.plan} lang=${lang} t=${t} trip=${trip} showToast=${showToast} />`}
+        ${trip.sample ? html`<${ChatPanel} t=${t} trip=${trip} scrollToPlan=${scrollToPlan} />` : html`<${AiUnavailable} t=${t} trip=${trip} />`}
+      </section>`;
+  }
+
+  function BottomNav({ view, goView, t, favCount }) {
+    const items = [
+      { id: "explorar", icon: "MapPin" },
+      { id: "viagem", icon: "Sparkles" },
+      { id: "favoritos", icon: "Heart" },
+      { id: "dicas", icon: "Lightbulb" }
+    ];
+    return html`
+      <nav className="bottom-nav" aria-label=${t.navLabel}>
+        <div className="max-w-xl mx-auto grid grid-cols-4 gap-1 px-2 py-2">
+          ${items.map((i) => {
+            const on = view === i.id;
+            return html`
+              <button key=${i.id} type="button" aria-current=${on ? "page" : undefined} onClick=${() => goView(i.id)}
+                className=${"min-h-[4rem] rounded-2xl flex flex-col items-center justify-center gap-1 font-bold text-[.9rem] transition-colors " +
+                  (on ? "bg-azul-tint text-azul" : "text-soft")}>
+                <span className="relative">
+                  <${Icon} name=${i.icon} size=${27} fill=${on && i.id === "favoritos" ? "currentColor" : "none"} />
+                  ${i.id === "favoritos" && favCount > 0 && html`<span className="count" aria-hidden="true">${favCount}</span>`}
+                </span>
+                <span>${t.nav[i.id]}${i.id === "favoritos" && favCount > 0 ? html`<span className="sr-only"> (${favCount})</span>` : null}</span>
+              </button>`;
+          })}
+        </div>
+      </nav>`;
+  }
+
+  function MainApp({ lang, setLang, t, onLogout, theme, toggleTheme }) {
+    const init = useRef(readHash()).current;
+    const [cityId, setCityId] = useState(() => { const c = init.city || store.get("rosinei.city", "porto"); return CITY_BY_ID[c] ? c : "porto"; });
+    const [cat, setCat] = useState(() => { const c = store.get("rosinei.cat", "ver"); return CATS.some((x) => x.id === c) ? c : "ver"; });
+    const [view, setView] = useState(init.view || "explorar");
+    const [favs, setFavs] = useState(() => { const f = store.get("rosinei.favs", []); return Array.isArray(f) ? f.filter((k) => PLACE_BY_KEY[k]) : []; });
+    const [toast, setToast] = useState(null);
+    const toastTimer = useRef(null);
+    const city = CITY_BY_ID[cityId];
+
+    function showToast(text) {
+      clearTimeout(toastTimer.current);
+      setToast({ text, id: Date.now() });
+      toastTimer.current = setTimeout(() => setToast(null), 2600);
+    }
+    const trip = useTrip(lang, t, showToast);
+
+    useEffect(() => { store.set("rosinei.city", cityId); }, [cityId]);
+    useEffect(() => { store.set("rosinei.cat", cat); }, [cat]);
+    /* link compartilhado (#a=… roteiro recomendado, #r=… roteiro da IA): guarda neste aparelho e abre a aba Viagem */
+    useEffect(() => {
+      const shared = readSharedFromHash();
+      if (!shared) return;
+      trip.importShared(shared);
+      setView("viagem");
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* sem histórico */ }
+    }, []);
+
+    function toggleFav(k) {
+      const has = favs.includes(k);
+      const next = has ? favs.filter((x) => x !== k) : favs.concat(k);
+      setFavs(next);
+      store.set("rosinei.favs", next);
+      showToast(has ? t.removed : t.added);
+    }
+    function goView(v) {
+      setView(v);
+      window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
+    }
+    function pickCity(id) {
+      setCityId(id);
+      goView("explorar");
+    }
+
+    return html`
+      <div className="font-body">
+        <${Header} lang=${lang} setLang=${setLang} t=${t} theme=${theme} toggleTheme=${toggleTheme} />
+        <main className="max-w-xl mx-auto px-4 pt-4 pb-nav flex flex-col gap-6">
+          ${view === "explorar" && html`
+            <${PromoCard} t=${t} plan=${trip.plan} goTrip=${() => goView("viagem")} />
+            <${CityCarousel} cityId=${cityId} onPick=${setCityId} lang=${lang} t=${t} />
+            <${CityHero} city=${city} lang=${lang} t=${t} />
+            <${TipCard} city=${city} lang=${lang} t=${t} />
+            <${CatTabs} cat=${cat} setCat=${setCat} t=${t} />
+            <${PlaceList} city=${city} cat=${cat} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} />
+            <p className="text-soft text-[.95rem] leading-relaxed">${t.note}</p>`}
+          ${view === "viagem" && html`<${TripView} lang=${lang} t=${t} trip=${trip} showToast=${showToast} />`}
+          ${view === "favoritos" && html`<${FavoritesView} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} goExplore=${() => goView("explorar")} />`}
+          ${view === "dicas" && html`<${TipsView} lang=${lang} t=${t} pickCity=${pickCity} onLogout=${onLogout} />`}
+        </main>
+        <${BottomNav} view=${view} goView=${goView} t=${t} favCount=${favs.length} />
+        <div className="toast-wrap" aria-live="polite">
+          ${toast && html`<div key=${toast.id} className="toast">${toast.text}</div>`}
+        </div>
+      </div>`;
+  }
+
+  function App() {
+    const [lang, setLang] = useState(() => { const l = store.get("rosinei.lang", "pt"); return T[l] ? l : "pt"; });
+    const [authed, setAuthed] = useState(() => store.get("rosinei.auth", "") === PASS_HASH);
+    const [theme, setTheme] = useState(() => (store.get("rosinei.theme", "light") === "dark" ? "dark" : "light"));
+    const t = T[lang];
+    useEffect(() => {
+      document.documentElement.lang = lang === "pt" ? "pt-BR" : "es";
+      store.set("rosinei.lang", lang);
+    }, [lang]);
+    useEffect(() => {
+      if (theme === "dark") document.documentElement.setAttribute("data-app-theme", "dark");
+      else document.documentElement.removeAttribute("data-app-theme");
+      store.set("rosinei.theme", theme);
+    }, [theme]);
+    const toggleTheme = () => setTheme((x) => (x === "dark" ? "light" : "dark"));
+    function logout() { store.set("rosinei.auth", null); setAuthed(false); window.scrollTo(0, 0); }
+    if (!authed) return html`<${Login} lang=${lang} setLang=${setLang} t=${t} theme=${theme} toggleTheme=${toggleTheme} onOk=${() => setAuthed(true)} />`;
+    return html`<${MainApp} lang=${lang} setLang=${setLang} t=${t} theme=${theme} toggleTheme=${toggleTheme} onLogout=${logout} />`;
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(html`<${App} />`);
+})();
+</script>
+</body>
+</html>
