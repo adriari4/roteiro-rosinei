@@ -173,7 +173,9 @@ h1, h2, h3 { text-wrap: balance; }
   font-weight: 700; font-size: 1.15rem; border-bottom: 1px solid var(--line);
   font-variant-numeric: tabular-nums; line-height: 1.1;
 }
-.fx-bar .fx-rate { font-size: 1.85rem; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+.fx-bar > span { white-space: nowrap; }
+.fx-bar .fx-rate { font-size: 1.8rem; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+@media (max-width: 380px) { .fx-bar { gap: .4rem; padding-inline: .6rem; } .fx-bar .fx-rate { font-size: 1.6rem; } .fx-bar .fx-emoji { display: none; } }
 .fx-bar .fx-go {
   margin-left: .3rem; padding: .35rem .8rem; border-radius: 999px;
   background: var(--btn); color: var(--on-btn); font-size: 1rem;
@@ -337,13 +339,16 @@ h1, h2, h3 { text-wrap: balance; }
   const ptA = (c) => (c === "Porto" ? "ao Porto" : "a " + c);
   const ptDe = (c) => (c === "Porto" ? "do Porto" : "de " + c);
   const ptPara = (c) => (c === "Porto" ? "para o Porto" : "para " + c);
+  const ptEm = (c) => (c === "Porto" ? "no Porto" : "em " + c);
   const T = {
     pt: {
       subtitle: "Portugal & Espanha",
       langLabel: "Idioma",
       chooseCity: "Escolha a cidade",
-      cats: { ver: "O que ver", comer: "Onde comer", bares: "Bares & Cafés", ficar: "Onde ficar" },
-      catIn: { ver: "O que ver em", comer: "Onde comer em", bares: "Bares & Cafés em", ficar: "Onde ficar em" },
+      cats: { ver: "O que ver", comer: "Onde comer", bares: "Bares & Cafés", ficar: "Onde ficar", vinho: "Provas de vinho" },
+      catIn: { ver: "O que ver", comer: "Onde comer", bares: "Bares & Cafés", ficar: "Onde ficar", vinho: "Provas de vinho" },
+      inCity: (c) => ptEm(c),
+      vinhoNote: "As caves de vinho do Porto ficam em Vila Nova de Gaia, do outro lado do rio: as 4 mais bem avaliadas no Google Maps (notas aproximadas, outubro de 2026). Reserve a visita com antecedência.",
       comerNote: "Comida típica, entre os restaurantes mais bem avaliados no Google Maps (notas aproximadas, consultadas em outubro de 2026). Os horários mudam: confirme antes de ir.",
       catsLabel: "Categorias",
       tip: "Dica de Ouro",
@@ -366,8 +371,12 @@ h1, h2, h3 { text-wrap: balance; }
       favEmptyTitle: "Ainda não há favoritos",
       favEmptyText: "Toque no coração de qualquer lugar para guardá-lo aqui.",
       favEmptyBtn: "Escolher lugares",
-      tipsTitle: "Dicas de Ouro",
-      tipsIntro: "Um conselho importante para cada cidade da viagem.",
+      tipsTitle: "Dicas de viagem",
+      tipsIntro: "O essencial para viajar tranquilo: antes de sair do Brasil e em cada cidade.",
+      tipsGeneral: "Para a viagem",
+      tipsCity: "Por cidade",
+      tipsCount: (n) => (n === 1 ? "1 dica" : n + " dicas"),
+      tipsSrc: "Regras e preços mudam: confirme antes de viajar.",
       seeCity: (c) => "Ver " + c,
       note: "Preços aproximados por pessoa. Horários e preços podem mudar: confirme antes de ir.",
       logout: "Sair da conta",
@@ -489,7 +498,7 @@ h1, h2, h3 { text-wrap: balance; }
       fxNote: "No cartão ou no caixa eletrônico o banco cobra IOF e tarifas: o valor final costuma ser um pouco maior.",
       fxQuick: "Valores rápidos",
       priceRange: ["", "até {a}", "{a}–{b}", "mais de {b}"],
-      wxTitle: (c) => "Tempo em " + c,
+      wxTitle: (c) => "Tempo " + ptEm(c),
       wxNow: "Agora",
       wxNext: "Próximos dias",
       wxRain: "chuva",
@@ -512,7 +521,7 @@ h1, h2, h3 { text-wrap: balance; }
       lessDaysIn: (c) => "Menos dias em " + c,
       moreDaysIn: (c) => "Mais dias em " + c,
       gastro: "Gastronomia típica",
-      gastroIn: (c) => "Gastronomia típica de " + c,
+      gastroIn: (c) => "Gastronomia típica " + ptDe(c),
       gastroIntro: "Os sabores da cidade e onde prová-los nos restaurantes do app.",
       kinds: { prato: "Prato", petisco: "Petisco", doce: "Doce", bebida: "Bebida" },
       tryAt: "Onde provar"
@@ -521,8 +530,10 @@ h1, h2, h3 { text-wrap: balance; }
       subtitle: "Portugal y España",
       langLabel: "Idioma",
       chooseCity: "Elige la ciudad",
-      cats: { ver: "Qué ver", comer: "Dónde comer", bares: "Bares y Cafés", ficar: "Dónde alojarse" },
-      catIn: { ver: "Qué ver en", comer: "Dónde comer en", bares: "Bares y cafés en", ficar: "Dónde alojarse en" },
+      cats: { ver: "Qué ver", comer: "Dónde comer", bares: "Bares y Cafés", ficar: "Dónde alojarse", vinho: "Catas de vino" },
+      catIn: { ver: "Qué ver", comer: "Dónde comer", bares: "Bares y cafés", ficar: "Dónde alojarse", vinho: "Catas de vino" },
+      inCity: (c) => "en " + c,
+      vinhoNote: "Las bodegas de vino de Oporto están en Vila Nova de Gaia, al otro lado del río: las 4 mejor valoradas en Google Maps (notas aproximadas, octubre de 2026). Conviene reservar la visita con antelación.",
       comerNote: "Comida típica, entre los restaurantes mejor valorados en Google Maps (notas aproximadas, consultadas en octubre de 2026). Los horarios cambian: conviene confirmarlos antes de ir.",
       catsLabel: "Categorías",
       tip: "Consejo de Oro",
@@ -545,8 +556,12 @@ h1, h2, h3 { text-wrap: balance; }
       favEmptyTitle: "Aún no hay favoritos",
       favEmptyText: "Toca el corazón de cualquier sitio para guardarlo aquí.",
       favEmptyBtn: "Elegir sitios",
-      tipsTitle: "Consejos de Oro",
-      tipsIntro: "Un consejo importante para cada ciudad del viaje.",
+      tipsTitle: "Consejos de viaje",
+      tipsIntro: "Lo esencial para viajar tranquilos: antes de salir de Brasil y en cada ciudad.",
+      tipsGeneral: "Para el viaje",
+      tipsCity: "Por ciudad",
+      tipsCount: (n) => (n === 1 ? "1 consejo" : n + " consejos"),
+      tipsSrc: "Las normas y los precios cambian: conviene confirmarlos antes de viajar.",
       seeCity: (c) => "Ver " + c,
       note: "Precios aproximados por persona. Horarios y precios pueden cambiar: conviene confirmarlos antes de ir.",
       logout: "Cerrar sesión",
@@ -700,10 +715,14 @@ h1, h2, h3 { text-wrap: balance; }
     { id: "ver", emoji: "👁️" },
     { id: "comer", emoji: "🍽️" },
     { id: "bares", emoji: "🍷" },
-    { id: "ficar", emoji: "🏨" }
+    { id: "ficar", emoji: "🏨" },
+    { id: "vinho", emoji: "🍇" }
   ];
-  /* abas da cidade: as 4 categorias de lugares + gastronomia típica (pratos, não lugares) */
+  /* abas da cidade: categorias de lugares (as vazias não aparecem) + gastronomia típica (pratos, não lugares) */
   const TABS = CATS.concat([{ id: "gastro", emoji: "🥘" }]);
+  const tabsFor = (cityId) => TABS.filter((c) => c.id === "gastro"
+    ? (GASTRO[cityId] || []).length > 0
+    : ((CITY_BY_ID[cityId] && CITY_BY_ID[cityId].places[c.id]) || []).length > 0);
   /* gastronomia típica por cidade: kind = prato | petisco | doce | bebida; where = ids de restaurantes da mesma cidade */
   const GASTRO = {};
 
@@ -721,8 +740,8 @@ h1, h2, h3 { text-wrap: balance; }
         es: "Tierra del vino de Oporto, de los puentes sobre el Duero y de las fachadas de azulejo azul."
       },
       tip: {
-        pt: "O Porto é cheio de ladeiras e de pedras de granito que escorregam com a chuva. Use sapato fechado com sola antiderrapante. Para subir da Ribeira até o centro, pegue o Funicular dos Guindais ou um táxi e poupe as pernas.",
-        es: "Oporto está lleno de cuestas y de adoquines de granito que resbalan con la lluvia. Mejor calzado cerrado con suela antideslizante. Para subir de la Ribeira al centro, el Funicular dos Guindais o un taxi ahorran mucho esfuerzo."
+        pt: "O Porto é cheio de ladeiras e de pedras de granito que escorregam com a chuva. Use sapato fechado com sola antiderrapante. Para subir da Ribeira até o centro, pegue um táxi ou Uber: o Funicular dos Guindais está fechado desde julho de 2026 (confirme se já reabriu).",
+        es: "Oporto está lleno de cuestas y de adoquines de granito que resbalan con la lluvia. Mejor calzado cerrado con suela antideslizante. Para subir de la Ribeira al centro, mejor taxi o Uber: el Funicular dos Guindais está cerrado desde julio de 2026 (conviene confirmar si ya ha reabierto)."
       },
       places: {
         ver: [
@@ -769,15 +788,15 @@ h1, h2, h3 { text-wrap: balance; }
           { id: "majestic", n: "Majestic Café", p: 2, q: "Majestic Café, Rua de Santa Catarina 112, Porto",
             d: { pt: "Café de 1921 em estilo Art Nouveau, com espelhos, lustres e garçons de gravata-borboleta. Peça a rabanada da casa com um café.",
                  es: "Café de 1921 de estilo modernista, con espejos, lámparas y camareros con pajarita. Merece la pena pedir la torrija de la casa con un café." } },
-          { id: "ferreira", n: "Caves Ferreira", p: 2, q: "Caves Ferreira, Vila Nova de Gaia",
-            d: { pt: "Adega de vinho do Porto à beira do rio, em Gaia, fundada em 1751 por uma família portuguesa. Visita guiada com prova no final. Reserve antes.",
-                 es: "Bodega de vino de Oporto junto al río, en Gaia, fundada en 1751 por una familia portuguesa. Visita guiada con cata al final. Conviene reservar." } },
-          { id: "sandeman", n: "Caves Sandeman", p: 2, q: "Sandeman, Largo Miguel Bombarda 47, Vila Nova de Gaia",
-            d: { pt: "Outra adega clássica, bem no cais de Gaia, com guias vestidos com a capa preta do famoso logotipo. Visita curta e com prova de vinhos.",
-                 es: "Otra bodega clásica, en pleno muelle de Gaia, con guías vestidos con la capa negra de su famoso logotipo. Visita corta y con cata." } },
           { id: "confeitaria", n: "Confeitaria do Bolhão", p: 1, q: "Confeitaria do Bolhão, Rua Formosa 339, Porto",
             d: { pt: "Confeitaria de 1896, pertinho do mercado. Ótima para um café com pastel de nata ou bolo de arroz, sentado com calma.",
                  es: "Pastelería de 1896, muy cerca del mercado. Ideal para un café con pastel de nata o bolo de arroz, sentados con calma." } }
+        ],
+        vinho: [
+          {"id": "cockburns", "n": "Cockburn's Port Lodge", "t": "Vila Nova de Gaia", "r": 4.8, "rc": 1727, "p": 2, "q": "Cockburn's Port Lodge, Rua de Serpa Pinto 346, Vila Nova de Gaia", "d": {"pt": "Uma das maiores adegas de Gaia, com tanoeiros consertando barris de segunda a sexta. Visita guiada de cerca de 1h30 com prova de 3 vinhos do Porto, por volta de 30 €; só com reserva no site, de preferência com uma semana de antecedência entre maio e outubro. Fica a meia encosta, com uns 10 minutos de subida: melhor ir de táxi.", "es": "Una de las bodegas más grandes de Gaia, con toneleros reparando barricas de lunes a viernes. Visita guiada de unos 90 minutos con cata de 3 oportos, unos 30 €; solo con reserva en su web, mejor con una semana de antelación entre mayo y octubre. Está a media ladera, con unos 10 minutos de subida: mejor ir en taxi."}},
+          {"id": "porto-augustos", "n": "Porto Augusto's", "t": "Vila Nova de Gaia", "r": 4.8, "rc": 1571, "p": 1, "e": true, "q": "Porto Augusto's, Rua de França 10, Vila Nova de Gaia", "d": {"pt": "Adega familiar pequena e acolhedora, a uma quadra da beira-rio e sem subidas. Visita curta (uns 20 minutos) com prova de 3 vinhos do Porto ou 4 bombons recheados de Porto, por 15 € por pessoa; há visitas em português. Reserve online com pelo menos um dia de antecedência; no mesmo dia, só perguntando na recepção.", "es": "Bodega familiar pequeña y cercana, a una manzana del río y en llano. Visita breve (unos 20 minutos) con cata de 3 oportos o 4 bombones rellenos de oporto, 15 € por persona. Conviene reservar online con al menos un día de antelación; el mismo día, solo preguntando en recepción."}},
+          {"id": "churchills", "n": "Churchill's Lodge", "t": "Vila Nova de Gaia", "r": 4.8, "rc": 531, "p": 2, "q": "Churchill's Lodge, Rua da Fonte Nova 5, Vila Nova de Gaia", "d": {"pt": "Casa independente e mais jovem (fundada em 1981), com um jardim tranquilo onde se faz a prova. A visita guiada com prova de 3 vinhos do Porto clássicos dura cerca de 1 hora e custa uns 25 €. Reserve com pelo menos um dia de antecedência e confirme se abre no domingo; fica numa rua em subida, longe da beira-rio: vale ir de táxi.", "es": "Casa independiente y más joven (fundada en 1981), con un jardín tranquilo donde se hace la cata. La visita guiada con cata de 3 oportos clásicos dura 1 hora y cuesta unos 25 €. Conviene reservar con al menos un día de antelación y confirmar si abre en domingo; está cuesta arriba, apartada de la ribera: mejor en taxi."}},
+          {"id": "pocas", "n": "Poças", "t": "Vila Nova de Gaia", "r": 4.7, "rc": 1868, "p": 2, "q": "Poças, Rua Visconde das Devesas 168, Vila Nova de Gaia", "d": {"pt": "Casa familiar independente desde 1918, com mais de 800 barris. Toda prova inclui visita guiada (cerca de 1h30): a mais simples custa 25 € e a com chocolate, 35 €; reserve pelo site. Fica a uns 1,3 km do rio, em subida, ao lado da estação Gaia-Devesas: vá de táxi; fecha às segundas.", "es": "Casa familiar independiente desde 1918, con más de 800 barricas. Todas las catas incluyen visita guiada (unos 90 minutos): la más sencilla cuesta 25 € y la de chocolate, 35 €; se reserva en su web. Está a unos 1,3 km del río, cuesta arriba, junto a la estación de Gaia-Devesas: mejor en taxi; cierra los lunes."}}
         ],
         ficar: [
           { id: "f-baixa", n: { pt: "Baixa e Aliados", es: "Baixa y Aliados" }, p: 2, q: "Avenida dos Aliados, Porto",
@@ -808,8 +827,8 @@ h1, h2, h3 { text-wrap: balance; }
       places: {
         ver: [
           { id: "universidade", n: { pt: "Universidade de Coimbra", es: "Universidad de Coímbra" }, p: 2, q: "Universidade de Coimbra, Paço das Escolas",
-            d: { pt: "Uma das universidades mais antigas da Europa, fundada em 1290 e Patrimônio Mundial. No Paço das Escolas ficam a torre, a Sala dos Capelos e um terraço com vista para o rio Mondego.",
-                 es: "Una de las universidades más antiguas de Europa, fundada en 1290 y Patrimonio Mundial. En el Paço das Escolas están la torre, la Sala dos Capelos y una terraza con vistas al Mondego." } },
+            d: { pt: "Uma das universidades mais antigas da Europa, fundada em 1290 e Patrimônio Mundial. No Paço das Escolas ficam a Sala dos Capelos e um terraço com vista para o rio Mondego (a torre está fechada para visitas).",
+                 es: "Una de las universidades más antiguas de Europa, fundada en 1290 y Patrimonio Mundial. En el Paço das Escolas están la Sala dos Capelos y una terraza con vistas al Mondego (la torre está cerrada a las visitas)." } },
           { id: "joanina", n: "Biblioteca Joanina", p: 2, q: "Biblioteca Joanina, Coimbra",
             d: { pt: "Biblioteca barroca do século XVIII, toda em madeira pintada e dourada, dentro da Universidade. A visita é curta e com hora marcada; lá dentro não se pode fotografar.",
                  es: "Biblioteca barroca del siglo XVIII, toda de madera pintada y dorada, dentro de la Universidad. La visita es corta y con hora fija; dentro no se pueden hacer fotos." } },
@@ -856,8 +875,8 @@ h1, h2, h3 { text-wrap: balance; }
         ],
         ficar: [
           { id: "f-baixa", n: "Baixa (Largo da Portagem)", p: 2, q: "Largo da Portagem, Coimbra",
-            d: { pt: "A parte plana da cidade, junto ao rio, com comércio, restaurantes e a estação Coimbra-A perto. A melhor escolha para não subir ladeiras.",
-                 es: "La parte llana de la ciudad, junto al río, con comercios, restaurantes y la estación Coimbra-A cerca. La mejor opción para no subir cuestas." } },
+            d: { pt: "A parte plana da cidade, junto ao rio, com comércio, restaurantes e o metrobus que liga à estação de trem Coimbra-B. A melhor escolha para não subir ladeiras.",
+                 es: "La parte llana de la ciudad, junto al río, con comercios, restaurantes y el metrobus que la une con la estación de tren Coimbra-B. La mejor opción para no subir cuestas." } },
           { id: "f-santaclara", n: "Santa Clara", p: 2, q: "Santa Clara, Coimbra",
             d: { pt: "Do outro lado do rio, mais tranquilo, com vista para a parte alta iluminada à noite. Perto do Portugal dos Pequenitos; para o centro, uma ponte plana ou um táxi curto.",
                  es: "Al otro lado del río, más tranquilo, con vistas a la parte alta iluminada de noche. Cerca del Portugal dos Pequenitos; al centro, un puente llano o un taxi corto." } },
@@ -1202,6 +1221,7 @@ h1, h2, h3 { text-wrap: balance; }
     }
   ];
 
+  CITIES.forEach((c) => { CATS.forEach((cat) => { if (!Array.isArray(c.places[cat.id])) c.places[cat.id] = []; }); });
   const CITY_BY_ID = Object.fromEntries(CITIES.map((c) => [c.id, c]));
   const favKey = (cityId, placeId) => cityId + "/" + placeId;
 
@@ -1263,7 +1283,7 @@ h1, h2, h3 { text-wrap: balance; }
   };
   /* trajetos aproximados entre paradas (chave na ordem da rota) */
   const TRAVEL = {
-    "porto|coimbra": { h: 1.5, pt: "trem Alfa Pendular ou Intercidades, ~1h até Coimbra-B e trem curto ou táxi até o centro", es: "tren Alfa Pendular o Intercidades, ~1 h hasta Coimbra-B y tren corto o taxi al centro" },
+    "porto|coimbra": { h: 1.5, pt: "trem Alfa Pendular ou Intercidades, ~1h até Coimbra-B e metrobus ou táxi até o centro", es: "tren Alfa Pendular o Intercidades, ~1 h hasta Coimbra-B y metrobus o taxi al centro" },
     "porto|lisboa": { h: 3, pt: "trem Alfa Pendular, ~3h", es: "tren Alfa Pendular, ~3 h" },
     "porto|lagos": { h: 7, pt: "voo Porto–Faro (~1h) e carro ~1h, ou trem e ônibus ~7h", es: "vuelo Oporto–Faro (~1 h) y coche ~1 h, o tren y autobús ~7 h" },
     "porto|albufeira": { h: 6, pt: "trem Alfa Pendular até Albufeira-Ferreiras, ~6h, ou voo Porto–Faro (~1h)", es: "tren Alfa Pendular hasta Albufeira-Ferreiras, ~6 h, o vuelo Oporto–Faro (~1 h)" },
@@ -1412,10 +1432,10 @@ h1, h2, h3 { text-wrap: balance; }
         { k: ["porto/ribeira"], pt: "Passeio plano pela Ribeira, à beira do Douro.", es: "Paseo llano por la Ribeira, junto al Duero." },
         { k: ["porto/cruzeiro"], pt: "Cruzeiro das Seis Pontes, sentados (50 min).", es: "Crucero de los Seis Puentes, sentados (50 min)." },
         { k: ["porto/saobento"], pt: "Azulejos da Estação de São Bento e centro histórico.", es: "Azulejos de la Estación de São Bento y centro histórico." },
-        { k: ["porto/ferreira"], pt: "Cave de vinho do Porto em Gaia, com prova.", es: "Bodega de vino de Oporto en Gaia, con cata." },
+        { k: ["porto/porto-augustos"], pt: "Prova de vinho do Porto em Gaia, no Porto Augusto's (plano, junto ao rio; reserve).", es: "Cata de vino de Oporto en Gaia, en Porto Augusto's (en llano, junto al río; reservar)." },
         { k: ["porto/lello"], pt: "Livraria Lello (ingresso com hora marcada).", es: "Librería Lello (entrada con hora)." },
         { k: ["porto/majestic", "porto/confeitaria"], pt: "Rua de Santa Catarina: café no Majestic ou na Confeitaria do Bolhão.", es: "Rua de Santa Catarina: café en el Majestic o en la Confeitaria do Bolhão." },
-        { k: ["porto/sandeman"], pt: "Caves Sandeman, no cais de Gaia.", es: "Bodegas Sandeman, en el muelle de Gaia." }
+        { k: ["porto/cockburns"], pt: "Visita às caves Cockburn's em Gaia, com prova (suba de táxi; reserve).", es: "Visita a las bodegas Cockburn's en Gaia, con cata (subir en taxi; reservar)." }
       ],
       full: [{ k: ["porto/douro"], pt: "Excursão de um dia ao Vale do Douro, com almoço e prova de vinhos.", es: "Excursión de un día al Valle del Duero, con comida y cata de vinos." }],
       eve: [
@@ -1678,13 +1698,14 @@ h1, h2, h3 { text-wrap: balance; }
       "MUST-SEE: they want Coimbra, Lagos and Albufeira in the trip. Keep them unless the user explicitly removes them.",
       "STOPS north→south, suggested route Porto → Coimbra → Lisboa → Lagos → Albufeira → Sevilla → Córdoba (reverse it if they arrive in Spain). Stop ids: porto, coimbra, lisboa, lagos, albufeira, sevilla, cordoba. Use \"algarve\" for a day elsewhere in the Algarve and \"viagem\" for a pure travel day.",
       "TRANSPORT (approximate, use these figures):",
-      "- Porto → Coimbra: train (Alfa Pendular / Intercidades) ~1h to Coimbra-B, then a short connecting train or taxi to the centre.",
+      "- Porto → Coimbra: train (Alfa Pendular / Intercidades) ~1h to Coimbra-B, then the metrobus or a taxi to the centre (Coimbra-A station is closed).",
       "- Coimbra → Lisboa: train ~1h45–2h.",
       "- Lisboa → Lagos: bus (Rede Expressos) ~3h45, or train with a change in Tunes ~4h; car ~3h.",
       "- Lisboa → Albufeira: train ~2h45 to Albufeira-Ferreiras station + 10 min taxi; bus ~3h.",
       "- Lagos ↔ Albufeira: car ~45 min; bus ~1h–1h15.",
       "- Albufeira → Sevilla: no direct train; bus ~3h–3h30 (often via Faro) or private transfer/car ~2h45. Spain is 1 hour ahead of Portugal.",
       "- Sevilla → Córdoba: AVE high-speed train ~45 min.",
+      "CLOSED (Oct 2026, do not recommend): Porto's Funicular dos Guindais (since July 2026) and Lisbon's historic lifts (Glória, Bica, Lavra, Santa Justa). Seniors 65+ get up to 50% off CP trains (Alfa Pendular, Intercidades) and 50% off Portuguese national monuments with their passport.",
       "DAYS PER STOP (guide, adapt to the total): Lisboa 3–4, Porto 2–3, Sevilla 2–3, Coimbra 1–2, Lagos 2, Albufeira 2, Córdoba 1–2. Day 1 is usually arrival and the last day departure.",
       "",
       "PLACES IN THE APP (key | stop | category | name | Google rating). Prefer these and list their keys in \"places\" (only keys from this list). The \"comer\" entries are the best-rated restaurants of typical food: use them for meal suggestions.",
@@ -2137,9 +2158,9 @@ h1, h2, h3 { text-wrap: balance; }
   function CatTabs({ cat, setCat, t, cityId }) {
     return html`
       <div role="tablist" aria-label=${t.catsLabel} className="grid grid-cols-2 gap-3">
-        ${TABS.filter((c) => c.id !== "gastro" || (GASTRO[cityId] || []).length > 0).map((c) => {
+        ${tabsFor(cityId).map((c, i, list) => {
           const on = c.id === cat;
-          const wide = c.id === "gastro";
+          const wide = i === list.length - 1 && list.length % 2 === 1;
           return html`
             <button key=${c.id} id=${"tab-" + c.id} role="tab" type="button" aria-selected=${on} aria-controls="painel"
               onClick=${() => setCat(c.id)}
@@ -2147,7 +2168,7 @@ h1, h2, h3 { text-wrap: balance; }
                 (wide ? "col-span-2 justify-center " : "") +
                 (on ? "bg-terra text-onterra border-terra shadow-card" : "bg-card text-ink border-line")}>
               <span className="text-[1.6rem] leading-none shrink-0" aria-hidden="true">${c.emoji}</span>
-              <span className="min-w-0">${wide ? t.gastro : t.cats[c.id]}</span>
+              <span className="min-w-0">${c.id === "gastro" ? t.gastro : t.cats[c.id]}</span>
             </button>`;
         })}
       </div>`;
@@ -2356,10 +2377,11 @@ h1, h2, h3 { text-wrap: balance; }
       <section id="painel" role="tabpanel" aria-labelledby=${"tab-" + cat} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-[1.45rem] font-bold leading-tight">${t.catIn[cat]} ${city.name[lang]}</h2>
+            <h2 className="text-[1.45rem] font-bold leading-tight">${t.catIn[cat]} ${t.inCity(city.name[lang])}</h2>
             <span className="text-soft shrink-0">${t.places(items.length)}</span>
           </div>
           ${cat === "comer" && html`<p className="text-soft text-[.98rem] leading-relaxed">${t.comerNote}</p>`}
+          ${cat === "vinho" && html`<p className="text-soft text-[.98rem] leading-relaxed">${t.vinhoNote}</p>`}
         </div>
         ${items.map((p) => {
           const k = favKey(city.id, p.id);
@@ -2409,21 +2431,213 @@ h1, h2, h3 { text-wrap: balance; }
       </section>`;
   }
 
+  /* ---------- dicas: gerais por tema (acordeão) e por cidade (com categoria) ---------- */
+  const TONE = {
+    azul: "bg-azul-tint text-azul", gold: "bg-gold-tint text-gold-ink", terra: "bg-terra-tint text-terra",
+    bad: "bg-bad-tint text-bad", ok: "bg-ok-tint text-ok"
+  };
+  const TIP_SECTIONS = [
+    { id: "docs", emoji: "🛂", tone: "azul", title: { pt: "Documentos e entrada", es: "Documentos y entrada" } },
+    { id: "money", emoji: "💶", tone: "gold", title: { pt: "Dinheiro e pagamentos", es: "Dinero y pagos" } },
+    { id: "table", emoji: "🍽️", tone: "terra", title: { pt: "À mesa", es: "En la mesa" } },
+    { id: "transport", emoji: "🚆", tone: "azul", title: { pt: "Transporte", es: "Transporte" } },
+    { id: "health", emoji: "🏥", tone: "bad", title: { pt: "Saúde e segurança", es: "Salud y seguridad" } },
+    { id: "phone", emoji: "🔌", tone: "ok", title: { pt: "Tomadas, celular e internet", es: "Enchufes, móvil e internet" } },
+    { id: "words", emoji: "🗣️", tone: "gold", title: { pt: "Palavras úteis", es: "Palabras útiles" } }
+  ];
+  const TIP_KINDS = {
+    transport: { emoji: "🚆", tone: "azul", label: { pt: "Transporte", es: "Transporte" } },
+    tickets: { emoji: "🎟️", tone: "terra", label: { pt: "Ingressos", es: "Entradas" } },
+    food: { emoji: "🍽️", tone: "gold", label: { pt: "Comida", es: "Comida" } },
+    care: { emoji: "⚠️", tone: "bad", label: { pt: "Atenção", es: "Atención" } },
+    comfort: { emoji: "🧓", tone: "ok", label: { pt: "Conforto", es: "Comodidad" } },
+    save: { emoji: "💰", tone: "ok", label: { pt: "Economize", es: "Ahorra" } }
+  };
+  /* conteúdo verificado: TIPS_GENERAL[secao] = [{pt, es}], CITY_TIPS[cidade] = [{kind, pt, es}] */
+  const TIPS_GENERAL = {
+    docs: [
+      {"pt": "O passaporte precisa ter sido emitido há menos de 10 anos e valer pelo menos 3 meses depois da data de saída da Europa. Portugal e Espanha contam juntos no limite de 90 dias a cada 180; leve a passagem de volta, as reservas de hospedagem e comprovação de dinheiro para a viagem, porque a fronteira pode pedir.", "es": "El pasaporte debe haberse expedido hace menos de 10 años y seguir válido al menos 3 meses después de la fecha de salida de Europa. Portugal y España cuentan juntos para el límite de 90 días cada 180; lleva el billete de vuelta, las reservas de alojamiento y prueba de medios económicos, porque en la frontera pueden pedirlos."},
+      {"pt": "Desde 10 de abril de 2026, na primeira entrada a fronteira registra foto e impressões digitais (sistema EES) em vez de carimbar o passaporte, então a fila pode demorar mais. O ETIAS ainda não está em funcionamento e não aceita pedidos: não pague sites que o oferecem e confirme no site oficial da UE antes de viajar.", "es": "Desde el 10 de abril de 2026, en la primera entrada la frontera registra foto y huellas (sistema EES) en lugar de sellar el pasaporte, así que la cola puede ser más larga. El ETIAS todavía no está en funcionamiento ni admite solicitudes: no pagues webs que lo ofrecen y confírmalo en la web oficial de la UE antes de viajar."},
+      {"pt": "Peça grátis no gov.br o Certificado de Direito à Assistência Médica (CDAM, o antigo PB4) para Portugal: o pedido é só on-line, com conta gov.br, e o prazo não é estimado, então faça com bastante antecedência. Em Portugal, apresente o certificado e o passaporte no centro de saúde ou hospital público para usar o SNS como os moradores; ele não vale na Espanha.", "es": "Pide gratis en gov.br el Certificado de Derecho a Asistencia Médica (CDAM, el antiguo PB4) para Portugal: se tramita solo en línea, con cuenta gov.br, y no tiene plazo estimado, así que pídelo con mucha antelación. En Portugal, enseña el certificado y el pasaporte en el centro de salud u hospital público para usar la sanidad pública como los residentes; en España no sirve."},
+      {"pt": "O CDAM não substitui o seguro-viagem nem cobre a Espanha. Contrate um seguro válido em toda a Europa com pelo menos € 30 mil de cobertura médica (o mínimo exigido para o visto Schengen, boa referência) e confira se aceita a idade de vocês e doenças preexistentes.", "es": "El CDAM no sustituye al seguro de viaje ni cubre España. Contrata un seguro válido en toda Europa con al menos 30.000 € de cobertura médica (el mínimo exigido para el visado Schengen, buena referencia) y comprueba que acepta vuestra edad y las enfermedades previas."},
+      {"pt": "Leve os remédios na bagagem de mão, nas caixas originais, com a receita e um relatório médico (de preferência em inglês) com o nome do princípio ativo, porque os nomes comerciais mudam de país para país. Remédios controlados (psicotrópicos ou entorpecentes) precisam de autorização da agência espanhola AEMPS para entrar na Espanha, que leva no mínimo 10 dias: peça antes.", "es": "Lleva los medicamentos en el equipaje de mano, en sus cajas originales, con la receta y un informe médico (mejor en inglés) que indique el principio activo, porque los nombres comerciales cambian de un país a otro. Los medicamentos controlados (estupefacientes o psicótropos) necesitan un permiso de la AEMPS para entrar en España, que tarda al menos 10 días: pídelo con tiempo."},
+    ],
+    money: [
+      {"pt": "Compras no exterior com cartão brasileiro de crédito, débito ou pré-pago pagam IOF de 3,5%, a mesma alíquota de comprar euros em espécie no Brasil; confirme antes, porque o governo muda por decreto. O que mais varia é o câmbio (spread) de cada banco: compare antes de decidir quanto levar em dinheiro.", "es": "Las compras en el extranjero con tarjeta brasileña de crédito, débito o prepago pagan un IOF del 3,5 %, el mismo que comprar euros en efectivo en Brasil; conviene confirmarlo, porque el Gobierno lo cambia por decreto. Lo que más varía es el tipo de cambio (spread) de cada banco: compáralo antes de decidir cuánto efectivo llevar."},
+      {"pt": "Se o caixa eletrônico ou a maquininha perguntar se quer pagar em euros (EUR) ou em reais (BRL), escolha sempre EUR: a conversão feita pela máquina costuma ter margem de 3% a 8%. Em Portugal, prefira os caixas Multibanco (cinza e azuis) aos azuis e amarelos da Euronet, voltados a turistas e que podem cobrar taxa.", "es": "Si el cajero o el datáfono pregunta si quieres pagar en euros (EUR) o en reales (BRL), elige siempre EUR: la conversión de la máquina suele llevar un margen del 3 al 8 %. En Portugal, mejor los cajeros Multibanco (grises y azules) que los azules y amarillos de Euronet, pensados para turistas y que pueden cobrar comisión."},
+      {"pt": "Como moram fora da UE, vocês podem recuperar parte do IVA: peça o documento na loja mostrando o passaporte e saia da UE com os produtos em até 3 meses. Em Portugal, a compra precisa passar de € 50 sem IVA. Se a saída for pelo aeroporto de Lisboa, as compras feitas na Espanha precisam do formulário (DER) impresso, carimbado na alfândega de lá.", "es": "Como residentes fuera de la UE podéis recuperar parte del IVA: pide el documento en la tienda enseñando el pasaporte y sal de la UE con los productos en un plazo de 3 meses. En Portugal la compra debe superar 50 € sin IVA. Si salís por el aeropuerto de Lisboa, las compras hechas en España necesitan el formulario (DER) impreso, sellado en la aduana de allí."},
+      {"pt": "Gorjeta não é obrigatória em Portugal nem na Espanha; em Portugal é comum deixar algumas moedas quando o serviço foi bom. Antes de deixar algo, veja se a conta já inclui taxa de serviço.", "es": "La propina no es obligatoria ni en Portugal ni en España; en Portugal es habitual dejar unas monedas si el servicio ha sido bueno. Antes de dejar nada, mira si la cuenta ya incluye un cargo por servicio."},
+      {"pt": "Em Portugal, pão, azeitonas, queijo ou patê que chegam à mesa sem pedir (o couvert) só podem ser cobrados se vocês comerem ou mexerem neles. Se não quiser, peça logo para retirar ('Não, obrigado') e confira a conta antes de pagar.", "es": "En Portugal, el pan, las aceitunas, el queso o el paté que llegan a la mesa sin pedirlos (el couvert) solo se pueden cobrar si los coméis o los tocáis. Si no los quieres, pide que los retiren enseguida («Não, obrigado») y revisa la cuenta antes de pagar."},
+    ],
+    table: [
+      {"pt": "Em Portugal, almoça-se entre 12h e 15h e os restaurantes abrem para o jantar por volta das 19h–19h30; na Espanha, o almoço vai das 13h às 16h e o jantar começa às 20h. Para o almoço de domingo ou um restaurante famoso, reserve.", "es": "En Portugal se come entre las 12:00 y las 15:00 y los restaurantes abren para cenar hacia las 19:00-19:30; en España se come de 13:00 a 16:00 y se cena a partir de las 20:00. Para la comida del domingo o un restaurante conocido, reserva."},
+      {"pt": "Em Portugal é comum dividir uma 'dose' entre dois; para um só, peça 'meia dose' quando a carta oferecer. No almoço, o 'prato do dia' ou o 'menu do dia' costuma ser o mais em conta, mas pergunte o que está incluído antes de pedir.", "es": "En Portugal es habitual compartir una «dose» entre dos; para uno solo, pide «meia dose» si la carta la ofrece. A mediodía, el «prato do dia» o el «menu do dia» suele ser lo más económico, pero pregunta qué incluye antes de pedir."},
+      {"pt": "Na Espanha há três tamanhos: tapa (poucas garfadas, para um), media ración (para dividir entre dois) e ración (um prato inteiro). Em Sevilha a tapa é paga (cerca de € 2,50 a € 7 em bares conhecidos); pedir meias rações permite provar mais pratos sem exagerar.", "es": "En España hay tres tamaños: tapa (unos bocados, para uno), media ración (para compartir entre dos) y ración (un plato completo). En Sevilla la tapa se paga (unos 2,50-7 € en bares conocidos); pedir medias raciones permite probar más platos sin pasarse."},
+      {"pt": "A água da torneira é gratuita por lei nos restaurantes de Portugal e da Espanha, mas o garçom costuma oferecer garrafa. Peça 'água da torneira' em Portugal e 'agua del grifo' na Espanha.", "es": "El agua del grifo es gratuita por ley en los restaurantes de Portugal y España, pero el camarero suele ofrecer botella. Pide «água da torneira» en Portugal y «agua del grifo» en España."},
+      {"pt": "Em Portugal o cafezinho é um expresso: peça 'um café' (em Lisboa, 'uma bica'; no Norte, 'um cimbalino'); com bastante leite, peça 'galão' ou 'meia de leite', porque 'café com leite' pode virar um pingado. Na Espanha, 'café solo' é o expresso e o 'cortado' leva um pouco de leite.", "es": "En Portugal el café es un expreso: pide «um café» (en Lisboa, «uma bica»; en el Norte, «um cimbalino»); con mucha leche, pide «galão» o «meia de leite», porque «café com leite» puede acabar en un pingado. En España, el «café solo» es el expreso y el «cortado» lleva un poco de leche."},
+    ],
+    transport: [
+      {"pt": "Uber e Bolt funcionam em Lisboa, Porto, Coimbra e no Algarve, e o Uber também em Sevilha; em Coimbra a espera pode ser maior, mas dá para agendar. Use para evitar caminhadas longas: a estação de trem de Albufeira (Ferreiras) fica a quase 7 km do centro.", "es": "Uber y Bolt funcionan en Lisboa, Oporto, Coímbra y el Algarve, y Uber también en Sevilla; en Coímbra la espera puede ser mayor, pero se puede programar el viaje. Úsalos para evitar caminatas largas: la estación de tren de Albufeira (Ferreiras) está a casi 7 km del centro."},
+      {"pt": "Com 65 anos ou mais, paga-se até 50% menos nos trens Alfa Pendular e Intercidades da CP, seja qual for a nacionalidade. Mostre o passaporte original na bilheteria e no trem (foto ou cópia não vale); no Alfa Pendular o lugar marcado é obrigatório, então compre com antecedência.", "es": "Con 65 años o más se paga hasta un 50 % menos en los trenes Alfa Pendular e Intercidades de CP, sea cual sea la nacionalidad. Enseña el pasaporte original en la taquilla y en el tren (no vale foto ni copia); en el Alfa Pendular la reserva de asiento es obligatoria, así que compra con antelación."},
+      {"pt": "Na Espanha, a Tarjeta Dorada da Renfe (maiores de 60 anos, € 6 por um ano) dá 25% de desconto no AVE e na Longa Distância e 40% na Média Distância; compra-se na bilheteria da estação ou em agências de viagem. O site da Renfe não fala em exigir residência, mas confirme na bilheteria se aceitam o passaporte brasileiro.", "es": "En España, la Tarjeta Dorada de Renfe (mayores de 60 años, 6 € por un año) da un 25 % en AVE y Larga Distancia y un 40 % en Media Distancia; se compra en la taquilla de la estación o en agencias de viaje. La web de Renfe no menciona requisito de residencia, pero conviene confirmar en taquilla que aceptan el pasaporte brasileño."},
+      {"pt": "No metrô de Lisboa dá para passar o cartão bancário por aproximação (€ 1,92 por viagem em 2026) ou usar o cartão navegante ocasional (€ 0,50) carregado com saldo, a € 1,72 por viagem; tire o cartão da carteira e passe o mesmo na entrada e na saída. No Porto, o cartão bancário só é aceito em algumas estações e cobra € 2,30 por viagem (máximo € 7,75 por dia), então o cartão Andante recarregável pode sair mais barato.", "es": "En el metro de Lisboa puedes pasar la tarjeta bancaria sin contacto (1,92 € por viaje en 2026) o usar la tarjeta navegante ocasional (0,50 €) con saldo, a 1,72 € por viaje; saca la tarjeta de la cartera y pasa la misma a la entrada y a la salida. En Oporto la tarjeta bancaria solo se acepta en algunas estaciones y cobra 2,30 € por viaje (máximo 7,75 € al día), así que la tarjeta Andante recargable puede salir más barata."},
+      {"pt": "A Espanha está 1 hora à frente de Portugal o ano todo: ao cruzar a fronteira, confira no celular o horário de trens e ônibus. Na madrugada de 25 de outubro de 2026 os dois países atrasam o relógio em 1 hora.", "es": "España va 1 hora por delante de Portugal todo el año: al cruzar la frontera, revisa en el móvil la hora de trenes y autobuses. La madrugada del 25 de octubre de 2026 ambos países retrasan el reloj 1 hora."},
+    ],
+    health: [
+      {"pt": "Em emergência, ligue 112, gratuito em Portugal e na Espanha. Em Portugal, se não houver risco de vida, ligue antes para o SNS 24 (808 24 24 24): um profissional avalia e diz aonde ir, e ir direto à urgência do hospital sem esse encaminhamento pode ter taxa.", "es": "En una emergencia, llama al 112, gratuito en Portugal y en España. En Portugal, si no hay riesgo vital, llama antes al SNS 24 (808 24 24 24): un profesional valora el caso y te dice adónde ir, y presentarte en urgencias del hospital sin esa derivación puede tener tasa."},
+      {"pt": "Farmácias têm cruz verde; à noite e nos fins de semana abre a 'farmácia de serviço' (Portugal) ou a 'farmacia de guardia' (Espanha), e a escala costuma estar afixada na porta. Em Portugal, a Linha 1400 indica a mais próxima (grátis das 19h às 9h, fins de semana e feriados); na Espanha, o site farmaceuticos.com leva à lista oficial de cada cidade.", "es": "Las farmacias tienen cruz verde; de noche y en fin de semana abre la «farmácia de serviço» (Portugal) o la farmacia de guardia (España), y el turno suele estar en la puerta. En Portugal, la Línea 1400 indica la más cercana (gratis de 19:00 a 9:00, fines de semana y festivos); en España, la web farmaceuticos.com lleva al listado oficial de cada ciudad."},
+      {"pt": "Em outubro, Sevilha ainda tem máxima média de 26 °C e muito sol: beba água mesmo sem sede e use protetor FPS 30 ou mais, renovando a cada 2 horas. Deixe as caminhadas longas para a manhã e o fim da tarde e evite o sol forte entre 11h e 17h.", "es": "En octubre Sevilla aún tiene una máxima media de 26 °C y mucho sol: bebe agua aunque no tengas sed y usa protector solar de factor 30 o más, renovándolo cada 2 horas. Deja los paseos largos para la mañana y la última hora de la tarde y evita el sol fuerte entre las 11:00 y las 17:00."},
+      {"pt": "Não guarde celular nem carteira em bolso que você não vê (como o de trás), leve a bolsa fechada na frente do corpo e ande só com o dinheiro do dia. Redobre a atenção em metrô e bondes cheios: o elétrico 28 de Lisboa é ponto conhecido de batedores de carteira.", "es": "No guardes el móvil ni la cartera en bolsillos que no ves (como el trasero), lleva el bolso cerrado por delante y sal solo con el dinero del día. Extrema la atención en metros y tranvías llenos: el eléctrico 28 de Lisboa es un punto conocido de carteristas."},
+      {"pt": "Na Espanha, o app gratuito AlertCops permite avisar a polícia sobre um furto, e o serviço SATE atende turistas estrangeiros vítimas de crime no próprio idioma (confirme se há posto na cidade).", "es": "En España, la app gratuita AlertCops permite avisar a la policía de un robo, y el SATE atiende en su idioma a turistas extranjeros víctimas de un delito (conviene confirmar si hay oficina en la ciudad)."},
+    ],
+    phone: [
+      {"pt": "Portugal e Espanha usam tomada de dois pinos redondos (tipo F), diferente da brasileira: o plugue brasileiro não encaixa direto. Leve um ou dois adaptadores universais; muitos hotéis também têm.", "es": "Portugal y España usan enchufe de dos patas redondas (tipo F), distinto del brasileño: el enchufe brasileño no encaja directamente. Lleva uno o dos adaptadores universales; muchos hoteles también tienen."},
+      {"pt": "A corrente é de 220–230 V. Se a etiqueta do aparelho diz '100–240 V' (carregadores de celular e notebook), basta o adaptador; se diz só 110 V ou 127 V, não leve, porque pode queimar (confira o secador e a chapinha).", "es": "La corriente es de 220-230 V. Si la etiqueta del aparato dice «100-240 V» (cargadores de móvil y portátil), basta con el adaptador; si dice solo 110 V o 127 V, no lo lleves, porque puede quemarse (revisa el secador y la plancha de pelo)."},
+      {"pt": "O roaming grátis da União Europeia vale só para chips de operadoras europeias: antes de viajar, contrate o pacote Europa da sua operadora ou um eSIM de viagem (no iPhone, a partir do XS/XR) e teste ainda em casa. Com eSIM, deixe a linha brasileira com 'Roaming de Dados' desligado e pergunte à operadora se receber SMS do banco no exterior tem custo.", "es": "El roaming gratuito de la UE solo se aplica a líneas de operadoras europeas: antes de viajar, contrata el paquete Europa de la operadora o una eSIM de viaje (en iPhone, desde el XS/XR) y pruébala en casa. Con eSIM, deja la línea brasileña con la itinerancia de datos desactivada y pregunta a la operadora si recibir SMS del banco en el extranjero tiene coste."},
+      {"pt": "No Wi-Fi do hotel, baixe no Google Maps o mapa de cada cidade (foto do perfil > Mapas off-line > Selecione seu mapa). Sem internet o mapa continua aparecendo, mas rotas a pé e de transporte público precisam de conexão.", "es": "Con el wifi del hotel, descarga en Google Maps el mapa de cada ciudad (foto de perfil > Mapas sin conexión > Seleccionar tu propio mapa). Sin internet el mapa se sigue viendo, pero las rutas a pie y en transporte público necesitan conexión."},
+      {"pt": "Use o Wi-Fi do hotel e de cafés para mapas e vídeos, mas abra o app do banco só pelos dados móveis. Desconfie de redes abertas com nome genérico ou parecido com o do lugar: confirme o nome certo com os funcionários.", "es": "Usa el wifi del hotel y de las cafeterías para mapas y vídeos, pero abre la app del banco solo con datos móviles. Desconfía de redes abiertas con nombres genéricos o parecidos al del local: confirma el nombre correcto con el personal."},
+    ],
+    words: [
+      {"pt": "Pequeno-almoço = café da manhã.", "es": "«Pequeno-almoço» = desayuno en Portugal; en Brasil se dice «café da manhã»."},
+      {"pt": "Autocarro = ônibus; 'paragem' = ponto de ônibus.", "es": "«Autocarro» = autobús en Portugal (en Brasil, «ônibus»); «paragem» = parada."},
+      {"pt": "Comboio = trem.", "es": "«Comboio» = tren en Portugal (en Brasil, «trem»)."},
+      {"pt": "Casa de banho = banheiro.", "es": "«Casa de banho» = baño o aseo en Portugal (en Brasil, «banheiro»)."},
+      {"pt": "Telemóvel = celular.", "es": "«Telemóvel» = móvil en Portugal (en Brasil, «celular»)."},
+      {"pt": "Fixe = legal, bacana ('É fixe!').", "es": "«Fixe» = guay, majo en Portugal; en Brasil se diría «legal»."},
+      {"pt": "Rapariga = moça. Em Portugal é uma palavra neutra, sem o sentido ofensivo que tem em partes do Brasil.", "es": "«Rapariga» = chica en Portugal, palabra neutra; en partes de Brasil es ofensiva."},
+      {"pt": "Puto = menino, garoto. Em Portugal é comum e não é palavrão.", "es": "«Puto» = niño, chaval en Portugal; allí no es un insulto."},
+      {"pt": "Espanhol: 'La cuenta, por favor' = a conta, por favor.", "es": "«La cuenta, por favor»: para pedir la cuenta (en portugués, «a conta, por favor»)."},
+      {"pt": "Espanhol: '¿Los servicios, por favor?' = onde fica o banheiro?", "es": "«¿Los servicios, por favor?»: para preguntar por el baño (en portugués, «onde fica o banheiro?»)."},
+      {"pt": "Espanhol: 'Hable más despacio, por favor' = fale mais devagar, por favor.", "es": "«Hable más despacio, por favor»: útil si te hablan muy rápido (en portugués, «fale mais devagar, por favor»)."},
+      {"pt": "Espanhol: '¿Cuánto cuesta esto?' = quanto custa isto?", "es": "«¿Cuánto cuesta esto?» (en portugués, «quanto custa isto?»)."},
+      {"pt": "Espanhol: 'Agua del grifo, por favor' = água da torneira, por favor; nos bares e restaurantes é de graça por lei.", "es": "«Agua del grifo, por favor»: en bares y restaurantes es gratis por ley (en portugués, «água da torneira»)."},
+      {"pt": "Falsos amigos no espanhol: 'exquisito' = gostoso; 'embarazada' = grávida; 'oficina' = escritório; 'polvo' = poeira; 'cena' = jantar.", "es": "Falsos amigos para brasileños: «exquisito» = gostoso (rico); «embarazada» = grávida; «oficina» = escritório; «polvo» = poeira; «cena» = jantar."},
+    ],
+  };
+  const CITY_TIPS = {
+    porto: [
+      {"kind": "transport", "pt": "Cada pessoa precisa do próprio cartão Andante Azul (€0,60). A viagem Z2 custa €1,40 e vale por 1 hora, com baldeações; valide o cartão a cada embarque. O bonde histórico não aceita a viagem avulsa do Andante: a passagem custa €6, é comprada a bordo e dá para pagar com cartão bancário. Confirme os preços antes de ir.", "es": "Cada persona necesita su propia tarjeta Andante Azul (0,60 €). El viaje Z2 cuesta 1,40 € y vale 1 hora, con transbordos; hay que validar la tarjeta cada vez que se sube. El tranvía histórico no admite los viajes sueltos del Andante: el billete cuesta 6 €, se compra a bordo y se puede pagar con tarjeta bancaria. Conviene confirmar los precios."},
+      {"kind": "comfort", "pt": "O Funicular dos Guindais (Ribeira–Batalha) está fechado desde 18/07/2026, e a reabertura só é esperada para o fim do ano; confirme antes de ir. Para não subir a pé, pegue o metrô linha D até Jardim do Morro e desça até o cais de Gaia pelo Teleférico (€7 só ida ou €10 ida e volta). O Teleférico tem bilhete próprio: o Andante não vale.", "es": "El Funicular dos Guindais (Ribeira–Batalha) está cerrado desde el 18/07/2026 y no se espera que reabra antes de fin de año; conviene confirmarlo. Para evitar la cuesta, se puede ir en metro (línea D) hasta Jardim do Morro y bajar al muelle de Gaia en el Teleférico (7 € la ida o 10 € ida y vuelta). El Teleférico tiene billete propio: el Andante no vale."},
+      {"kind": "tickets", "pt": "Na Livraria Lello só se entra com voucher, e o valor dele é descontado se você comprar um livro. Compre online: o voucher vale até 60 minutos depois do horário marcado. A livraria abre todos os dias das 9h às 19h30 e fecha em 1/1, no Domingo de Páscoa, em 1/5, em 24/6 e em 25/12. Se você comprar o voucher na fila, não aceitam dinheiro.", "es": "En la Livraria Lello solo se entra con bono, y su importe se descuenta si se compra un libro. Mejor comprarlo en línea: el bono vale hasta 60 minutos después de la hora reservada. La librería abre a diario de 9:00 a 19:30 y cierra el 1/1, el Domingo de Pascua, el 1/5, el 24/6 y el 25/12. Si se compra el bono en la cola, no aceptan efectivo."},
+      {"kind": "food", "pt": "O Mercado do Bolhão abre de segunda a sexta das 8h às 20h e aos sábados até as 18h; fecha domingos e feriados. Os restaurantes do andar de cima funcionam de segunda a sábado até a meia-noite, uma boa opção para comer sentado.", "es": "El Mercado do Bolhão abre de lunes a viernes de 8:00 a 20:00 y los sábados hasta las 18:00; cierra domingos y festivos. Los restaurantes de la planta de arriba abren de lunes a sábado hasta medianoche, una buena opción para comer sentados."},
+      {"kind": "care", "pt": "Outubro é um mês chuvoso no Porto: em média são cerca de 149 mm e 11 dias de chuva (normal 1991–2020). Leve guarda-chuva e sapato com sola antiderrapante, porque as ladeiras e as pedras da Ribeira ficam escorregadias.", "es": "Octubre es un mes lluvioso en Oporto: de media caen unos 149 mm en 11 días de lluvia (normal 1991–2020). Conviene llevar paraguas y calzado antideslizante, porque las cuestas y el empedrado de la Ribeira resbalan."},
+    ],
+    coimbra: [
+      {"kind": "transport", "pt": "Os trens Alfa Pendular e Intercidades param em Coimbra-B. A estação do centro (Coimbra-A) fechou em janeiro de 2025, e desde 10/09/2026 o metrobus faz a ligação de Coimbra-B ao centro. Quem tem 65 anos ou mais, de qualquer nacionalidade, paga até 50% menos no Alfa e no Intercidades: é só mostrar o passaporte.", "es": "Los trenes Alfa Pendular e Intercidades paran en Coimbra-B. La estación del centro (Coimbra-A) cerró en enero de 2025, y desde el 10/09/2026 el metrobús une Coimbra-B con el centro. Los mayores de 65 años, de cualquier nacionalidad, tienen hasta un 50 % de descuento en el Alfa y el Intercidades presentando el pasaporte."},
+      {"kind": "comfort", "pt": "Para subir da Baixa (ao lado do Mercado D. Pedro V) até a Alta, perto da Universidade, use o Elevador do Mercado. Ele funciona de segunda a sábado das 7h30 às 21h e aos domingos e feriados das 10h às 21h. É preciso ter um bilhete válido da SMTUC. Confirme antes se o elevador está funcionando.", "es": "Para subir de la Baixa (junto al Mercado D. Pedro V) a la Alta, cerca de la Universidad, se puede usar el Elevador do Mercado. Funciona de lunes a sábado de 7:30 a 21:00 y los domingos y festivos de 10:00 a 21:00. Hace falta un billete válido de SMTUC. Conviene confirmar antes que el ascensor funciona."},
+      {"kind": "tickets", "pt": "O ingresso Biblioteca Joanina + Universidade + Museu da Ciência custa €16,50. A Joanina tem horário marcado (última entrada às 17h40); o resto do ingresso vale por 2 dias, então dá para dividir a visita. O Palácio Real não é recomendado para quem tem dificuldade de locomoção, e a Torre está fechada.", "es": "La entrada Biblioteca Joanina + Universidad + Museo de la Ciencia cuesta 16,50 €. La Joanina tiene hora fija (última entrada a las 17:40); el resto de la entrada vale 2 días, así que se puede repartir la visita. El Palacio Real no se recomienda a personas con dificultad para caminar, y la Torre está cerrada."},
+      {"kind": "save", "pt": "O Jardim Botânico da Universidade tem entrada gratuita e, de 1/10 a 31/3, abre das 9h às 17h30. Por causa das obras, algumas áreas não são acessíveis para quem tem mobilidade reduzida.", "es": "El Jardín Botánico de la Universidad es gratuito y, del 1/10 al 31/3, abre de 9:00 a 17:30. Por las obras, algunas zonas no son accesibles para personas con movilidad reducida."},
+      {"kind": "food", "pt": "Prove os pastéis de Santa Clara, doce de convento recheado com doce de ovos e amêndoa, e o leitão à Bairrada, assado em forno a lenha, especialidade da região vizinha. Se a fome for pouca, dá para dividir uma porção entre os dois.", "es": "Merece la pena probar los pastéis de Santa Clara, dulce conventual relleno de yema y almendra, y el leitão à Bairrada (cochinillo asado en horno de leña), especialidad de la comarca vecina. Si no hay mucha hambre, se puede compartir una ración entre los dos."},
+    ],
+    lisboa: [
+      {"kind": "transport", "pt": "Compre o cartão navegante ocasional (€0,50) e carregue viagens. Em 2026, a viagem Carris/Metrô custa €1,90 (vale 1 hora) ou €1,72 no zapping, e o passe de 24 h custa €7,25. Pagar a bordo sai mais caro: €2,30 no ônibus e €3,30 no bonde.", "es": "Conviene comprar la tarjeta navegante ocasional (0,50 €) y cargarla con viajes. En 2026, el viaje Carris/Metro cuesta 1,90 € (vale 1 hora) o 1,72 € con zapping, y el pase de 24 h cuesta 7,25 €. Pagar a bordo sale más caro: 2,30 € en autobús y 3,30 € en tranvía."},
+      {"kind": "comfort", "pt": "Os elevadores históricos (Glória, Bica, Lavra e Santa Justa) continuavam parados em setembro de 2026, depois do acidente de 2025. Para subir ao Largo do Carmo, no Chiado, pegue o micro-ônibus 51E nos Restauradores. Para chegar ao Castelo, há elevadores públicos gratuitos a partir da Rua dos Fanqueiros, 170; confirme se estão funcionando.", "es": "Los ascensores históricos (Glória, Bica, Lavra y Santa Justa) seguían parados en septiembre de 2026, después del accidente de 2025. Para subir al Largo do Carmo, en el Chiado, está el microbús 51E, que sale de Restauradores. Para llegar al Castelo hay ascensores públicos gratuitos desde la Rua dos Fanqueiros, 170; conviene confirmar que funcionan."},
+      {"kind": "care", "pt": "O bonde 28 vive lotado e é a linha de Lisboa com mais furtos por carteiristas. Para ir sentado, embarque cedo (por volta das 7h–8h) no ponto final do Martim Moniz. Leve a mochila na frente do corpo e o celular guardado.", "es": "El tranvía 28 va siempre lleno y es la línea de Lisboa con más robos de carteristas. Para ir sentados, mejor subir temprano (hacia las 7:00–8:00) en la cabecera de Martim Moniz. Conviene llevar la mochila delante y el móvil guardado."},
+      {"kind": "tickets", "pt": "Em Sintra, no Palácio da Pena, quem tem 65 anos ou mais paga €18 na visita essencial (adulto: €20). Na compra online é obrigatório escolher a data. Para não subir a pé da entrada do parque até o palácio, há um transfer de ida e volta por €4,50.", "es": "En Sintra, en el Palacio da Pena, los mayores de 65 años pagan 18 € por la visita esencial (adulto: 20 €). Al comprar en línea hay que elegir fecha. Para no subir andando desde la entrada del parque hasta el palacio, hay un traslado de ida y vuelta por 4,50 €."},
+      {"kind": "save", "pt": "Nos museus e monumentos nacionais (Jerónimos, Torre de Belém, Museu do Azulejo), quem tem 65 anos ou mais tem 50% de desconto no bilhete normal mostrando o passaporte; o desconto não vale para bilhetes combinados. Os dias grátis (Acesso 52) são só para residentes em Portugal, e o Mosteiro dos Jerónimos fecha às segundas.", "es": "En los museos y monumentos nacionales (Jerónimos, Torre de Belém, Museo del Azulejo), los mayores de 65 años tienen un 50 % de descuento en la entrada normal presentando el pasaporte; el descuento no vale para entradas combinadas. Los días gratuitos (Acesso 52) son solo para residentes en Portugal, y el Monasterio de los Jerónimos cierra los lunes."},
+    ],
+    algarve: [
+      {"kind": "care", "pt": "Em 2026, a época balnear com salva-vidas foi até 15/10 em Albufeira e só até 30/09 em Lagos. Fora da época não há salva-vidas nem bandeiras. Durante a época, a bandeira xadrez indica praia temporariamente sem vigilância, a vermelha proíbe entrar na água e a amarela proíbe nadar. Confirme as datas do ano da viagem.", "es": "En 2026, la temporada de baño con socorristas fue hasta el 15/10 en Albufeira y solo hasta el 30/09 en Lagos. Fuera de temporada no hay socorristas ni banderas. Durante la temporada, la bandera a cuadros indica playa sin vigilancia en ese momento, la roja prohíbe entrar al agua y la amarilla prohíbe nadar. Conviene confirmar las fechas del año del viaje."},
+      {"kind": "care", "pt": "As falésias do Algarve podem desabar sem aviso, porque o mar desgasta a rocha. Não fique sentado na base nem caminhe na beira do topo, principalmente depois de chuva, e respeite as placas de risco nas praias.", "es": "Los acantilados del Algarve pueden desprenderse sin aviso, porque el mar va erosionando la roca. Mejor no sentarse al pie ni caminar por el borde de arriba, sobre todo después de llover, y respetar los carteles de riesgo de las playas."},
+      {"kind": "comfort", "pt": "Em Albufeira, o Elevador do Peneco desce de graça da cidade velha até a praia, todos os dias das 8h às 21h (horário de 2023; confirme antes, porque pode parar para manutenção).", "es": "En Albufeira, el Elevador do Peneco baja gratis del casco antiguo a la playa, todos los días de 8:00 a 21:00 (horario de 2023; conviene confirmarlo, porque puede parar por mantenimiento)."},
+      {"kind": "tickets", "pt": "Na Ponta da Piedade, para chegar perto da água é preciso descer uma escadaria esculpida na encosta. Para quem anda devagar, o melhor é ver as grutas num passeio de barco que sai da marina de Lagos.", "es": "En la Ponta da Piedade, para llegar cerca del agua hay que bajar una escalera tallada en la ladera. Para quien camina despacio, es mejor ver las grutas en una excursión en barco desde el puerto deportivo de Lagos."},
+      {"kind": "transport", "pt": "A estação de trem de Albufeira fica em Ferreiras, fora da cidade. De lá saem ônibus locais (linhas 5 e 11; alguns só vão até a rodoviária), ou você pode pegar um táxi (cerca de €11 em 2024). Confirme os horários antes de chegar com malas.", "es": "La estación de tren de Albufeira está en Ferreiras, fuera de la ciudad. Desde allí salen autobuses locales (líneas 5 y 11; algunos solo llegan a la estación de autobuses) o se puede tomar un taxi (unos 11 € en 2024). Conviene confirmar horarios antes de llegar con maletas."},
+    ],
+    sevilla: [
+      {"kind": "tickets", "pt": "Compre a entrada do Real Alcázar só no site oficial (alcazarsevilla.org). A entrada geral custa €15,50, e maiores de 65 pagam €8, mostrando documento na entrada. De outubro a março, abre das 9h30 às 17h. A bilheteria do Pátio de Banderas só aceita cartão.", "es": "La entrada del Real Alcázar conviene comprarla solo en la web oficial (alcazarsevilla.org). La general cuesta 15,50 € y los mayores de 65 pagan 8 €, acreditándolo en el control de acceso. De octubre a marzo abre de 9:30 a 17:00. La taquilla del Patio de Banderas solo acepta tarjeta."},
+      {"kind": "comfort", "pt": "A visita à Catedral começa pela Giralda, que se sobe por 35 rampas e, no final, 17 degraus. Maiores de 65 pagam €7 online (€8 na bilheteria). A Catedral abre de segunda a sábado das 10h45 às 19h e aos domingos das 14h30 às 19h; a bilheteria fecha às 18h.", "es": "La visita a la Catedral empieza por la Giralda, que se sube por 35 rampas y, al final, 17 escalones. Los mayores de 65 pagan 7 € en línea (8 € en taquilla). La Catedral abre de lunes a sábado de 10:45 a 19:00 y los domingos de 14:30 a 19:00; la taquilla cierra a las 18:00."},
+      {"kind": "save", "pt": "A Catedral tem visita gratuita aos domingos (exceto feriados) das 16h30 às 18h, com lotação limitada. O Alcázar também tem visitas gratuitas em dias e horários definidos pelo próprio monumento; confirme no site oficial antes de ir.", "es": "La Catedral tiene visita gratuita los domingos (salvo festivos) de 16:30 a 18:00, con aforo limitado. El Alcázar también tiene visitas gratuitas en días y horas que fija el propio monumento; conviene consultarlo en la web oficial."},
+      {"kind": "comfort", "pt": "Em outubro, a máxima média em Sevilha é de 26 °C, mas o recorde do mês passa de 37 °C. Faça as visitas de manhã e descanse no meio da tarde. Os restaurantes costumam servir almoço das 13h às 16h e jantar das 20h às 22h30.", "es": "En octubre la máxima media en Sevilla es de 26 °C, pero el récord del mes supera los 37 °C. Mejor hacer las visitas por la mañana y descansar a media tarde. Los restaurantes suelen servir comidas de 13:00 a 16:00 y cenas de 20:00 a 22:30."},
+      {"kind": "transport", "pt": "Nos ônibus da Tussam, a passagem avulsa custa €1,40 e é comprada a bordo. O ônibus do aeroporto (EA) custa €6 só ida ou €8 ida e volta, também comprados a bordo. Confirme os preços no site da Tussam.", "es": "En los autobuses de Tussam, el billete sencillo cuesta 1,40 € y se compra a bordo. El autobús del aeropuerto (EA) cuesta 6 € la ida u 8 € ida y vuelta, también a bordo. Conviene confirmar los precios en la web de Tussam."},
+    ],
+    cordoba: [
+      {"kind": "save", "pt": "A Mesquita-Catedral é gratuita de segunda a sábado das 8h30 às 9h30 (entre até as 9h20). Não vale para grupos nem em dias de celebração especial. Fora desse horário, a entrada custa €15, e maiores de 65 pagam €12.", "es": "La Mezquita-Catedral es gratuita de lunes a sábado de 8:30 a 9:30 (se puede entrar hasta las 9:20). No vale para grupos ni en días de celebración extraordinaria. Fuera de ese horario, la entrada cuesta 15 €, y los mayores de 65 pagan 12 €."},
+      {"kind": "tickets", "pt": "Medina Azahara fecha às segundas e, aos domingos e feriados, só abre de manhã. Cidadãos da UE entram grátis, mas brasileiros pagam €1,50. Do centro de recepção até as ruínas há um ônibus-lançadeira (€3). Confirme o horário antes de ir.", "es": "Medina Azahara cierra los lunes y los domingos y festivos solo abre por la mañana. Los ciudadanos de la UE entran gratis; quien no es de la UE (por ejemplo, con pasaporte brasileño) paga 1,50 €. Desde el centro de recepción hasta las ruinas hay un autobús lanzadera (3 €). Conviene confirmar el horario."},
+      {"kind": "transport", "pt": "A estação de trem fica a uns 25–30 minutos a pé da Mesquita; para quem anda devagar, o táxi leva de 5 a 10 minutos. A linha 3 da Aucorsa também liga a estação ao centro.", "es": "La estación de tren está a unos 25–30 minutos andando de la Mezquita; para quien camina despacio, el taxi tarda de 5 a 10 minutos. La línea 3 de Aucorsa también une la estación con el centro."},
+      {"kind": "tickets", "pt": "A Festa dos Pátios acontece em maio (em 2026 foi de 4 a 17/5; as datas de 2027 ainda não foram anunciadas). Em outubro, dá para ver pátios no Palácio de Viana, que abre de terça a sábado das 10h às 19h e aos domingos e feriados das 10h às 15h; fecha às segundas.", "es": "La Fiesta de los Patios se celebra en mayo (en 2026 fue del 4 al 17/5; las fechas de 2027 aún no se han anunciado). En octubre se pueden ver patios en el Palacio de Viana, que abre de martes a sábado de 10:00 a 19:00 y domingos y festivos de 10:00 a 15:00; cierra los lunes."},
+      {"kind": "food", "pt": "Prove o salmorejo (creme frio de tomate e pão), o flamenquín (lombo de porco enrolado e empanado) e a berinjela com mel. Para tapas, procure o centro antigo e os bairros de San Lorenzo, San Andrés e Santa Marina.", "es": "Merece la pena probar el salmorejo, el flamenquín y las berenjenas con miel. Para tapear, mejor el casco antiguo y los barrios de San Lorenzo, San Andrés y Santa Marina."},
+    ],
+  };
+
   function TipsView({ lang, t, pickCity, onLogout }) {
+    const sections = TIP_SECTIONS.filter((sec) => (TIPS_GENERAL[sec.id] || []).length > 0);
+    const [mode, setMode] = useState(() => (store.get("rosinei.tipsMode", "general") === "city" || !sections.length ? "city" : "general"));
+    const [openId, setOpenId] = useState(sections.length ? sections[0].id : null);
+    const [cityId, setCityId] = useState(() => { const c = store.get("rosinei.city", "porto"); return CITY_BY_ID[c] ? c : "porto"; });
+    const city = CITY_BY_ID[cityId];
+    const extra = CITY_TIPS[cityId] || [];
+    const pick = (m) => { setMode(m); store.set("rosinei.tipsMode", m); };
     return html`
       <section className="fade-in flex flex-col gap-5">
         <div className="flex flex-col gap-1">
           <h2 className="city-name text-terra">${t.tipsTitle}</h2>
           <p className="text-[1.1rem] text-soft">${t.tipsIntro}</p>
         </div>
-        ${CITIES.map((c) => html`
-          <div key=${c.id} className="flex flex-col gap-2">
-            <${TipCard} city=${c} lang=${lang} t=${t} showCity=${true} />
-            <button type="button" onClick=${() => pickCity(c.id)} className="btn-outline self-start">
-              <span aria-hidden="true">${c.emoji}</span> ${t.seeCity(c.name[lang])}
+        ${sections.length > 0 && html`
+          <div role="group" className="grid grid-cols-2 gap-2 rounded-full border-2 border-azul bg-card p-1">
+            ${[["general", t.tipsGeneral, "Luggage"], ["city", t.tipsCity, "MapPin"]].map(([m, label, ic]) => html`
+              <button key=${m} type="button" aria-pressed=${mode === m} onClick=${() => pick(m)}
+                className=${"min-h-[3rem] rounded-full font-bold text-[1.05rem] flex items-center justify-center gap-2 " + (mode === m ? "bg-btn text-onbtn" : "text-azul")}>
+                <${Icon} name=${[ic, "MapPin"]} size=${20} /> ${label}
+              </button>`)}
+          </div>`}
+
+        ${mode === "general" && html`
+          <div className="flex flex-col gap-3">
+            ${sections.map((sec) => {
+              const items = TIPS_GENERAL[sec.id];
+              const open = openId === sec.id;
+              return html`
+                <article key=${sec.id} className="rounded-2xl bg-card border border-line shadow-card overflow-hidden">
+                  <button type="button" aria-expanded=${open} aria-controls=${"tips-" + sec.id} onClick=${() => setOpenId(open ? null : sec.id)}
+                    className="w-full min-h-[4.2rem] px-4 py-3 flex items-center gap-3 text-left">
+                    <span className=${"shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-[1.5rem] " + TONE[sec.tone]} aria-hidden="true">${sec.emoji}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[1.2rem] font-bold leading-tight">${sec.title[lang]}</span>
+                      <span className="block text-soft text-[.95rem]">${t.tipsCount(items.length)}</span>
+                    </span>
+                    <${Icon} name=${open ? "ChevronUp" : "ChevronDown"} size=${26} className="text-azul shrink-0" />
+                  </button>
+                  ${open && html`
+                    <ul id=${"tips-" + sec.id} className="flex flex-col gap-3 px-4 pb-4">
+                      ${items.map((it, i) => html`
+                        <li key=${i} className="flex gap-3 text-[1.05rem] leading-relaxed">
+                          <span className=${"shrink-0 mt-1 w-7 h-7 rounded-full flex items-center justify-center text-[.85rem] font-bold " + TONE[sec.tone]} aria-hidden="true">${i + 1}</span>
+                          <span className="min-w-0">${it[lang]}</span>
+                        </li>`)}
+                    </ul>`}
+                </article>`;
+            })}
+            <p className="text-[.9rem] text-soft">${t.tipsSrc}</p>
+          </div>`}
+
+        ${mode === "city" && html`
+          <div className="flex flex-col gap-4">
+            <div className="carousel -mx-4 px-4 flex gap-2 overflow-x-auto pb-1" role="group" aria-label=${t.chooseCity}>
+              ${CITIES.map((c) => html`
+                <button key=${c.id} type="button" className="chip shrink-0" aria-pressed=${c.id === cityId} onClick=${() => setCityId(c.id)}>
+                  <span aria-hidden="true">${c.emoji}</span>${c.name[lang]}
+                </button>`)}
+            </div>
+            <${TipCard} city=${city} lang=${lang} t=${t} showCity=${true} />
+            ${extra.map((tip, i) => {
+              const k = TIP_KINDS[tip.kind] || TIP_KINDS.comfort;
+              return html`
+                <article key=${i} className="rounded-2xl bg-card border border-line shadow-card p-4 flex gap-3">
+                  <span className=${"shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[1.35rem] " + TONE[k.tone]} aria-hidden="true">${k.emoji}</span>
+                  <div className="min-w-0 flex flex-col gap-1">
+                    <p className=${"badge self-start !min-h-[1.8rem] !text-[.85rem] " + TONE[k.tone]}>${k.label[lang]}</p>
+                    <p className="text-[1.05rem] leading-relaxed">${tip[lang]}</p>
+                  </div>
+                </article>`;
+            })}
+            <button type="button" onClick=${() => pickCity(city.id)} className="btn-outline self-start">
+              <span aria-hidden="true">${city.emoji}</span> ${t.seeCity(city.name[lang])}
               <${Icon} name="ChevronRight" size=${20} />
             </button>
-          </div>`)}
+            <p className="text-[.9rem] text-soft">${t.tipsSrc}</p>
+          </div>`}
+
         <button type="button" onClick=${onLogout} className="btn-quiet self-center mt-4">
           <${Icon} name="LogOut" size=${20} /> ${t.logout}
         </button>
@@ -2820,7 +3034,7 @@ h1, h2, h3 { text-wrap: balance; }
     return html`
       <nav className="bottom-nav" aria-label=${t.navLabel}>
         <button type="button" className="fx-bar" onClick=${open} aria-haspopup="dialog" aria-label=${t.fxBar(brl(fx.rate)) + " · " + t.fxOpen}>
-          <span aria-hidden="true" className="text-[1.5rem]">💱</span>
+          <span aria-hidden="true" className="fx-emoji text-[1.5rem]">💱</span>
           <span aria-hidden="true">1 € =</span>
           <span aria-hidden="true" className="fx-rate">${brl(fx.rate)}</span>
           <span aria-hidden="true" className="fx-go">${t.fxOpen}</span>
@@ -2852,6 +3066,7 @@ h1, h2, h3 { text-wrap: balance; }
     const [toast, setToast] = useState(null);
     const toastTimer = useRef(null);
     const city = CITY_BY_ID[cityId];
+    const shownCat = tabsFor(cityId).some((x) => x.id === cat) ? cat : "ver";
 
     function showToast(text) {
       clearTimeout(toastTimer.current);
@@ -2901,10 +3116,10 @@ h1, h2, h3 { text-wrap: balance; }
             <${CityHero} city=${city} lang=${lang} t=${t} />
             <${WeatherCard} key=${"wx-" + city.id} city=${city} lang=${lang} t=${t} start=${trip.settings.start} />
             <${TipCard} city=${city} lang=${lang} t=${t} />
-            <${CatTabs} cat=${cat === "gastro" && !(GASTRO[city.id] || []).length ? "ver" : cat} setCat=${setCat} t=${t} cityId=${city.id} />
-            ${cat === "gastro" && (GASTRO[city.id] || []).length
+            <${CatTabs} cat=${shownCat} setCat=${setCat} t=${t} cityId=${city.id} />
+            ${shownCat === "gastro"
               ? html`<${GastroList} city=${city} lang=${lang} t=${t} />`
-              : html`<${PlaceList} city=${city} cat=${cat === "gastro" ? "ver" : cat} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} />`}
+              : html`<${PlaceList} city=${city} cat=${shownCat} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} />`}
             <p className="text-soft text-[.95rem] leading-relaxed">${t.note}</p>`}
           ${view === "viagem" && html`<${TripView} lang=${lang} t=${t} trip=${trip} showToast=${showToast} />`}
           ${view === "favoritos" && html`<${FavoritesView} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} goExplore=${() => goView("explorar")} />`}
