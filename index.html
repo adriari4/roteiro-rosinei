@@ -165,7 +165,34 @@ h1, h2, h3 { text-wrap: balance; }
 .dots span:nth-child(3) { animation-delay: .3s; }
 @keyframes dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
 
-.pb-nav { padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)); }
+.pb-nav { padding-bottom: calc(10.5rem + env(safe-area-inset-bottom, 0px)); }
+.fx-bar {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; min-height: 3.9rem; padding: .35rem 1rem;
+  background: var(--gold-tint); color: var(--gold-ink);
+  font-weight: 700; font-size: 1.15rem; border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.fx-bar .fx-rate { font-size: 1.85rem; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+.fx-bar .fx-go {
+  margin-left: .3rem; padding: .35rem .8rem; border-radius: 999px;
+  background: var(--btn); color: var(--on-btn); font-size: 1rem;
+}
+.sheet-backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(10, 14, 22, .55); display: flex; align-items: flex-end; justify-content: center; }
+.sheet {
+  width: 100%; max-width: 36rem; max-height: 92vh; overflow-y: auto;
+  background: var(--bg); color: var(--ink);
+  border-radius: 1.5rem 1.5rem 0 0; box-shadow: var(--shadow);
+  padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  animation: sheet-in .2s ease-out;
+}
+@keyframes sheet-in { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+.money { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wx-day { min-width: 4.6rem; border-radius: 1rem; background: var(--card); border: 1px solid var(--line); padding: .5rem .4rem; text-align: center; font-variant-numeric: tabular-nums; }
+.clima-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.clima-table th, .clima-table td { padding: .45rem .4rem; text-align: center; border-bottom: 1px solid var(--line); }
+.clima-table th:first-child, .clima-table td:first-child { text-align: left; }
+.clima-table tr.now td { background: var(--azul-tint); font-weight: 700; }
 .bottom-nav {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
   background: var(--card);
@@ -181,7 +208,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .toast-wrap {
   position: fixed; left: 0; right: 0; z-index: 40; pointer-events: none;
-  bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(9.8rem + env(safe-area-inset-bottom, 0px));
   display: flex; justify-content: center; padding-inline: 1rem;
 }
 .toast {
@@ -230,7 +257,7 @@ h1, h2, h3 { text-wrap: balance; }
 <script>
 (function () {
   "use strict";
-  const { useState, useEffect, useRef } = React;
+  const { useState, useEffect, useRef, useContext } = React;
   const html = htm.bind(React.createElement);
 
   /* ---------- acesso (cadeado familiar: a senha não fica escrita na página, só o seu hash) ---------- */
@@ -447,7 +474,48 @@ h1, h2, h3 { text-wrap: balance; }
       aiIntro: "Peça mudanças no roteiro ou tire dúvidas sobre transporte, comida e passeios.",
       aiStandalone: "O assistente com IA funciona só dentro do Claude e usa a conta Claude de quem está usando. O roteiro recomendado acima funciona sem conta nenhuma.",
       openClaude: "Abrir no Claude",
-      imported: "Roteiro recebido e guardado neste aparelho."
+      imported: "Roteiro recebido e guardado neste aparelho.",
+      fxBar: (r) => "1 € = " + r,
+      fxOpen: "Converter",
+      fxTitle: "Conversor euro ↔ real",
+      fxEur: "Euros (€)",
+      fxBrl: "Reais (R$)",
+      fxRate: (r, d, src) => "Cotação: 1 € = " + r + " (" + src + ", " + d + ")",
+      fxLive: "Atualizada agora pela internet.",
+      fxOffline: "Sem conexão com o serviço de câmbio: usando a última cotação conhecida.",
+      fxLoading: "Atualizando a cotação…",
+      fxRefresh: "Atualizar cotação",
+      fxClose: "Fechar",
+      fxNote: "No cartão ou no caixa eletrônico o banco cobra IOF e tarifas: o valor final costuma ser um pouco maior.",
+      fxQuick: "Valores rápidos",
+      priceRange: ["", "até {a}", "{a}–{b}", "mais de {b}"],
+      wxTitle: (c) => "Tempo em " + c,
+      wxNow: "Agora",
+      wxNext: "Próximos dias",
+      wxRain: "chuva",
+      wxNoForecast: "A previsão ao vivo não está disponível aqui. Veja o clima médio abaixo ou abra a previsão.",
+      wxOpen: "Ver previsão",
+      wxStale: "Previsão guardada (sem conexão agora).",
+      climTitle: (m) => "Clima típico em " + m,
+      climLine: (mx, mn, r) => "Máx. " + mx + "° · mín. " + mn + "° · " + r + " dias de chuva no mês",
+      climAll: "Ver todos os meses",
+      climHide: "Esconder meses",
+      climMonth: "Mês", climMax: "Máx.", climMin: "Mín.", climRain: "Dias de chuva",
+      climSrc: "Médias 1991–2020 (IPMA e AEMET).",
+      wear: { hot: "Muito calor: chapéu, protetor solar, água e passeios cedo.", warm: "Calor agradável: roupa leve e protetor solar.", mild: "Temperatura amena: leve um casaquinho para a noite.", cool: "Fresco: casaco, cachecol e sapato fechado.", rain: "Leve guarda-chuva ou capa de chuva." },
+      wxDay: (mx, mn) => mx + "° / " + mn + "°",
+      wxAvg: (mx, mn) => "Média do mês: " + mx + "° / " + mn + "°",
+      perCityQ: "Dias em cada cidade",
+      perCityAuto: "Distribuição automática (recomendada)",
+      perCityManual: "Você escolheu os dias de cada cidade.",
+      perCityReset: "Distribuir automaticamente",
+      lessDaysIn: (c) => "Menos dias em " + c,
+      moreDaysIn: (c) => "Mais dias em " + c,
+      gastro: "Gastronomia típica",
+      gastroIn: (c) => "Gastronomia típica de " + c,
+      gastroIntro: "Os sabores da cidade e onde prová-los nos restaurantes do app.",
+      kinds: { prato: "Prato", petisco: "Petisco", doce: "Doce", bebida: "Bebida" },
+      tryAt: "Onde provar"
     },
     es: {
       subtitle: "Portugal y España",
@@ -583,7 +651,48 @@ h1, h2, h3 { text-wrap: balance; }
       aiIntro: "Pide cambios en el itinerario o pregunta dudas sobre transporte, comida y visitas.",
       aiStandalone: "El asistente con IA solo funciona dentro de Claude y usa la cuenta de Claude de quien lo usa. El itinerario recomendado de arriba funciona sin ninguna cuenta.",
       openClaude: "Abrir en Claude",
-      imported: "Itinerario recibido y guardado en este dispositivo."
+      imported: "Itinerario recibido y guardado en este dispositivo.",
+      fxBar: (r) => "1 € = " + r,
+      fxOpen: "Convertir",
+      fxTitle: "Conversor euro ↔ real",
+      fxEur: "Euros (€)",
+      fxBrl: "Reales (R$)",
+      fxRate: (r, d, src) => "Cambio: 1 € = " + r + " (" + src + ", " + d + ")",
+      fxLive: "Actualizado ahora por internet.",
+      fxOffline: "Sin conexión con el servicio de cambio: se usa el último cambio conocido.",
+      fxLoading: "Actualizando el cambio…",
+      fxRefresh: "Actualizar cambio",
+      fxClose: "Cerrar",
+      fxNote: "Con tarjeta o en el cajero, el banco brasileño cobra IOF y comisiones: el importe final suele ser algo mayor.",
+      fxQuick: "Importes rápidos",
+      priceRange: ["", "hasta {a}", "{a}–{b}", "más de {b}"],
+      wxTitle: (c) => "El tiempo en " + c,
+      wxNow: "Ahora",
+      wxNext: "Próximos días",
+      wxRain: "lluvia",
+      wxNoForecast: "La previsión en directo no está disponible aquí. Mira el clima medio abajo o abre la previsión.",
+      wxOpen: "Ver previsión",
+      wxStale: "Previsión guardada (ahora sin conexión).",
+      climTitle: (m) => "Clima típico en " + m,
+      climLine: (mx, mn, r) => "Máx. " + mx + "° · mín. " + mn + "° · " + r + " días de lluvia al mes",
+      climAll: "Ver todos los meses",
+      climHide: "Ocultar meses",
+      climMonth: "Mes", climMax: "Máx.", climMin: "Mín.", climRain: "Días de lluvia",
+      climSrc: "Medias 1991–2020 (IPMA y AEMET).",
+      wear: { hot: "Mucho calor: sombrero, crema solar, agua y paseos temprano.", warm: "Calor agradable: ropa ligera y crema solar.", mild: "Temperatura suave: lleva una chaqueta fina para la noche.", cool: "Fresco: abrigo, bufanda y calzado cerrado.", rain: "Lleva paraguas o chubasquero." },
+      wxDay: (mx, mn) => mx + "° / " + mn + "°",
+      wxAvg: (mx, mn) => "Media del mes: " + mx + "° / " + mn + "°",
+      perCityQ: "Días en cada ciudad",
+      perCityAuto: "Reparto automático (recomendado)",
+      perCityManual: "Has elegido los días de cada ciudad.",
+      perCityReset: "Repartir automáticamente",
+      lessDaysIn: (c) => "Menos días en " + c,
+      moreDaysIn: (c) => "Más días en " + c,
+      gastro: "Gastronomía típica",
+      gastroIn: (c) => "Gastronomía típica de " + c,
+      gastroIntro: "Los sabores de la ciudad y dónde probarlos en los restaurantes de la app.",
+      kinds: { prato: "Plato", petisco: "Tapa", doce: "Dulce", bebida: "Bebida" },
+      tryAt: "Dónde probarlo"
     }
   };
 
@@ -593,6 +702,10 @@ h1, h2, h3 { text-wrap: balance; }
     { id: "bares", emoji: "🍷" },
     { id: "ficar", emoji: "🏨" }
   ];
+  /* abas da cidade: as 4 categorias de lugares + gastronomia típica (pratos, não lugares) */
+  const TABS = CATS.concat([{ id: "gastro", emoji: "🥘" }]);
+  /* gastronomia típica por cidade: kind = prato | petisco | doce | bebida; where = ids de restaurantes da mesma cidade */
+  const GASTRO = {};
 
   /* ---------- conteúdo: 6 destinos ----------
      n = nome · d = descrição · p = preço (0 grátis, 1 €, 2 €€, 3 €€€) · q = busca no Google Maps · e = acesso fácil
@@ -1103,10 +1216,13 @@ h1, h2, h3 { text-wrap: balance; }
     { id: "cordoba", city: "cordoba", emoji: "🕌", name: { pt: "Córdoba", es: "Córdoba" } }
   ];
   const STOP_BY_ID = Object.fromEntries(STOPS.map((s) => [s.id, s]));
+  /* vilas que contam como Lagos ou Albufeira no roteiro */
+  const LAGOS_TOWNS = ["Lagos", "Luz", "Praia da Luz", "Odiáxere", "Bensafrim"];
+  const ALBU_TOWNS = ["Albufeira", "Guia", "Olhos de Água", "Galé", "Açoteias", "Areias de São João", "Sesmarias", "Ferreiras", "Paderne"];
   const stopOf = (city, place) => {
     if (city.id !== "algarve") return city.id;
-    if (place.t === "Lagos") return "lagos";
-    if (place.t === "Albufeira" || place.t === "Guia") return "albufeira";
+    if (LAGOS_TOWNS.indexOf(place.t) >= 0) return "lagos";
+    if (ALBU_TOWNS.indexOf(place.t) >= 0) return "albufeira";
     return "algarve";
   };
 
@@ -1170,6 +1286,124 @@ h1, h2, h3 { text-wrap: balance; }
     "sevilla|cordoba": { h: 1, pt: "trem AVE, ~45 min", es: "tren AVE, ~45 min" }
   };
   const legBetween = (a, b) => TRAVEL[ORDER.indexOf(a) < ORDER.indexOf(b) ? a + "|" + b : b + "|" + a] || null;
+
+  /* ---------- tempo: coordenadas, códigos WMO (Open-Meteo) e clima médio mensal ---------- */
+  const COORDS = {
+    porto: [41.1496, -8.6110], coimbra: [40.2033, -8.4103], lisboa: [38.7223, -9.1393],
+    lagos: [37.1028, -8.6730], albufeira: [37.0885, -8.2503], sevilla: [37.3891, -5.9845], cordoba: [37.8882, -4.7794]
+  };
+  /* parada → série de clima (Lagos e Albufeira usam Faro) */
+  const CLIMATE_OF = { porto: "porto", coimbra: "coimbra", lisboa: "lisboa", lagos: "algarve", albufeira: "algarve", algarve: "algarve", sevilla: "sevilla", cordoba: "cordoba" };
+  /* médias mensais (jan..dez): máxima, mínima, dias com chuva ≥ 1 mm — preenchido com dados verificados */
+  const CLIMATE = {};
+  const WMO = [
+    [[0], "☀️", { pt: "Céu limpo", es: "Despejado" }],
+    [[1, 2], "🌤️", { pt: "Poucas nuvens", es: "Poco nuboso" }],
+    [[3], "☁️", { pt: "Nublado", es: "Nublado" }],
+    [[45, 48], "🌫️", { pt: "Nevoeiro", es: "Niebla" }],
+    [[51, 53, 55, 56, 57], "🌦️", { pt: "Garoa", es: "Llovizna" }],
+    [[61, 63, 65, 66, 67], "🌧️", { pt: "Chuva", es: "Lluvia" }],
+    [[71, 73, 75, 77, 85, 86], "❄️", { pt: "Neve", es: "Nieve" }],
+    [[80, 81, 82], "🌦️", { pt: "Pancadas de chuva", es: "Chubascos" }],
+    [[95, 96, 99], "⛈️", { pt: "Trovoada", es: "Tormenta" }]
+  ];
+  const wmo = (code) => WMO.find((w) => w[0].indexOf(code) >= 0) || [[], "🌡️", { pt: "", es: "" }];
+
+  /* previsão de 16 dias por parada, em memória e no aparelho (3 h); se a rede estiver bloqueada, fica só o clima médio */
+  const WX = { data: {}, pending: {}, listeners: new Set() };
+  async function fetchJson(url, ms) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), ms || 9000);
+    try {
+      const r = await fetch(url, { signal: ctl.signal });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return await r.json();
+    } finally { clearTimeout(timer); }
+  }
+  function loadForecast(stop) {
+    const pos = COORDS[stop];
+    if (!pos || WX.pending[stop]) return;
+    const cached = WX.data[stop] || store.get("rosinei.wx." + stop, null);
+    if (cached && cached.days && Date.now() - cached.at < 3 * 3600e3) { WX.data[stop] = cached; return; }
+    if (WX.data[stop] && WX.data[stop].failed) return;
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + pos[0] + "&longitude=" + pos[1] +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+      "&current=temperature_2m,weather_code&timezone=auto&forecast_days=16";
+    WX.pending[stop] = fetchJson(url).then((j) => {
+      const d = j.daily || {};
+      const days = (d.time || []).map((date, i) => ({
+        date, code: d.weather_code[i], max: d.temperature_2m_max[i], min: d.temperature_2m_min[i], rain: d.precipitation_probability_max[i]
+      }));
+      const v = { at: Date.now(), days, now: j.current ? { temp: j.current.temperature_2m, code: j.current.weather_code } : null };
+      WX.data[stop] = v;
+      store.set("rosinei.wx." + stop, v);
+    }).catch(() => {
+      WX.data[stop] = cached && cached.days ? Object.assign({}, cached, { stale: true }) : { at: Date.now(), days: null, failed: true };
+    }).finally(() => {
+      delete WX.pending[stop];
+      WX.listeners.forEach((f) => f());
+    });
+  }
+  function useForecast(stop) {
+    const [, force] = useState(0);
+    useEffect(() => {
+      const f = () => force((x) => x + 1);
+      WX.listeners.add(f);
+      loadForecast(stop);
+      return () => { WX.listeners.delete(f); };
+    }, [stop]);
+    return WX.data[stop] || null;
+  }
+
+  /* ---------- câmbio euro → real (BCE via Frankfurter; reserva: ExchangeRate-API) ---------- */
+  const FX_FALLBACK = { rate: 5.6086, date: "2026-10-09", src: "BCE" };
+  const FxContext = React.createContext({ fx: FX_FALLBACK, status: "idle", refresh: () => {}, open: () => {} });
+  const brl = (v) => { try { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: v >= 100 ? 0 : 2, maximumFractionDigits: v >= 100 ? 0 : 2 }).format(v); } catch (e) { return "R$ " + v.toFixed(2); } };
+  const brlInt = (v) => { try { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v); } catch (e) { return "R$ " + Math.round(v); } };
+  const eur = (v) => { try { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "EUR", minimumFractionDigits: v >= 100 ? 0 : 2, maximumFractionDigits: v >= 100 ? 0 : 2 }).format(v); } catch (e) { return v.toFixed(2) + " €"; } };
+  const fmtDateShort = (iso, lang) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return iso || "";
+    const [y, m, d] = iso.split("-").map(Number);
+    try { return new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "es-ES", { day: "numeric", month: "short", year: "numeric" }).format(new Date(y, m - 1, d)); } catch (e) { return iso; }
+  };
+  function useFx() {
+    const [fx, setFx] = useState(() => {
+      const s = store.get("rosinei.fx", null);
+      return s && s.rate > 0 && (s.date || "") >= FX_FALLBACK.date ? s : FX_FALLBACK;
+    });
+    const [status, setStatus] = useState("idle");
+    const busy = useRef(false);
+    async function refresh() {
+      if (busy.current) return;
+      busy.current = true;
+      setStatus("loading");
+      const sources = [
+        () => fetchJson("https://api.frankfurter.dev/v1/latest?base=EUR&symbols=BRL").then((j) => ({ rate: j.rates.BRL, date: j.date, src: "BCE" })),
+        () => fetchJson("https://open.er-api.com/v6/latest/EUR").then((j) => ({ rate: j.rates.BRL, date: new Date(j.time_last_update_unix * 1000).toISOString().slice(0, 10), src: "ExchangeRate-API" }))
+      ];
+      for (const get of sources) {
+        try {
+          const r = await get();
+          if (r && r.rate > 0) {
+            const v = Object.assign({}, r, { at: Date.now() });
+            setFx(v);
+            store.set("rosinei.fx", v);
+            setStatus("live");
+            busy.current = false;
+            return;
+          }
+        } catch (e) { /* tenta a próxima fonte */ }
+      }
+      setStatus("offline");
+      busy.current = false;
+    }
+    useEffect(() => {
+      refresh();
+      const id = setInterval(refresh, 30 * 60 * 1000);
+      return () => clearInterval(id);
+    }, []);
+    return { fx, status, refresh };
+  }
 
   /* passeios por parada: half = meio dia (em ordem de prioridade), full = excursão de dia inteiro, eve = fim de tarde */
   const ITIN = {
@@ -1282,10 +1516,20 @@ h1, h2, h3 { text-wrap: balance; }
   function sanitizeCfg(c) {
     c = c || {};
     const s = Array.isArray(c.s) ? ORDER.filter((id) => c.s.indexOf(id) >= 0) : ORDER.slice();
-    const d = Math.max(1, Math.min(30, parseInt(c.d, 10) || 14));
-    return { d, s, st: /^\d{4}-\d{2}-\d{2}$/.test(c.st || "") ? c.st : "", p: c.p === "normal" ? "normal" : "calmo", dir: c.dir === "sn" ? "sn" : "ns" };
+    let d = Math.max(1, Math.min(30, parseInt(c.d, 10) || 14));
+    /* a = dias escolhidos por cidade (opcional); se vier completo, o total é a soma */
+    let a = null;
+    if (c.a && typeof c.a === "object" && s.length && s.every((id) => parseInt(c.a[id], 10) >= 1)) {
+      a = {};
+      s.forEach((id) => { a[id] = Math.max(1, Math.min(15, parseInt(c.a[id], 10))); });
+      d = s.reduce((sum, id) => sum + a[id], 0);
+    }
+    const out = { d, s, st: /^\d{4}-\d{2}-\d{2}$/.test(c.st || "") ? c.st : "", p: c.p === "normal" ? "normal" : "calmo", dir: c.dir === "sn" ? "sn" : "ns" };
+    if (a) out.a = a;
+    return out;
   }
-  const cfgFromSettings = (s) => sanitizeCfg({ d: s.days, s: s.stops, st: s.start, p: s.pace, dir: s.dir });
+  const cfgFromSettings = (s) => sanitizeCfg({ d: s.days, s: s.stops, st: s.start, p: s.pace, dir: s.dir, a: s.alloc });
+  const orderedStops = (stops, dir) => { const o = ORDER.filter((id) => stops.indexOf(id) >= 0); return dir === "sn" ? o.reverse() : o; };
 
   /* dias por parada: o mínimo de cada uma e o resto pelos pesos, respeitando o máximo */
   function allocateDays(stops, n) {
@@ -1319,7 +1563,7 @@ h1, h2, h3 { text-wrap: balance; }
     const cfg = sanitizeCfg(rawCfg);
     const stops = cfg.dir === "sn" ? cfg.s.slice().reverse() : cfg.s.slice();
     if (!stops.length || cfg.d < stops.length) return null;
-    const alloc = allocateDays(stops, cfg.d);
+    const alloc = cfg.a || allocateDays(stops, cfg.d);
     const days = [];
     let n = 0;
     stops.forEach((stop, si) => {
@@ -1640,7 +1884,7 @@ h1, h2, h3 { text-wrap: balance; }
     function buildAuto() { return saveCurrent({ type: "auto", cfg: cfgFromSettings(settings) }); }
     function importShared(c) {
       setLocal(c);
-      if (c.type === "auto") setSettings((s) => Object.assign({}, s, { days: c.cfg.d, stops: c.cfg.s, start: c.cfg.st, pace: c.cfg.p, dir: c.cfg.dir }));
+      if (c.type === "auto") setSettings((s) => Object.assign({}, s, { days: c.cfg.d, stops: c.cfg.s, start: c.cfg.st, pace: c.cfg.p, dir: c.cfg.dir, alloc: c.cfg.a || null }));
       showToast(t.imported);
     }
 
@@ -1890,24 +2134,33 @@ h1, h2, h3 { text-wrap: balance; }
       </aside>`;
   }
 
-  function CatTabs({ cat, setCat, t }) {
+  function CatTabs({ cat, setCat, t, cityId }) {
     return html`
       <div role="tablist" aria-label=${t.catsLabel} className="grid grid-cols-2 gap-3">
-        ${CATS.map((c) => {
+        ${TABS.filter((c) => c.id !== "gastro" || (GASTRO[cityId] || []).length > 0).map((c) => {
           const on = c.id === cat;
+          const wide = c.id === "gastro";
           return html`
             <button key=${c.id} id=${"tab-" + c.id} role="tab" type="button" aria-selected=${on} aria-controls="painel"
               onClick=${() => setCat(c.id)}
               className=${"min-h-[4.5rem] rounded-2xl border-2 px-3 py-2 flex items-center gap-3 text-left text-[1.05rem] font-bold leading-tight transition-colors " +
+                (wide ? "col-span-2 justify-center " : "") +
                 (on ? "bg-terra text-onterra border-terra shadow-card" : "bg-card text-ink border-line")}>
               <span className="text-[1.6rem] leading-none shrink-0" aria-hidden="true">${c.emoji}</span>
-              <span className="min-w-0">${t.cats[c.id]}</span>
+              <span className="min-w-0">${wide ? t.gastro : t.cats[c.id]}</span>
             </button>`;
         })}
       </div>`;
   }
 
+  /* faixas por pessoa: € até 15 €, €€ 15–35 €, €€€ mais de 35 € — mostradas também em reais com o câmbio do dia */
+  function priceInBrl(p, t, rate) {
+    const round5 = (v) => Math.round(v / 5) * 5;
+    const a = brlInt(round5(15 * rate)), b = brlInt(round5(35 * rate));
+    return (t.priceRange[p] || "").replace("{a}", a).replace("{b}", b);
+  }
   function PriceBadge({ p, t }) {
+    const { fx } = useContext(FxContext);
     if (p === 0) {
       return html`<span className="badge bg-ok-tint text-ok">${t.price[0]}</span>`;
     }
@@ -1917,6 +2170,7 @@ h1, h2, h3 { text-wrap: balance; }
           <span className="text-azul">${"€".repeat(p)}</span><span className="opacity-30">${"€".repeat(3 - p)}</span>
         </span>
         <span><span className="sr-only">${t.priceLabel}: </span>${t.price[p]}</span>
+        <span className="font-normal text-soft tabular-nums">· ${priceInBrl(p, t, fx.rate)}</span>
       </span>`;
   }
 
@@ -1959,6 +2213,141 @@ h1, h2, h3 { text-wrap: balance; }
           <${Icon} name="Navigation" size=${24} /> ${t.openMap}
         </a>
       </article>`;
+  }
+
+  /* ---------- tempo e clima ---------- */
+  const MONTHS = {
+    pt: ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
+    es: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+  };
+  const r0 = (v) => Math.round(v);
+  function wearTips(c, m, t) {
+    const mx = c.tmax[m], mn = c.tmin[m], rain = c.rain[m];
+    const tips = [mx >= 30 ? t.wear.hot : mx >= 24 ? t.wear.warm : mx >= 17 ? t.wear.mild : t.wear.cool];
+    if (mx >= 24 && mn <= 14) tips.push(t.wear.mild);
+    if (rain >= 7) tips.push(t.wear.rain);
+    return tips;
+  }
+  const isoDay = (start, n) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(start || "")) return "";
+    const [y, m, d] = start.split("-").map(Number);
+    const dt = new Date(y, m - 1, d + n - 1);
+    return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
+  };
+
+  function WeatherCard({ city, lang, t, start }) {
+    const subs = city.id === "algarve" ? ["lagos", "albufeira"] : [city.id];
+    const [sub, setSub] = useState(subs[0]);
+    const stop = subs.indexOf(sub) >= 0 ? sub : subs[0];
+    const wx = useForecast(stop);
+    const clim = CLIMATE[CLIMATE_OF[stop]];
+    const startMonth = /^\d{4}-\d{2}/.test(start || "") ? parseInt(start.slice(5, 7), 10) - 1 : new Date().getMonth();
+    const [m, setM] = useState(startMonth);
+    const [all, setAll] = useState(false);
+    const name = STOP_BY_ID[stop].name[lang];
+    const locale = lang === "pt" ? "pt-BR" : "es-ES";
+    const days = wx && wx.days ? wx.days.slice(0, 7) : null;
+    const dayName = (iso) => {
+      const [y, mo, d] = iso.split("-").map(Number);
+      try { return new Intl.DateTimeFormat(locale, { weekday: "short", day: "numeric" }).format(new Date(y, mo - 1, d)); } catch (e) { return iso.slice(5); }
+    };
+    const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent((lang === "pt" ? "previsão do tempo " : "tiempo en ") + name);
+    return html`
+      <section className="rounded-2xl bg-card border border-line shadow-card p-4 flex flex-col gap-3" aria-labelledby="wx-title">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 id="wx-title" className="text-[1.25rem] font-bold flex items-center gap-2"><span aria-hidden="true">🌤️</span> ${t.wxTitle(name)}</h3>
+          ${subs.length > 1 && html`
+            <div className="flex gap-2">
+              ${subs.map((s) => html`<button key=${s} type="button" className="chip !min-h-[2.4rem]" aria-pressed=${s === stop} onClick=${() => setSub(s)}>${STOP_BY_ID[s].name[lang]}</button>`)}
+            </div>`}
+        </div>
+        ${!wx && html`<p className="text-soft flex items-center gap-2"><span className="dots" aria-hidden="true"><span></span><span></span><span></span></span></p>`}
+        ${wx && wx.now && html`
+          <p className="flex items-center gap-3">
+            <span className="text-[2.4rem] leading-none" aria-hidden="true">${wmo(wx.now.code)[1]}</span>
+            <span><span className="text-[1.6rem] font-bold tabular-nums">${r0(wx.now.temp)}°</span>
+            <span className="block text-soft">${t.wxNow} · ${wmo(wx.now.code)[2][lang]}</span></span>
+          </p>`}
+        ${days && html`
+          <div className="carousel -mx-4 px-4 flex gap-2 overflow-x-auto pb-1" aria-label=${t.wxNext}>
+            ${days.map((d) => html`
+              <div key=${d.date} className="wx-day shrink-0">
+                <p className="text-[.85rem] font-bold text-soft">${dayName(d.date)}</p>
+                <p className="text-[1.6rem] leading-tight" title=${wmo(d.code)[2][lang]}><span aria-hidden="true">${wmo(d.code)[1]}</span><span className="sr-only">${wmo(d.code)[2][lang]}</span></p>
+                <p className="font-bold">${r0(d.max)}°</p>
+                <p className="text-soft text-[.9rem]">${r0(d.min)}°</p>
+                ${d.rain != null && html`<p className="text-[.8rem] text-azul font-bold">💧${d.rain}%</p>`}
+              </div>`)}
+          </div>`}
+        ${wx && wx.stale && html`<p className="text-[.9rem] text-soft">${t.wxStale}</p>`}
+        ${wx && wx.failed && html`
+          <p className="text-[.98rem] text-soft">${t.wxNoForecast}</p>
+          <a className="btn-outline self-start" href=${searchUrl} target="_blank" rel="noopener noreferrer"><${Icon} name="ExternalLink" size=${18} /> ${t.wxOpen}</a>`}
+        ${clim && html`
+          <div className="rounded-xl bg-azul-tint px-3 py-3 flex flex-col gap-2">
+            <label htmlFor="wx-month" className="flex flex-wrap items-center gap-2 font-bold">
+              ${t.climTitle("")}
+              <select id="wx-month" className="field !min-h-[2.6rem] !w-auto !py-1 !text-[1rem]" value=${m} onChange=${(e) => setM(parseInt(e.target.value, 10))}>
+                ${MONTHS[lang].map((mn, i) => html`<option key=${i} value=${i}>${mn}</option>`)}
+              </select>
+            </label>
+            <p className="text-[1.05rem] tabular-nums">${t.climLine(r0(clim.tmax[m]), r0(clim.tmin[m]), r0(clim.rain[m]))}</p>
+            <ul className="flex flex-col gap-1">
+              ${wearTips(clim, m, t).map((tip, i) => html`<li key=${i} className="flex gap-2 text-[1rem]"><span aria-hidden="true">👕</span>${tip}</li>`)}
+            </ul>
+            <button type="button" className="btn-quiet self-start !min-h-[2.5rem] text-[.95rem]" aria-expanded=${all} onClick=${() => setAll(!all)}>
+              ${all ? t.climHide : t.climAll}
+            </button>
+            ${all && html`
+              <div className="overflow-x-auto">
+                <table className="clima-table text-[.95rem]">
+                  <thead><tr><th>${t.climMonth}</th><th>${t.climMax}</th><th>${t.climMin}</th><th>${t.climRain}</th></tr></thead>
+                  <tbody>
+                    ${MONTHS[lang].map((mn, i) => html`
+                      <tr key=${i} className=${i === m ? "now" : ""}><td>${mn}</td><td>${r0(clim.tmax[i])}°</td><td>${r0(clim.tmin[i])}°</td><td>${r0(clim.rain[i])}</td></tr>`)}
+                  </tbody>
+                </table>
+              </div>`}
+            <p className="text-[.85rem] text-soft">${t.climSrc}</p>
+          </div>`}
+      </section>`;
+  }
+
+  /* ---------- gastronomia típica ---------- */
+  function GastroList({ city, lang, t }) {
+    const items = GASTRO[city.id] || [];
+    return html`
+      <section id="painel" role="tabpanel" aria-labelledby="tab-gastro" className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-[1.45rem] font-bold leading-tight">${t.gastroIn(city.name[lang])}</h2>
+          <p className="text-soft text-[.98rem] leading-relaxed">${t.gastroIntro}</p>
+        </div>
+        ${items.map((d) => {
+          const where = (d.where || []).map((id) => PLACE_BY_KEY[favKey(city.id, id)]).filter(Boolean);
+          return html`
+            <article key=${d.id} className="rounded-2xl bg-card border border-line shadow-card p-4 flex flex-col gap-3">
+              <div className="flex items-start gap-3">
+                <span className="text-[2.3rem] leading-none shrink-0" aria-hidden="true">${d.emoji}</span>
+                <div className="min-w-0">
+                  <p className="eyebrow">${t.kinds[d.kind] || ""}</p>
+                  <h3 className="text-[1.3rem] font-bold leading-snug">${d.n[lang]}</h3>
+                </div>
+              </div>
+              <p className="text-[1.05rem] leading-relaxed">${d.d[lang]}</p>
+              ${where.length > 0 && html`
+                <div className="flex flex-col gap-2">
+                  <p className="font-bold text-[.98rem] flex items-center gap-2"><${Icon} name=${["UtensilsCrossed", "Utensils"]} size=${18} className="text-terra" /> ${t.tryAt}</p>
+                  <div className="flex flex-wrap gap-2">
+                    ${where.map((ref) => html`
+                      <a key=${ref.place.id} className="chip" href=${mapsUrl(ref.place.q)} target="_blank" rel="noopener noreferrer">
+                        <${Icon} name="MapPin" size=${18} className="text-azul" />${tx(ref.place.n, lang)}
+                        ${ref.place.r ? html`<span className="text-gold-ink">★ ${Number(ref.place.r).toFixed(1).replace(".", ",")}</span>` : null}
+                      </a>`)}
+                  </div>
+                </div>`}
+            </article>`;
+        })}
+      </section>`;
   }
 
   function PlaceList({ city, cat, lang, t, favs, toggleFav }) {
@@ -2045,7 +2434,25 @@ h1, h2, h3 { text-wrap: balance; }
   function PlanSetup({ t, lang, trip, onBuild }) {
     const s = trip.settings;
     const set = (patch) => trip.setSettings(Object.assign({}, s, patch));
-    const toggleStop = (id) => set({ stops: s.stops.includes(id) ? s.stops.filter((x) => x !== id) : STOPS.map((x) => x.id).filter((x) => x === id || s.stops.includes(x)) });
+    const toggleStop = (id) => {
+      const on = s.stops.includes(id);
+      const stops = on ? s.stops.filter((x) => x !== id) : STOPS.map((x) => x.id).filter((x) => x === id || s.stops.includes(x));
+      if (!s.alloc) { set({ stops }); return; }
+      const alloc = Object.assign({}, s.alloc);
+      if (on) delete alloc[id]; else alloc[id] = MIN_DAYS[id] || 1;
+      const days = stops.reduce((sum, x) => sum + (alloc[x] || 1), 0);
+      set(stops.length ? { stops, alloc, days: Math.max(1, Math.min(30, days)) } : { stops, alloc: null });
+    };
+    const ordered = orderedStops(s.stops, s.dir);
+    const perCity = s.alloc || (s.stops.length && s.days >= s.stops.length ? allocateDays(ordered, s.days) : null);
+    const changeCity = (id, delta) => {
+      const base = Object.assign({}, perCity || {});
+      ordered.forEach((x) => { if (!base[x]) base[x] = 1; });
+      base[id] = Math.max(1, Math.min(15, base[id] + delta));
+      const days = ordered.reduce((sum, x) => sum + base[x], 0);
+      if (days > 30) return;
+      set({ alloc: base, days });
+    };
     const problem = s.stops.length === 0 ? t.noStops : s.days < s.stops.length ? t.tooFew(s.days, s.stops.length) : "";
     return html`
       <section className="rounded-3xl bg-card border border-line shadow-card p-4 flex flex-col gap-5" aria-labelledby="setup-title">
@@ -2055,14 +2462,14 @@ h1, h2, h3 { text-wrap: balance; }
         <div className="flex flex-col gap-2">
           <p className="font-bold text-lg">${t.daysQ}</p>
           <div className="flex items-center gap-4">
-            <button type="button" className="stepper-btn" aria-label=${t.fewer} disabled=${s.days <= 1} onClick=${() => set({ days: Math.max(1, s.days - 1) })}>
+            <button type="button" className="stepper-btn" aria-label=${t.fewer} disabled=${s.days <= 1} onClick=${() => set({ days: Math.max(1, s.days - 1), alloc: null })}>
               <${Icon} name="Minus" size=${26} />
             </button>
             <p className="min-w-[6rem] text-center" aria-live="polite">
               <span className="font-display text-[2.4rem] leading-none text-azul tabular-nums">${s.days}</span>
               <span className="block text-soft font-bold">${t.daysUnit(s.days)}</span>
             </p>
-            <button type="button" className="stepper-btn" aria-label=${t.more} disabled=${s.days >= 30} onClick=${() => set({ days: Math.min(30, s.days + 1) })}>
+            <button type="button" className="stepper-btn" aria-label=${t.more} disabled=${s.days >= 30} onClick=${() => set({ days: Math.min(30, s.days + 1), alloc: null })}>
               <${Icon} name="Plus" size=${26} />
             </button>
           </div>
@@ -2087,6 +2494,31 @@ h1, h2, h3 { text-wrap: balance; }
               <button key=${d} type="button" className="chip" aria-pressed=${(s.dir || "ns") === d} onClick=${() => set({ dir: d })}>${t.dirs[d]}</button>`)}
           </div>
         </div>
+        ${perCity && html`
+          <div className="flex flex-col gap-2">
+            <p className="font-bold text-lg">${t.perCityQ}</p>
+            <p className="text-soft text-[.98rem]">${s.alloc ? t.perCityManual : t.perCityAuto}</p>
+            <ul className="flex flex-col gap-2">
+              ${ordered.map((id) => {
+                const st = STOP_BY_ID[id];
+                const n = perCity[id] || 1;
+                return html`
+                  <li key=${id} className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-bg px-3 py-2">
+                    <span className="font-bold text-[1.1rem] min-w-0"><span aria-hidden="true">${st.emoji} </span>${st.name[lang]}</span>
+                    <span className="flex items-center gap-2 shrink-0">
+                      <button type="button" className="stepper-btn !w-11 !h-11" aria-label=${t.lessDaysIn(st.name[lang])} disabled=${n <= 1} onClick=${() => changeCity(id, -1)}>
+                        <${Icon} name="Minus" size=${22} />
+                      </button>
+                      <span className="min-w-[3.6rem] text-center font-bold tabular-nums" aria-live="polite">${n} <span className="font-normal text-soft text-[.9rem]">${t.daysUnit(n)}</span></span>
+                      <button type="button" className="stepper-btn !w-11 !h-11" aria-label=${t.moreDaysIn(st.name[lang])} disabled=${n >= 15 || s.days >= 30} onClick=${() => changeCity(id, 1)}>
+                        <${Icon} name="Plus" size=${22} />
+                      </button>
+                    </span>
+                  </li>`;
+              })}
+            </ul>
+            ${s.alloc && html`<button type="button" className="btn-quiet self-start" onClick=${() => set({ alloc: null })}><${Icon} name=${["Wand2", "Wand", "RotateCcw"]} size=${18} /> ${t.perCityReset}</button>`}
+          </div>`}
         <div className="flex flex-col gap-2">
           <p className="font-bold text-lg">${t.paceQ}</p>
           <div className="flex flex-wrap gap-2">
@@ -2099,6 +2531,23 @@ h1, h2, h3 { text-wrap: balance; }
           <${Icon} name=${["Route", "Map"]} size=${24} /> ${t.build}
         </button>
       </section>`;
+  }
+
+  function DayWeather({ d, plan, lang, t }) {
+    const start = plan.meta && plan.meta.start;
+    const wx = useForecast(COORDS[d.stop] ? d.stop : "");
+    if (!start || !COORDS[d.stop]) return null;
+    const iso = isoDay(start, d.day);
+    const f = wx && wx.days ? wx.days.find((x) => x.date === iso) : null;
+    if (f) {
+      const w = wmo(f.code);
+      return html`<p className="text-[1.02rem] flex items-center gap-2 tabular-nums"><span aria-hidden="true" className="text-[1.3rem]">${w[1]}</span>
+        <span><b>${t.wxDay(r0(f.max), r0(f.min))}</b> · ${w[2][lang]}${f.rain != null ? " · 💧" + f.rain + "% " + t.wxRain : ""}</span></p>`;
+    }
+    const clim = CLIMATE[CLIMATE_OF[d.stop]];
+    if (!clim) return null;
+    const m = parseInt(iso.slice(5, 7), 10) - 1;
+    return html`<p className="text-[1rem] text-soft flex items-center gap-2 tabular-nums"><span aria-hidden="true">🌡️</span>${t.wxAvg(r0(clim.tmax[m]), r0(clim.tmin[m]))}</p>`;
   }
 
   function DayCard({ d, plan, lang, t }) {
@@ -2117,6 +2566,7 @@ h1, h2, h3 { text-wrap: balance; }
             <h4 className="text-[1.25rem] font-bold leading-snug"><span aria-hidden="true">${st.emoji} </span>${date ? st.name + (d.title ? " — " : "") : ""}${d.title}</h4>
           </div>
         </div>
+        <${DayWeather} d=${d} plan=${plan} lang=${lang} t=${t} />
         ${d.travel && html`
           <p className="rounded-xl bg-azul-tint text-ink px-3 py-2 flex items-start gap-2 font-bold">
             <${Icon} name=${["TrainFront", "Train"]} size=${22} className="text-azul shrink-0 mt-0.5" />
@@ -2302,7 +2752,65 @@ h1, h2, h3 { text-wrap: balance; }
       </section>`;
   }
 
+  /* conversor euro ↔ real em folha inferior; os dois campos se atualizam juntos */
+  function ConverterSheet({ t, lang, onClose }) {
+    const { fx, status, refresh } = useContext(FxContext);
+    const [eurTxt, setEurTxt] = useState("10");
+    const parse = (s) => { const v = parseFloat(String(s).replace(/\s/g, "").replace(/\./g, "").replace(",", ".")); return isFinite(v) ? v : 0; };
+    const eurVal = parse(eurTxt);
+    const [brlTxt, setBrlTxt] = useState(() => (10 * fx.rate).toFixed(2).replace(".", ","));
+    const [last, setLast] = useState("eur");
+    useEffect(() => {
+      if (last === "eur") setBrlTxt((parse(eurTxt) * fx.rate).toFixed(2).replace(".", ","));
+      else setEurTxt((parse(brlTxt) / fx.rate).toFixed(2).replace(".", ","));
+    }, [fx.rate]);
+    useEffect(() => {
+      const onKey = (e) => { if (e.key === "Escape") onClose(); };
+      document.addEventListener("keydown", onKey);
+      return () => document.removeEventListener("keydown", onKey);
+    }, []);
+    const fromEur = (v) => { setLast("eur"); setEurTxt(v); setBrlTxt((parse(v) * fx.rate).toFixed(2).replace(".", ",")); };
+    const fromBrl = (v) => { setLast("brl"); setBrlTxt(v); setEurTxt((parse(v) / fx.rate).toFixed(2).replace(".", ",")); };
+    const rateTxt = brl(fx.rate).replace(/(\d),(\d\d)$/, "$1,$2");
+    return html`
+      <div className="sheet-backdrop" onClick=${onClose}>
+        <section className="sheet flex flex-col gap-4" role="dialog" aria-modal="true" aria-labelledby="fx-title" onClick=${(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="fx-title" className="text-[1.4rem] font-bold flex items-center gap-2"><span aria-hidden="true">💱</span> ${t.fxTitle}</h2>
+            <button type="button" className="stepper-btn !w-12 !h-12" aria-label=${t.fxClose} onClick=${onClose}><${Icon} name="X" size=${24} /></button>
+          </div>
+          <label htmlFor="fx-eur" className="flex flex-col gap-1.5 font-bold text-lg">
+            ${t.fxEur}
+            <input id="fx-eur" className="field money" inputMode="decimal" value=${eurTxt} onChange=${(e) => fromEur(e.target.value)} />
+          </label>
+          <label htmlFor="fx-brl" className="flex flex-col gap-1.5 font-bold text-lg">
+            ${t.fxBrl}
+            <input id="fx-brl" className="field money" inputMode="decimal" value=${brlTxt} onChange=${(e) => fromBrl(e.target.value)} />
+          </label>
+          <div className="flex flex-col gap-2">
+            <p className="font-bold">${t.fxQuick}</p>
+            <div className="grid grid-cols-3 gap-2">
+              ${[1, 5, 10, 20, 50, 100].map((v) => html`
+                <button key=${v} type="button" className=${"chip justify-center" + (Math.abs(eurVal - v) < 0.001 ? " !bg-btn !text-onbtn !border-btn" : "")}
+                  onClick=${() => fromEur(String(v))}>
+                  <span className="tabular-nums">${v} € = ${brl(v * fx.rate)}</span>
+                </button>`)}
+            </div>
+          </div>
+          <div className="rounded-2xl bg-gold-tint px-4 py-3 flex flex-col gap-1">
+            <p className="font-bold text-gold-ink tabular-nums">${t.fxRate(rateTxt, fmtDateShort(fx.date, lang), fx.src)}</p>
+            <p className="text-[.98rem]">${status === "loading" ? t.fxLoading : status === "offline" ? t.fxOffline : status === "live" ? t.fxLive : ""}</p>
+          </div>
+          <p className="text-[.98rem] text-soft">${t.fxNote}</p>
+          <button type="button" className="btn-outline self-start" onClick=${refresh} disabled=${status === "loading"}>
+            <${Icon} name="RefreshCw" size=${20} /> ${t.fxRefresh}
+          </button>
+        </section>
+      </div>`;
+  }
+
   function BottomNav({ view, goView, t, favCount }) {
+    const { fx, open } = useContext(FxContext);
     const items = [
       { id: "explorar", icon: "MapPin" },
       { id: "viagem", icon: "Sparkles" },
@@ -2311,6 +2819,12 @@ h1, h2, h3 { text-wrap: balance; }
     ];
     return html`
       <nav className="bottom-nav" aria-label=${t.navLabel}>
+        <button type="button" className="fx-bar" onClick=${open} aria-haspopup="dialog" aria-label=${t.fxBar(brl(fx.rate)) + " · " + t.fxOpen}>
+          <span aria-hidden="true" className="text-[1.5rem]">💱</span>
+          <span aria-hidden="true">1 € =</span>
+          <span aria-hidden="true" className="fx-rate">${brl(fx.rate)}</span>
+          <span aria-hidden="true" className="fx-go">${t.fxOpen}</span>
+        </button>
         <div className="max-w-xl mx-auto grid grid-cols-4 gap-1 px-2 py-2">
           ${items.map((i) => {
             const on = view === i.id;
@@ -2332,7 +2846,7 @@ h1, h2, h3 { text-wrap: balance; }
   function MainApp({ lang, setLang, t, onLogout, theme, toggleTheme }) {
     const init = useRef(readHash()).current;
     const [cityId, setCityId] = useState(() => { const c = init.city || store.get("rosinei.city", "porto"); return CITY_BY_ID[c] ? c : "porto"; });
-    const [cat, setCat] = useState(() => { const c = store.get("rosinei.cat", "ver"); return CATS.some((x) => x.id === c) ? c : "ver"; });
+    const [cat, setCat] = useState(() => { const c = store.get("rosinei.cat", "ver"); return TABS.some((x) => x.id === c) ? c : "ver"; });
     const [view, setView] = useState(init.view || "explorar");
     const [favs, setFavs] = useState(() => { const f = store.get("rosinei.favs", []); return Array.isArray(f) ? f.filter((k) => PLACE_BY_KEY[k]) : []; });
     const [toast, setToast] = useState(null);
@@ -2345,6 +2859,9 @@ h1, h2, h3 { text-wrap: balance; }
       toastTimer.current = setTimeout(() => setToast(null), 2600);
     }
     const trip = useTrip(lang, t, showToast);
+    const fxState = useFx();
+    const [fxOpen, setFxOpen] = useState(false);
+    const fxValue = { fx: fxState.fx, status: fxState.status, refresh: fxState.refresh, open: () => setFxOpen(true) };
 
     useEffect(() => { store.set("rosinei.city", cityId); }, [cityId]);
     useEffect(() => { store.set("rosinei.cat", cat); }, [cat]);
@@ -2374,6 +2891,7 @@ h1, h2, h3 { text-wrap: balance; }
     }
 
     return html`
+      <${FxContext.Provider} value=${fxValue}>
       <div className="font-body">
         <${Header} lang=${lang} setLang=${setLang} t=${t} theme=${theme} toggleTheme=${toggleTheme} />
         <main className="max-w-xl mx-auto px-4 pt-4 pb-nav flex flex-col gap-6">
@@ -2381,9 +2899,12 @@ h1, h2, h3 { text-wrap: balance; }
             <${PromoCard} t=${t} plan=${trip.plan} goTrip=${() => goView("viagem")} />
             <${CityCarousel} cityId=${cityId} onPick=${setCityId} lang=${lang} t=${t} />
             <${CityHero} city=${city} lang=${lang} t=${t} />
+            <${WeatherCard} key=${"wx-" + city.id} city=${city} lang=${lang} t=${t} start=${trip.settings.start} />
             <${TipCard} city=${city} lang=${lang} t=${t} />
-            <${CatTabs} cat=${cat} setCat=${setCat} t=${t} />
-            <${PlaceList} city=${city} cat=${cat} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} />
+            <${CatTabs} cat=${cat === "gastro" && !(GASTRO[city.id] || []).length ? "ver" : cat} setCat=${setCat} t=${t} cityId=${city.id} />
+            ${cat === "gastro" && (GASTRO[city.id] || []).length
+              ? html`<${GastroList} city=${city} lang=${lang} t=${t} />`
+              : html`<${PlaceList} city=${city} cat=${cat === "gastro" ? "ver" : cat} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} />`}
             <p className="text-soft text-[.95rem] leading-relaxed">${t.note}</p>`}
           ${view === "viagem" && html`<${TripView} lang=${lang} t=${t} trip=${trip} showToast=${showToast} />`}
           ${view === "favoritos" && html`<${FavoritesView} lang=${lang} t=${t} favs=${favs} toggleFav=${toggleFav} goExplore=${() => goView("explorar")} />`}
@@ -2393,7 +2914,9 @@ h1, h2, h3 { text-wrap: balance; }
         <div className="toast-wrap" aria-live="polite">
           ${toast && html`<div key=${toast.id} className="toast">${toast.text}</div>`}
         </div>
-      </div>`;
+        ${fxOpen && html`<${ConverterSheet} t=${t} lang=${lang} onClose=${() => setFxOpen(false)} />`}
+      </div>
+      <//>`;
   }
 
   function App() {
