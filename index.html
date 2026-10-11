@@ -1348,11 +1348,16 @@ h1, h2, h3 { text-wrap: balance; }
   const PLACE_BY_KEY = {};
   CITIES.forEach((c) => CATS.forEach((cat) => c.places[cat.id].forEach((p) => { PLACE_BY_KEY[favKey(c.id, p.id)] = { place: p, city: c, cat: cat.id }; })));
 
+  /* restaurantes que só servem uma das refeições (segundo a descrição verificada) */
+  const MEAL_ONLY = {
+    "algarve/casinha": "jantar", "algarve/cantinho-algarvio": "jantar",
+    "sevilla/freiduria-reina-victoria": "jantar", "algarve/casa-chico-ze": "almoco"
+  };
   const CATALOG = Object.keys(PLACE_BY_KEY).map((k) => {
     const { place, city, cat } = PLACE_BY_KEY[k];
     const stop = stopOf(city, place);
-    return k + " | " + stop + (stop === "algarve" && place.t ? " (" + place.t + ")" : "") + " | " + cat + " | " + tx(place.n, "pt") +
-      (place.r ? " | Google " + place.r : "");
+    return k + " | " + stop + (place.t ? " (" + place.t + ")" : "") + " | " + cat + " | " + tx(place.n, "pt") +
+      (place.r ? " | Google " + place.r : "") + (MEAL_ONLY[k] ? (MEAL_ONLY[k] === "jantar" ? " | dinner only" : " | lunch only") : "");
   }).join("\n");
 
   function readHash() {
@@ -1449,9 +1454,10 @@ h1, h2, h3 { text-wrap: balance; }
   function loadForecast(stop) {
     const pos = COORDS[stop];
     if (!pos || WX.pending[stop]) return;
-    const cached = WX.data[stop] || store.get("rosinei.wx." + stop, null);
-    if (cached && cached.days && Date.now() - cached.at < 3 * 3600e3) { WX.data[stop] = cached; return; }
-    if (WX.data[stop] && WX.data[stop].failed) return;
+    const cur = WX.data[stop];
+    if (cur && cur.failedAt && Date.now() - cur.failedAt < 10 * 60e3) return;
+    const cached = cur || store.get("rosinei.wx." + stop, null);
+    if (cached && cached.days && !cached.stale && Date.now() - cached.at < 3 * 3600e3) { WX.data[stop] = cached; return; }
     const url = "https://api.open-meteo.com/v1/forecast?latitude=" + pos[0] + "&longitude=" + pos[1] +
       "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
       "&current=temperature_2m,weather_code&timezone=auto&forecast_days=16";
@@ -1464,7 +1470,7 @@ h1, h2, h3 { text-wrap: balance; }
       WX.data[stop] = v;
       store.set("rosinei.wx." + stop, v);
     }).catch(() => {
-      WX.data[stop] = cached && cached.days ? Object.assign({}, cached, { stale: true }) : { at: Date.now(), days: null, failed: true };
+      WX.data[stop] = cached && cached.days ? Object.assign({}, cached, { stale: true, failedAt: Date.now() }) : { at: Date.now(), days: null, failed: true, failedAt: Date.now() };
     }).finally(() => {
       delete WX.pending[stop];
       WX.listeners.forEach((f) => f());
@@ -1476,6 +1482,7 @@ h1, h2, h3 { text-wrap: balance; }
       const f = () => force((x) => x + 1);
       WX.listeners.add(f);
       loadForecast(stop);
+      if (WX.data[stop]) f();
       return () => { WX.listeners.delete(f); };
     }, [stop]);
     return WX.data[stop] || null;
@@ -1647,8 +1654,9 @@ h1, h2, h3 { text-wrap: balance; }
     let a = null;
     if (c.a && typeof c.a === "object" && s.length && s.every((id) => parseInt(c.a[id], 10) >= 1)) {
       a = {};
-      s.forEach((id) => { a[id] = Math.max(1, Math.min(15, parseInt(c.a[id], 10))); });
-      d = s.reduce((sum, id) => sum + a[id], 0);
+      s.forEach((id) => { a[id] = Math.max(1, Math.min(30, parseInt(c.a[id], 10))); });
+      const total = s.reduce((sum, id) => sum + a[id], 0);
+      if (total > 30) a = null; else d = total;
     }
     const out = { d, s, st: /^\d{4}-\d{2}-\d{2}$/.test(c.st || "") ? c.st : "", p: c.p === "normal" ? "normal" : "calmo", dir: c.dir === "sn" ? "sn" : "ns" };
     if (a) out.a = a;
@@ -1680,9 +1688,17 @@ h1, h2, h3 { text-wrap: balance; }
     return alloc;
   }
 
+  /* restaurantes para as refeições do roteiro: os de outra vila (Matosinhos, Gaia, Mealhada…) ficam fora,
+     exceto no Algarve, onde cada vila já é a parada; separa almoço e jantar conforme o horário */
   function restaurantsFor(stop) {
     const city = CITY_BY_ID[STOP_BY_ID[stop].city];
-    return city.places.comer.filter((p) => stopOf(city, p) === stop).map((p) => favKey(city.id, p.id));
+    const keys = city.places.comer
+      .filter((p) => stopOf(city, p) === stop && (city.id === "algarve" || !p.t))
+      .map((p) => favKey(city.id, p.id));
+    return {
+      lunch: keys.filter((k) => MEAL_ONLY[k] !== "jantar"),
+      dinner: keys.filter((k) => MEAL_ONLY[k] !== "almoco")
+    };
   }
 
   function generatePlan(rawCfg, lang, t) {
@@ -1703,7 +1719,21 @@ h1, h2, h3 { text-wrap: balance; }
       const fullDays = Math.max(0, Math.min(it.full.length, D - 3));
       const sleepRef = PLACE_BY_KEY[SLEEP[stop]];
       const sleepName = sleepRef ? tx(sleepRef.place.n, lang) : name;
-      let hi = 0, fi = 0, ei = 0, ri = 0;
+      let hi = 0, fi = 0, ei = 0;
+      /* cada restaurante uma vez por cidade antes de repetir (almoço e jantar partilham a lista de usados) */
+      const ptr = { l: 0, d: 0 };
+      const used = new Set();
+      const nextMeal = (list, which) => {
+        if (!list.length) return null;
+        for (let n = 0; n < list.length; n++) {
+          const k = list[ptr[which]++ % list.length];
+          if (!used.has(k)) { used.add(k); return k; }
+        }
+        used.clear();
+        const k = list[ptr[which]++ % list.length];
+        used.add(k);
+        return k;
+      };
       for (let j = 0; j < D; j++) {
         n++;
         const last = n === cfg.d;
@@ -1749,10 +1779,10 @@ h1, h2, h3 { text-wrap: balance; }
           const k = day.places[0];
           day.title = k && PLACE_BY_KEY[k] ? tx(PLACE_BY_KEY[k].place.n, lang) : name;
         }
-        if (rests.length) {
-          day.meals.push({ label: t.lunch, key: rests[ri++ % rests.length] });
-          if (!last) day.meals.push({ label: t.dinner, key: rests[ri++ % rests.length] });
-        }
+        const lunchKey = nextMeal(rests.lunch, "l");
+        if (lunchKey) day.meals.push({ label: t.lunch, key: lunchKey });
+        const dinnerKey = last ? null : nextMeal(rests.dinner, "d");
+        if (dinnerKey) day.meals.push({ label: t.dinner, key: dinnerKey });
         if (!last) day.sleep = sleepName.indexOf(name) >= 0 ? sleepName : sleepName + " (" + name + ")";
         const algarvePair = (stop === "albufeira" && prev === "lagos") || (stop === "lagos" && prev === "albufeira");
         if (arrival && !algarvePair) day.tip = city.tip[lang];
@@ -1990,7 +2020,8 @@ h1, h2, h3 { text-wrap: balance; }
 
     const current = localCur || family;
     const planSource = localCur ? "local" : family ? "family" : null;
-    const plan = !current ? null : current.type === "auto" ? generatePlan(current.cfg, lang, t) : current.plan;
+    const plan = !current ? null : current.type === "auto" ? generatePlan(current.cfg, lang, t)
+      : normalizePlan(current.plan, (current.plan && current.plan.meta) || {});
 
     function setLocal(c) { setLocalCur(c); store.set("rosinei.current", c); store.set("rosinei.plan", null); }
 
@@ -2036,12 +2067,12 @@ h1, h2, h3 { text-wrap: balance; }
       return turns;
     }
 
-    async function send(text) {
+    async function send(text, base) {
       text = (text || "").trim();
       if (!text || !sample || busy) return;
       const userMsg = { id: uid(), role: "user", text };
       const aiId = uid();
-      const history = chat.filter((m) => !m.error).concat(userMsg);
+      const history = (base || chat).filter((m) => !m.error).concat(userMsg);
       setChat(history.concat({ id: aiId, role: "assistant", text: "", pending: true }));
       const ctl = new AbortController();
       ctlRef.current = ctl;
@@ -2076,12 +2107,11 @@ h1, h2, h3 { text-wrap: balance; }
       }
     }
 
+    /* repete a pergunta sem duplicá-la: tira a pergunta e o erro e envia de novo a partir dali */
     function retry(msg) {
-      setChat((c) => {
-        const i = c.findIndex((m) => m.id === msg.id);
-        return i > 0 ? c.slice(0, i - 1) : c;
-      });
-      setTimeout(() => send(msg.retry), 0);
+      const i = chat.findIndex((m) => m.id === msg.id);
+      const base = i > 0 ? chat.slice(0, i - 1) : chat.filter((m) => m.id !== msg.id);
+      send(msg.retry, base);
     }
 
     function stop() { if (ctlRef.current) ctlRef.current.abort(); }
@@ -2373,7 +2403,10 @@ h1, h2, h3 { text-wrap: balance; }
     const [all, setAll] = useState(false);
     const name = STOP_BY_ID[stop].name[lang];
     const locale = lang === "pt" ? "pt-BR" : "es-ES";
-    const days = wx && wx.days ? wx.days.slice(0, 7) : null;
+    const now = new Date();
+    const todayIso = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+    const days = wx && wx.days ? wx.days.filter((d) => d.date >= todayIso).slice(0, 7) : null;
+    const showNow = !!(wx && wx.now && !wx.stale && Date.now() - wx.at < 3 * 3600e3);
     const dayName = (iso) => {
       const [y, mo, d] = iso.split("-").map(Number);
       try { return new Intl.DateTimeFormat(locale, { weekday: "short", day: "numeric" }).format(new Date(y, mo - 1, d)); } catch (e) { return iso.slice(5); }
@@ -2389,13 +2422,13 @@ h1, h2, h3 { text-wrap: balance; }
             </div>`}
         </div>
         ${!wx && html`<p className="text-soft flex items-center gap-2"><span className="dots" aria-hidden="true"><span></span><span></span><span></span></span></p>`}
-        ${wx && wx.now && html`
+        ${showNow && html`
           <p className="flex items-center gap-3">
             <span className="text-[2.4rem] leading-none" aria-hidden="true">${wmo(wx.now.code)[1]}</span>
             <span><span className="text-[1.6rem] font-bold tabular-nums">${r0(wx.now.temp)}°</span>
             <span className="block text-soft">${t.wxNow} · ${wmo(wx.now.code)[2][lang]}</span></span>
           </p>`}
-        ${days && html`
+        ${days && days.length > 0 && html`
           <div className="carousel -mx-4 px-4 flex gap-2 overflow-x-auto pb-1" aria-label=${t.wxNext}>
             ${days.map((d) => html`
               <div key=${d.date} className="wx-day shrink-0">
@@ -2761,14 +2794,14 @@ h1, h2, h3 { text-wrap: balance; }
       const alloc = Object.assign({}, s.alloc);
       if (on) delete alloc[id]; else alloc[id] = MIN_DAYS[id] || 1;
       const days = stops.reduce((sum, x) => sum + (alloc[x] || 1), 0);
-      set(stops.length ? { stops, alloc, days: Math.max(1, Math.min(30, days)) } : { stops, alloc: null });
+      set(stops.length && days <= 30 ? { stops, alloc, days } : { stops, alloc: null });
     };
     const ordered = orderedStops(s.stops, s.dir);
     const perCity = s.alloc || (s.stops.length && s.days >= s.stops.length ? allocateDays(ordered, s.days) : null);
     const changeCity = (id, delta) => {
       const base = Object.assign({}, perCity || {});
       ordered.forEach((x) => { if (!base[x]) base[x] = 1; });
-      base[id] = Math.max(1, Math.min(15, base[id] + delta));
+      base[id] = Math.max(1, Math.min(30, base[id] + delta));
       const days = ordered.reduce((sum, x) => sum + base[x], 0);
       if (days > 30) return;
       set({ alloc: base, days });
@@ -2830,7 +2863,7 @@ h1, h2, h3 { text-wrap: balance; }
                         <${Icon} name="Minus" size=${22} />
                       </button>
                       <span className="min-w-[3.6rem] text-center font-bold tabular-nums" aria-live="polite">${n} <span className="font-normal text-soft text-[.9rem]">${t.daysUnit(n)}</span></span>
-                      <button type="button" className="stepper-btn !w-11 !h-11" aria-label=${t.moreDaysIn(st.name[lang])} disabled=${n >= 15 || s.days >= 30} onClick=${() => changeCity(id, 1)}>
+                      <button type="button" className="stepper-btn !w-11 !h-11" aria-label=${t.moreDaysIn(st.name[lang])} disabled=${n >= 30 || s.days >= 30} onClick=${() => changeCity(id, 1)}>
                         <${Icon} name="Plus" size=${22} />
                       </button>
                     </span>
@@ -2856,9 +2889,10 @@ h1, h2, h3 { text-wrap: balance; }
   function DayWeather({ d, plan, lang, t }) {
     const start = plan.meta && plan.meta.start;
     const wx = useForecast(COORDS[d.stop] ? d.stop : "");
-    if (!start || !COORDS[d.stop]) return null;
+    if (!start) return null;
     const iso = isoDay(start, d.day);
-    const f = wx && wx.days ? wx.days.find((x) => x.date === iso) : null;
+    if (!iso) return null;
+    const f = COORDS[d.stop] && wx && wx.days ? wx.days.find((x) => x.date === iso) : null;
     if (f) {
       const w = wmo(f.code);
       return html`<p className="text-[1.02rem] flex items-center gap-2 tabular-nums"><span aria-hidden="true" className="text-[1.3rem]">${w[1]}</span>
@@ -2897,9 +2931,9 @@ h1, h2, h3 { text-wrap: balance; }
             <${Icon} name=${ic} size=${22} className="text-gold-ink shrink-0 mt-1" />
             <p className="text-[1.05rem] leading-relaxed min-w-0"><b>${t[k]}:</b> ${d[k]}</p>
           </div>`)}
-        ${d.places.length > 0 && html`
+        ${(d.places || []).some((k) => PLACE_BY_KEY[k]) && html`
           <div className="flex flex-wrap gap-2">
-            ${d.places.map((k) => {
+            ${(d.places || []).filter((k) => PLACE_BY_KEY[k]).map((k) => {
               const ref = PLACE_BY_KEY[k];
               return html`<a key=${k} className="chip" href=${mapsUrl(ref.place.q)} target="_blank" rel="noopener noreferrer">
                 <${Icon} name="MapPin" size=${18} className="text-azul" />${tx(ref.place.n, lang)}</a>`;
@@ -2913,7 +2947,7 @@ h1, h2, h3 { text-wrap: balance; }
                 const ref = PLACE_BY_KEY[m.key];
                 if (!ref) return null;
                 return html`<a key=${i} className="chip w-full !rounded-2xl justify-between gap-3" href=${mapsUrl(ref.place.q)} target="_blank" rel="noopener noreferrer">
-                  <span className="min-w-0"><span className="block text-soft font-normal text-[.9rem]">${m.label}</span>${tx(ref.place.n, lang)}</span>
+                  <span className="min-w-0"><span className="block text-soft font-normal text-[.9rem]">${m.label}</span>${tx(ref.place.n, lang)}${ref.place.t ? html`<span className="block text-soft font-normal text-[.85rem]">📍 ${ref.place.t}</span>` : null}</span>
                   ${ref.place.r ? html`<span className="shrink-0 text-gold-ink">★ ${Number(ref.place.r).toFixed(1).replace(".", ",")}</span>` : null}</a>`;
               })}
             </div>
@@ -3076,7 +3110,13 @@ h1, h2, h3 { text-wrap: balance; }
   function ConverterSheet({ t, lang, onClose }) {
     const { fx, status, refresh } = useContext(FxContext);
     const [eurTxt, setEurTxt] = useState("10");
-    const parse = (s) => { const v = parseFloat(String(s).replace(/\s/g, "").replace(/\./g, "").replace(",", ".")); return isFinite(v) ? v : 0; };
+    const parse = (raw) => {
+      let x = String(raw).replace(/\s/g, "");
+      if (x.indexOf(",") >= 0) x = x.replace(/\./g, "").replace(",", ".");
+      else if ((x.match(/\./g) || []).length > 1 || /^\d{1,3}\.\d{3}$/.test(x)) x = x.replace(/\./g, "");
+      const v = parseFloat(x);
+      return isFinite(v) ? v : 0;
+    };
     const eurVal = parse(eurTxt);
     const [brlTxt, setBrlTxt] = useState(() => (10 * fx.rate).toFixed(2).replace(".", ","));
     const [last, setLast] = useState("eur");
